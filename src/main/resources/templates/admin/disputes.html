@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>İtiraz Yönetimi</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="container mx-auto px-4 py-8" x-data="disputesPage()">
+
+            <!-- Header -->
+            <div class="flex items-center gap-4 mb-8">
+                <a href="/admin/dashboard" class="btn btn-ghost btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold">
+                        <span class="text-3xl mr-2">⚖️</span>
+                        İtiraz Yönetimi
+                    </h1>
+                    <p class="text-base-content/60 mt-1">Marka ve Creator arasındaki anlaşmazlıkları çözün</p>
+                </div>
+            </div>
+
+            <!-- Disputes List -->
+            <div class="space-y-6">
+                <template x-for="dispute in disputes" :key="dispute.id">
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <div class="flex flex-col lg:flex-row gap-6">
+
+                                <!-- Order Info -->
+                                <div class="lg:w-1/3">
+                                    <h3 class="font-semibold mb-3">📦 Sipariş Bilgileri</h3>
+                                    <div class="bg-base-100 rounded-lg p-4">
+                                        <img :src="dispute.deliveryFile"
+                                            class="w-full aspect-video object-cover rounded-lg mb-3" />
+                                        <p class="font-medium" x-text="dispute.gigTitle"></p>
+                                        <p class="text-sm text-base-content/60">Tutar: <span
+                                                x-text="Utils.formatPrice(dispute.price)"></span></p>
+                                        <p class="text-sm text-base-content/60">Sipariş: <span
+                                                x-text="Utils.formatDate(dispute.orderDate)"></span></p>
+                                    </div>
+                                </div>
+
+                                <!-- Dispute Details -->
+                                <div class="lg:w-2/3">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div>
+                                            <span class="badge badge-error mb-2">İtiraz Açık</span>
+                                            <p class="text-sm text-base-content/60">
+                                                Açılış: <span x-text="Utils.formatDate(dispute.openedAt)"></span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Parties -->
+                                    <div class="grid grid-cols-2 gap-4 mb-4">
+                                        <div class="bg-base-100 rounded-lg p-3">
+                                            <span class="text-xs text-base-content/50">Marka</span>
+                                            <p class="font-medium" x-text="dispute.brandName"></p>
+                                        </div>
+                                        <div class="bg-base-100 rounded-lg p-3">
+                                            <span class="text-xs text-base-content/50">Creator</span>
+                                            <p class="font-medium" x-text="dispute.creatorName"></p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Dispute Reason -->
+                                    <div class="bg-warning/10 border border-warning/30 rounded-lg p-4 mb-4">
+                                        <h4 class="font-medium text-warning mb-2">İtiraz Nedeni</h4>
+                                        <p class="text-sm" x-text="dispute.reason"></p>
+                                    </div>
+
+                                    <!-- Chat History (Mock) -->
+                                    <div class="collapse collapse-arrow bg-base-100 mb-4">
+                                        <input type="checkbox" />
+                                        <div class="collapse-title font-medium">💬 Mesaj Geçmişi</div>
+                                        <div class="collapse-content">
+                                            <div class="space-y-2 text-sm">
+                                                <div class="chat chat-start">
+                                                    <div class="chat-header">Marka</div>
+                                                    <div class="chat-bubble chat-bubble-neutral">Teslim edilen görsel
+                                                        brief'ten farklı.</div>
+                                                </div>
+                                                <div class="chat chat-end">
+                                                    <div class="chat-header">Creator</div>
+                                                    <div class="chat-bubble chat-bubble-primary">Brief'e uygun şekilde
+                                                        hazırladım, hangi kısım farklı?</div>
+                                                </div>
+                                                <div class="chat chat-start">
+                                                    <div class="chat-header">Marka</div>
+                                                    <div class="chat-bubble chat-bubble-neutral">Ürün farklı açıda
+                                                        görünüyor, kare format istedim.</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Decision -->
+                                    <div class="alert mb-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            class="stroke-current shrink-0 w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                        </svg>
+                                        <span class="text-sm">Havuzda bekleyen tutar: <strong
+                                                x-text="Utils.formatPrice(dispute.price)"></strong></span>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="flex flex-col sm:flex-row gap-3">
+                                        <button class="btn btn-primary flex-1" @click="decideForCreator(dispute)">
+                                            💰 Creator'a Aktar
+                                        </button>
+                                        <button class="btn btn-secondary flex-1" @click="decideForBrand(dispute)">
+                                            💵 Markaya İade
+                                        </button>
+                                        <button class="btn btn-outline flex-1" @click="requestMoreInfo(dispute)">
+                                            📝 Bilgi İste
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Empty State -->
+                <div x-show="disputes.length === 0" class="card bg-base-200 shadow-xl">
+                    <div class="card-body items-center text-center py-16">
+                        <div class="text-6xl mb-4">✌️</div>
+                        <h3 class="text-xl font-semibold mb-2">Açık itiraz yok!</h3>
+                        <p class="text-base-content/60">Tüm anlaşmazlıklar çözülmüş durumda.</p>
+                        <a href="/admin/dashboard" class="btn btn-primary mt-4">Dashboard'a Dön</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function disputesPage() {
+                return {
+                    disputes: [
+                        {
+                            id: 'dispute_1',
+                            gigTitle: 'Cafe ortamında ürün fotoğrafı',
+                            price: 500,
+                            orderDate: '2024-03-15T10:00:00Z',
+                            openedAt: '2024-03-18T14:00:00Z',
+                            brandName: 'Tech Brand',
+                            creatorName: 'Aylin',
+                            deliveryFile: 'https://picsum.photos/seed/dispute1/600/400',
+                            reason: 'Teslim edilen görsel brief\'te belirtilen formata uygun değil. Kare format istedim ama dikey görsel geldi.'
+                        }
+                    ],
+
+                    decideForCreator(dispute) {
+                        this.disputes = this.disputes.filter(d => d.id !== dispute.id);
+                        Alpine.store('notify').success('Karar verildi: ' + Utils.formatPrice(dispute.price) + ' Creator hesabına aktarıldı.');
+                    },
+
+                    decideForBrand(dispute) {
+                        this.disputes = this.disputes.filter(d => d.id !== dispute.id);
+                        Alpine.store('notify').success('Karar verildi: ' + Utils.formatPrice(dispute.price) + ' Marka hesabına iade edildi.');
+                    },
+
+                    requestMoreInfo(dispute) {
+                        Alpine.store('notify').info('Her iki tarafa da ek bilgi talebi gönderildi.');
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

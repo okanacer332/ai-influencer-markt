@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Onay Bekleyen Creator'lar</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="container mx-auto px-4 py-8" x-data="pendingCreatorsPage()">
+
+            <!-- Header -->
+            <div class="flex items-center gap-4 mb-8">
+                <a href="/admin/dashboard" class="btn btn-ghost btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+                <div>
+                    <h1 class="text-3xl font-bold">
+                        <span class="text-3xl mr-2">⏳</span>
+                        Onay Bekleyen Creator'lar
+                    </h1>
+                    <p class="text-base-content/60 mt-1">
+                        <span x-text="pendingCreators.length"></span> başvuru inceleme bekliyor
+                    </p>
+                </div>
+            </div>
+
+            <!-- Pending List -->
+            <div class="space-y-6">
+                <template x-for="creator in pendingCreators" :key="creator.id">
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <div class="flex flex-col lg:flex-row gap-6">
+
+                                <!-- Proof Images -->
+                                <div class="lg:w-1/2">
+                                    <h3 class="font-semibold mb-3">📸 Doğrulama Görselleri</h3>
+                                    <div class="grid grid-cols-3 gap-2">
+                                        <template x-for="(img, index) in creator.persona.proofImages" :key="index">
+                                            <div class="relative group">
+                                                <img :src="img"
+                                                    class="aspect-[3/4] object-cover rounded-lg cursor-pointer hover:opacity-90 transition-opacity"
+                                                    @click="openImageModal(img)" />
+                                                <div class="absolute bottom-1 left-1 badge badge-sm badge-neutral"
+                                                    x-text="['Profil', 'Boy', 'Yakın'][index]"></div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <p class="text-xs text-base-content/50 mt-2">Büyütmek için tıklayın</p>
+                                </div>
+
+                                <!-- Creator Info -->
+                                <div class="lg:w-1/2">
+                                    <div class="flex items-start justify-between mb-4">
+                                        <div>
+                                            <h3 class="text-xl font-bold" x-text="creator.name"></h3>
+                                            <p class="text-sm text-base-content/60" x-text="creator.email"></p>
+                                        </div>
+                                        <span class="badge badge-warning">Beklemede</span>
+                                    </div>
+
+                                    <!-- Persona Details -->
+                                    <div class="bg-base-100 rounded-lg p-4 mb-4">
+                                        <h4 class="font-medium mb-2">Karakter Bilgileri</h4>
+                                        <div class="grid grid-cols-2 gap-2 text-sm">
+                                            <div>
+                                                <span class="text-base-content/60">Ad:</span>
+                                                <span class="font-medium" x-text="creator.persona.name"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-base-content/60">Yaş:</span>
+                                                <span class="font-medium" x-text="creator.persona.age"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-base-content/60">Stil:</span>
+                                                <span class="font-medium" x-text="creator.persona.style"></span>
+                                            </div>
+                                            <div>
+                                                <span class="text-base-content/60">Başvuru:</span>
+                                                <span class="font-medium"
+                                                    x-text="Utils.formatDate(creator.submittedAt)"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Review Checklist -->
+                                    <div class="bg-base-100 rounded-lg p-4 mb-4">
+                                        <h4 class="font-medium mb-2">İnceleme Kontrol Listesi</h4>
+                                        <div class="space-y-2">
+                                            <label class="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" class="checkbox checkbox-sm checkbox-success" />
+                                                <span class="text-sm">Görseller tutarlı (aynı karakter)</span>
+                                            </label>
+                                            <label class="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" class="checkbox checkbox-sm checkbox-success" />
+                                                <span class="text-sm">Kalite yeterli (net, profesyonel)</span>
+                                            </label>
+                                            <label class="flex items-center gap-2 cursor-pointer">
+                                                <input type="checkbox" class="checkbox checkbox-sm checkbox-success" />
+                                                <span class="text-sm">Uygunsuz içerik yok</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="flex gap-3">
+                                        <button class="btn btn-success flex-1" @click="approveCreator(creator)">
+                                            ✅ Onayla
+                                        </button>
+                                        <button class="btn btn-error flex-1" @click="openRejectModal(creator)">
+                                            ❌ Reddet
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Empty State -->
+                <div x-show="pendingCreators.length === 0" class="card bg-base-200 shadow-xl">
+                    <div class="card-body items-center text-center py-16">
+                        <div class="text-6xl mb-4">🎉</div>
+                        <h3 class="text-xl font-semibold mb-2">Tüm başvurular incelendi!</h3>
+                        <p class="text-base-content/60">Şu anda bekleyen başvuru bulunmuyor.</p>
+                        <a href="/admin/dashboard" class="btn btn-primary mt-4">Dashboard'a Dön</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Modal -->
+            <div class="modal" :class="{ 'modal-open': imageModal.open }">
+                <div class="modal-box max-w-4xl">
+                    <img :src="imageModal.src" class="w-full rounded-lg" />
+                    <div class="modal-action">
+                        <button class="btn" @click="imageModal.open = false">Kapat</button>
+                    </div>
+                </div>
+                <div class="modal-backdrop" @click="imageModal.open = false"></div>
+            </div>
+
+            <!-- Reject Modal -->
+            <div class="modal" :class="{ 'modal-open': rejectModal.open }">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg mb-4">❌ Başvuruyu Reddet</h3>
+
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text">Red Nedeni</span>
+                        </label>
+                        <select x-model="rejectModal.reason" class="select select-bordered">
+                            <option value="">Neden Seçin</option>
+                            <option value="inconsistent">Görseller tutarsız</option>
+                            <option value="quality">Kalite yetersiz</option>
+                            <option value="inappropriate">Uygunsuz içerik</option>
+                            <option value="other">Diğer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text">Ek Açıklama</span>
+                        </label>
+                        <textarea x-model="rejectModal.note" class="textarea textarea-bordered"
+                            placeholder="Creator'a iletilecek detaylı açıklama..."></textarea>
+                    </div>
+
+                    <div class="modal-action">
+                        <button class="btn btn-ghost" @click="rejectModal.open = false">İptal</button>
+                        <button class="btn btn-error" @click="rejectCreator" :disabled="!rejectModal.reason">
+                            Reddet
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-backdrop" @click="rejectModal.open = false"></div>
+            </div>
+        </div>
+
+        <script>
+            function pendingCreatorsPage() {
+                return {
+                    pendingCreators: MockData.pendingCreators,
+                    imageModal: {
+                        open: false,
+                        src: ''
+                    },
+                    rejectModal: {
+                        open: false,
+                        creator: null,
+                        reason: '',
+                        note: ''
+                    },
+
+                    openImageModal(src) {
+                        this.imageModal.src = src;
+                        this.imageModal.open = true;
+                    },
+
+                    openRejectModal(creator) {
+                        this.rejectModal.creator = creator;
+                        this.rejectModal.reason = '';
+                        this.rejectModal.note = '';
+                        this.rejectModal.open = true;
+                    },
+
+                    approveCreator(creator) {
+                        // Remove from pending list
+                        this.pendingCreators = this.pendingCreators.filter(c => c.id !== creator.id);
+                        Alpine.store('notify').success(creator.name + ' onaylandı! E-posta gönderildi.');
+                    },
+
+                    rejectCreator() {
+                        if (this.rejectModal.creator && this.rejectModal.reason) {
+                            // Remove from pending list
+                            this.pendingCreators = this.pendingCreators.filter(c => c.id !== this.rejectModal.creator.id);
+                            Alpine.store('notify').warning('Başvuru reddedildi. Creator bilgilendirildi.');
+                            this.rejectModal.open = false;
+                        }
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

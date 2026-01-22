@@ -1,0 +1,73 @@
+/* Tailwind CSS 4 + DaisyUI 5 Configuration */
+@import "tailwindcss";
+@plugin "daisyui" {
+  themes: light --default, dark, cyberpunk, luxury;
+}
+
+/* Custom Base Styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply min-h-screen bg-base-100 text-base-content;
+  }
+}
+
+/* Custom Component Styles */
+@layer components {
+  /* Card hover effects */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+  
+  /* Glass effect */
+  .glass-card {
+    @apply backdrop-blur-lg bg-base-100/70 border border-base-300;
+  }
+  
+  /* Status badges */
+  .status-pending {
+    @apply badge badge-warning;
+  }
+  
+  .status-active {
+    @apply badge badge-success;
+  }
+  
+  .status-completed {
+    @apply badge badge-info;
+  }
+  
+  .status-rejected {
+    @apply badge badge-error;
+  }
+  
+  /* Page container */
+  .page-container {
+    @apply container mx-auto px-4 py-8;
+  }
+  
+  /* Section title */
+  .section-title {
+    @apply text-2xl font-bold mb-6;
+  }
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}

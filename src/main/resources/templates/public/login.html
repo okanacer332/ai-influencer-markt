@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Giriş Yap</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="min-h-[80vh] flex items-center justify-center py-12 px-4">
+            <div class="card w-full max-w-md bg-base-200 shadow-2xl">
+                <div class="card-body">
+
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <div class="text-5xl mb-4">🤖</div>
+                        <h1 class="text-2xl font-bold">Hoş Geldiniz</h1>
+                        <p class="text-base-content/60 mt-2">Hesabınıza giriş yapın</p>
+                    </div>
+
+                    <!-- Login Form -->
+                    <form x-data="loginForm()" @submit.prevent="handleLogin">
+
+                        <!-- Email Field -->
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text font-medium">E-posta</span>
+                            </label>
+                            <div class="relative">
+                                <input type="email" x-model="email" placeholder="ornek@email.com"
+                                    class="input input-bordered w-full pl-10" required />
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                                    📧
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-control mb-6">
+                            <label class="label">
+                                <span class="label-text font-medium">Şifre</span>
+                            </label>
+                            <div class="relative">
+                                <input :type="showPassword ? 'text' : 'password'" x-model="password"
+                                    placeholder="••••••••" class="input input-bordered w-full pl-10 pr-10" required />
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                                    🔒
+                                </span>
+                                <button type="button" @click="showPassword = !showPassword"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content">
+                                    <span x-show="!showPassword">👁️</span>
+                                    <span x-show="showPassword">🙈</span>
+                                </button>
+                            </div>
+                            <label class="label">
+                                <a href="#" class="label-text-alt link link-hover">Şifremi Unuttum?</a>
+                            </label>
+                        </div>
+
+                        <!-- Demo Accounts Info -->
+                        <div class="alert alert-info mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                class="stroke-current shrink-0 w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <div class="text-sm">
+                                <p class="font-semibold">Demo Hesaplar:</p>
+                                <p>• brand@test.com (Marka)</p>
+                                <p>• creator@test.com (Creator)</p>
+                                <p>• admin@test.com (Admin)</p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-full" :class="{ 'loading': loading }"
+                            :disabled="loading">
+                            <span x-show="!loading">Giriş Yap</span>
+                            <span x-show="loading">Giriş yapılıyor...</span>
+                        </button>
+
+                        <!-- Error Message -->
+                        <div x-show="error" x-cloak class="alert alert-error mt-4">
+                            <span x-text="error"></span>
+                        </div>
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="divider">veya</div>
+
+                    <!-- Social Login (Mock) -->
+                    <div class="flex gap-2">
+                        <button class="btn btn-outline flex-1 gap-2">
+                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"
+                                class="w-5 h-5" />
+                            Google
+                        </button>
+                        <button class="btn btn-outline flex-1 gap-2">
+                            <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook"
+                                class="w-5 h-5" />
+                            Facebook
+                        </button>
+                    </div>
+
+                    <!-- Register Link -->
+                    <p class="text-center mt-6 text-base-content/70">
+                        Hesabınız yok mu?
+                        <a href="/register" class="link link-primary font-semibold">Kayıt Olun</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function loginForm() {
+                return {
+                    email: '',
+                    password: '',
+                    showPassword: false,
+                    loading: false,
+                    error: null,
+
+                    handleLogin() {
+                        this.loading = true;
+                        this.error = null;
+
+                        // Simulate API delay
+                        setTimeout(() => {
+                            // Demo account logic
+                            let role = 'BRAND';
+                            if (this.email.includes('creator')) role = 'CREATOR';
+                            if (this.email.includes('admin')) role = 'ADMIN';
+
+                            // Mock login via Alpine store
+                            const user = Alpine.store('auth').login(this.email, this.password, role);
+
+                            this.loading = false;
+                            Alpine.store('notify').success('Giriş başarılı! Yönlendiriliyorsunuz...');
+
+                            // Redirect based on role
+                            setTimeout(() => {
+                                window.location.href = Alpine.store('auth').getRedirectUrl();
+                            }, 1000);
+                        }, 800);
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

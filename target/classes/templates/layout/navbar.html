@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- Navbar Fragment -->
+<nav th:fragment="navbar" class="navbar bg-base-100 shadow-lg sticky top-0 z-40 backdrop-blur-lg bg-base-100/90">
+    <div class="container mx-auto">
+
+        <!-- Logo -->
+        <div class="flex-1">
+            <a href="/" class="btn btn-ghost text-xl gap-2">
+                <span class="text-2xl">🤖</span>
+                <span
+                    class="font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hidden sm:inline">
+                    AI Influencer
+                </span>
+            </a>
+        </div>
+
+        <!-- Search (Desktop) -->
+        <div class="flex-none hidden md:flex">
+            <div class="form-control">
+                <div class="input-group">
+                    <input type="text" placeholder="Creator veya hizmet ara..."
+                        class="input input-bordered w-64 focus:w-80 transition-all" />
+                    <a href="/search" class="btn btn-square btn-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <div class="flex-none gap-2">
+
+            <!-- Browse Button -->
+            <a href="/search" class="btn btn-ghost hidden sm:flex">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+                <span>Keşfet</span>
+            </a>
+
+            <!-- Theme Toggle -->
+            <div x-data class="dropdown dropdown-end">
+                <label tabindex="0" class="btn btn-ghost btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </label>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-200 rounded-box w-52 mt-4">
+                    <li><a @click="$store.theme.set('light')">☀️ Açık Tema</a></li>
+                    <li><a @click="$store.theme.set('dark')">🌙 Koyu Tema</a></li>
+                    <li><a @click="$store.theme.set('cyberpunk')">🌈 Cyberpunk</a></li>
+                    <li><a @click="$store.theme.set('luxury')">💎 Luxury</a></li>
+                </ul>
+            </div>
+
+            <!-- Auth Section - Dynamic based on login state -->
+            <div x-data x-cloak>
+
+                <!-- Not Logged In -->
+                <template x-if="!$store.auth.isLoggedIn">
+                    <div class="flex gap-2">
+                        <a href="/login" class="btn btn-ghost">Giriş Yap</a>
+                        <a href="/register" class="btn btn-primary">Kayıt Ol</a>
+                    </div>
+                </template>
+
+                <!-- Logged In - User Menu -->
+                <template x-if="$store.auth.isLoggedIn">
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-circle avatar online">
+                            <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                                <img :src="$store.auth.user?.avatar" :alt="$store.auth.user?.name" />
+                            </div>
+                        </label>
+                        <ul tabindex="0"
+                            class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-200 rounded-box w-64 mt-4">
+                            <li class="menu-title px-4 py-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="avatar">
+                                        <div class="w-12 rounded-full">
+                                            <img :src="$store.auth.user?.avatar" />
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <p class="font-semibold" x-text="$store.auth.user?.name"></p>
+                                        <p class="text-xs opacity-60" x-text="$store.auth.user?.email"></p>
+                                        <span class="badge badge-sm badge-primary"
+                                            x-text="$store.auth.user?.role"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <div class="divider my-1"></div>
+
+                            <!-- Role-based menu items -->
+                            <template x-if="$store.auth.user?.role === 'BRAND'">
+                                <div>
+                                    <li><a href="/brand/dashboard">📊 Dashboard</a></li>
+                                    <li><a href="/brand/orders">📦 Siparişlerim</a></li>
+                                </div>
+                            </template>
+
+                            <template x-if="$store.auth.user?.role === 'CREATOR'">
+                                <div>
+                                    <li><a href="/creator/dashboard">📊 Dashboard</a></li>
+                                    <li><a href="/creator/gigs">🎨 İlanlarım</a></li>
+                                    <li><a href="/creator/orders">📦 Siparişler</a></li>
+                                    <li><a href="/creator/gigs/new">➕ Yeni İlan</a></li>
+                                </div>
+                            </template>
+
+                            <template x-if="$store.auth.user?.role === 'ADMIN'">
+                                <div>
+                                    <li><a href="/admin/dashboard">📊 Admin Panel</a></li>
+                                    <li><a href="/admin/pending-creators">⏳ Onay Bekleyenler</a></li>
+                                    <li><a href="/admin/disputes">⚖️ İtirazlar</a></li>
+                                </div>
+                            </template>
+
+                            <div class="divider my-1"></div>
+                            <li><a href="/profile">⚙️ Ayarlar</a></li>
+                            <li><a @click="$store.auth.logout()" class="text-error">🚪 Çıkış Yap</a></li>
+                        </ul>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div class="dropdown dropdown-end md:hidden">
+                <label tabindex="0" class="btn btn-ghost btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h7" />
+                    </svg>
+                </label>
+                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-200 rounded-box w-52 mt-4">
+                    <li><a href="/">🏠 Ana Sayfa</a></li>
+                    <li><a href="/search">🔍 Keşfet</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/login">🔑 Giriş Yap</a></li>
+                    <li><a href="/register">📝 Kayıt Ol</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+</html>

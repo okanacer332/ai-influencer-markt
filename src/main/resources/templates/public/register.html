@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Kayıt Ol</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="min-h-[80vh] flex items-center justify-center py-12 px-4">
+            <div class="card w-full max-w-lg bg-base-200 shadow-2xl">
+                <div class="card-body">
+
+                    <!-- Header -->
+                    <div class="text-center mb-6">
+                        <div class="text-5xl mb-4">🚀</div>
+                        <h1 class="text-2xl font-bold">Hesap Oluşturun</h1>
+                        <p class="text-base-content/60 mt-2">AI Influencer Marketplace'e katılın</p>
+                    </div>
+
+                    <!-- Register Form -->
+                    <form x-data="registerForm()" @submit.prevent="handleRegister">
+
+                        <!-- Role Selection -->
+                        <div class="form-control mb-6">
+                            <label class="label">
+                                <span class="label-text font-medium">Hesap Türü</span>
+                            </label>
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Brand Option -->
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="role" value="BRAND" x-model="role" class="hidden peer" />
+                                    <div
+                                        class="card bg-base-100 border-2 border-base-300 peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
+                                        <div class="card-body items-center text-center py-4">
+                                            <span class="text-3xl mb-2">🏢</span>
+                                            <span class="font-semibold">Marka</span>
+                                            <span class="text-xs text-base-content/60">İçerik satın al</span>
+                                        </div>
+                                    </div>
+                                </label>
+
+                                <!-- Creator Option -->
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="role" value="CREATOR" x-model="role"
+                                        class="hidden peer" />
+                                    <div
+                                        class="card bg-base-100 border-2 border-base-300 peer-checked:border-secondary peer-checked:bg-secondary/10 transition-all">
+                                        <div class="card-body items-center text-center py-4">
+                                            <span class="text-3xl mb-2">🎨</span>
+                                            <span class="font-semibold">Creator</span>
+                                            <span class="text-xs text-base-content/60">İçerik üret & kazan</span>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Name Field -->
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text font-medium">Ad Soyad</span>
+                            </label>
+                            <div class="relative">
+                                <input type="text" x-model="name" placeholder="Adınız Soyadınız"
+                                    class="input input-bordered w-full pl-10" required />
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                                    👤
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Email Field -->
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text font-medium">E-posta</span>
+                            </label>
+                            <div class="relative">
+                                <input type="email" x-model="email" placeholder="ornek@email.com"
+                                    class="input input-bordered w-full pl-10" required />
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                                    📧
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Password Field -->
+                        <div class="form-control mb-4">
+                            <label class="label">
+                                <span class="label-text font-medium">Şifre</span>
+                            </label>
+                            <div class="relative">
+                                <input :type="showPassword ? 'text' : 'password'" x-model="password"
+                                    placeholder="Minimum 8 karakter" class="input input-bordered w-full pl-10 pr-10"
+                                    minlength="8" required />
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                                    🔒
+                                </span>
+                                <button type="button" @click="showPassword = !showPassword"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content">
+                                    <span x-show="!showPassword">👁️</span>
+                                    <span x-show="showPassword">🙈</span>
+                                </button>
+                            </div>
+                            <!-- Password Strength -->
+                            <div class="mt-2" x-show="password.length > 0">
+                                <progress class="progress w-full" :class="{
+                                          'progress-error': passwordStrength < 30,
+                                          'progress-warning': passwordStrength >= 30 && passwordStrength < 70,
+                                          'progress-success': passwordStrength >= 70
+                                      }" :value="passwordStrength" max="100"></progress>
+                                <span class="text-xs" :class="{
+                                      'text-error': passwordStrength < 30,
+                                      'text-warning': passwordStrength >= 30 && passwordStrength < 70,
+                                      'text-success': passwordStrength >= 70
+                                  }" x-text="passwordStrengthText"></span>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-control mb-6">
+                            <label class="label">
+                                <span class="label-text font-medium">Şifre Tekrar</span>
+                            </label>
+                            <div class="relative">
+                                <input :type="showPassword ? 'text' : 'password'" x-model="confirmPassword"
+                                    placeholder="Şifrenizi tekrar girin" class="input input-bordered w-full pl-10"
+                                    :class="{ 'input-error': confirmPassword && password !== confirmPassword }"
+                                    required />
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                                    🔐
+                                </span>
+                            </div>
+                            <label class="label" x-show="confirmPassword && password !== confirmPassword">
+                                <span class="label-text-alt text-error">Şifreler eşleşmiyor</span>
+                            </label>
+                        </div>
+
+                        <!-- Terms Checkbox -->
+                        <div class="form-control mb-6">
+                            <label class="label cursor-pointer justify-start gap-3">
+                                <input type="checkbox" x-model="acceptTerms" class="checkbox checkbox-primary"
+                                    required />
+                                <span class="label-text">
+                                    <a href="#" class="link link-primary">Kullanım Şartları</a>'nı ve
+                                    <a href="#" class="link link-primary">Gizlilik Politikası</a>'nı kabul ediyorum.
+                                </span>
+                            </label>
+                        </div>
+
+                        <!-- Creator Info -->
+                        <div x-show="role === 'CREATOR'" x-cloak class="alert alert-warning mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                            </svg>
+                            <div class="text-sm">
+                                <p class="font-semibold">Creator Onay Süreci</p>
+                                <p>Kayıt sonrası AI karakterinizin 3 farklı açıdan görselini yüklemeniz gerekecek. Admin
+                                    onayından sonra ilan oluşturabilirsiniz.</p>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary w-full" :class="{ 'loading': loading }"
+                            :disabled="loading || !canSubmit">
+                            <span x-show="!loading">Kayıt Ol</span>
+                            <span x-show="loading">Hesap oluşturuluyor...</span>
+                        </button>
+
+                        <!-- Error Message -->
+                        <div x-show="error" x-cloak class="alert alert-error mt-4">
+                            <span x-text="error"></span>
+                        </div>
+                    </form>
+
+                    <!-- Divider -->
+                    <div class="divider">veya</div>
+
+                    <!-- Social Register -->
+                    <div class="flex gap-2">
+                        <button class="btn btn-outline flex-1 gap-2">
+                            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google"
+                                class="w-5 h-5" />
+                            Google
+                        </button>
+                        <button class="btn btn-outline flex-1 gap-2">
+                            <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" alt="Facebook"
+                                class="w-5 h-5" />
+                            Facebook
+                        </button>
+                    </div>
+
+                    <!-- Login Link -->
+                    <p class="text-center mt-6 text-base-content/70">
+                        Zaten hesabınız var mı?
+                        <a href="/login" class="link link-primary font-semibold">Giriş Yapın</a>
+                    </p>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function registerForm() {
+                return {
+                    name: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    role: 'BRAND',
+                    showPassword: false,
+                    acceptTerms: false,
+                    loading: false,
+                    error: null,
+
+                    get passwordStrength() {
+                        let strength = 0;
+                        if (this.password.length >= 8) strength += 25;
+                        if (this.password.length >= 12) strength += 15;
+                        if (/[A-Z]/.test(this.password)) strength += 20;
+                        if (/[a-z]/.test(this.password)) strength += 10;
+                        if (/[0-9]/.test(this.password)) strength += 15;
+                        if (/[^A-Za-z0-9]/.test(this.password)) strength += 15;
+                        return Math.min(strength, 100);
+                    },
+
+                    get passwordStrengthText() {
+                        if (this.passwordStrength < 30) return 'Zayıf';
+                        if (this.passwordStrength < 70) return 'Orta';
+                        return 'Güçlü';
+                    },
+
+                    get canSubmit() {
+                        return this.name &&
+                            this.email &&
+                            this.password.length >= 8 &&
+                            this.password === this.confirmPassword &&
+                            this.acceptTerms;
+                    },
+
+                    handleRegister() {
+                        if (!this.canSubmit) return;
+
+                        this.loading = true;
+                        this.error = null;
+
+                        // Simulate API delay
+                        setTimeout(() => {
+                            // Mock register via Alpine store
+                            const user = Alpine.store('auth').register(this.email, this.password, this.role);
+                            user.name = this.name;
+                            localStorage.setItem('user', JSON.stringify(user));
+
+                            this.loading = false;
+                            Alpine.store('notify').success('Kayıt başarılı! Yönlendiriliyorsunuz...');
+
+                            // Redirect based on role
+                            setTimeout(() => {
+                                if (this.role === 'CREATOR') {
+                                    window.location.href = '/creator/onboarding';
+                                } else {
+                                    window.location.href = Alpine.store('auth').getRedirectUrl();
+                                }
+                            }, 1000);
+                        }, 1000);
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

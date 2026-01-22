@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Creator Dashboard</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="container mx-auto px-4 py-8" x-data="creatorDashboard()">
+
+            <!-- Welcome Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold">
+                        Merhaba, <span x-text="$store.auth.user?.name || 'Creator'" class="text-primary"></span> 👋
+                    </h1>
+                    <p class="text-base-content/60 mt-1">İşte bugünkü özet</p>
+                </div>
+                <a href="/creator/gigs/new" class="btn btn-primary gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    Yeni İlan Oluştur
+                </a>
+            </div>
+
+            <!-- Status Alert (for pending approval) -->
+            <div x-show="$store.auth.user?.status === 'PENDING_REVIEW'" class="alert alert-warning mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <div>
+                    <h3 class="font-bold">Profil Onayı Bekleniyor</h3>
+                    <p class="text-sm">AI karakteriniz admin onayı bekliyor. Onay sonrası ilan oluşturabilirsiniz.</p>
+                </div>
+                <a href="/creator/onboarding" class="btn btn-sm">Durumu Kontrol Et</a>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Total Earnings -->
+                <div class="stat bg-gradient-to-br from-primary/20 to-primary/5 rounded-box shadow">
+                    <div class="stat-figure text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">Toplam Kazanç</div>
+                    <div class="stat-value text-primary" x-text="Utils.formatPrice(stats.totalEarnings)">₺0</div>
+                    <div class="stat-desc text-success">↗︎ Bu ay %23 artış</div>
+                </div>
+
+                <!-- Active Orders -->
+                <div class="stat bg-gradient-to-br from-secondary/20 to-secondary/5 rounded-box shadow">
+                    <div class="stat-figure text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">Aktif Siparişler</div>
+                    <div class="stat-value text-secondary" x-text="stats.activeOrders">0</div>
+                    <div class="stat-desc">Teslim bekleyen</div>
+                </div>
+
+                <!-- Completed Orders -->
+                <div class="stat bg-gradient-to-br from-accent/20 to-accent/5 rounded-box shadow">
+                    <div class="stat-figure text-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">Tamamlanan</div>
+                    <div class="stat-value text-accent" x-text="stats.completedOrders">0</div>
+                    <div class="stat-desc">Toplam sipariş</div>
+                </div>
+
+                <!-- Average Rating -->
+                <div class="stat bg-gradient-to-br from-warning/20 to-warning/5 rounded-box shadow">
+                    <div class="stat-figure text-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">Ortalama Puan</div>
+                    <div class="stat-value text-warning" x-text="stats.avgRating">0</div>
+                    <div class="stat-desc">5 üzerinden</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Active Orders List -->
+                <div class="lg:col-span-2">
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="card-title">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                    </svg>
+                                    Aktif Siparişler
+                                </h2>
+                                <a href="/creator/orders" class="btn btn-ghost btn-sm">Tümünü Gör</a>
+                            </div>
+
+                            <!-- Orders Table -->
+                            <div class="overflow-x-auto">
+                                <table class="table table-zebra">
+                                    <thead>
+                                        <tr>
+                                            <th>Sipariş</th>
+                                            <th>Marka</th>
+                                            <th>Durum</th>
+                                            <th>Teslim Tarihi</th>
+                                            <th>Aksiyon</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="order in activeOrders" :key="order.id">
+                                            <tr>
+                                                <td>
+                                                    <div class="flex items-center gap-3">
+                                                        <div class="avatar">
+                                                            <div class="w-12 h-12 rounded">
+                                                                <img :src="order.brief.productImage" alt="Product" />
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <p class="font-semibold" x-text="getGigTitle(order.gigId)">
+                                                            </p>
+                                                            <p class="text-sm text-base-content/60"
+                                                                x-text="Utils.formatPrice(order.price)"></p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td x-text="order.brandId"></td>
+                                                <td>
+                                                    <span class="badge" :class="{
+                                                          'badge-warning': order.status === 'PENDING',
+                                                          'badge-info': order.status === 'IN_PROGRESS',
+                                                          'badge-success': order.status === 'DELIVERED'
+                                                      }" x-text="order.status"></span>
+                                                </td>
+                                                <td x-text="Utils.formatDate(order.deliveryDue)"></td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-sm"
+                                                        x-show="order.status === 'IN_PROGRESS'"
+                                                        @click="openDeliveryModal(order)">
+                                                        Teslim Et
+                                                    </button>
+                                                    <span x-show="order.status === 'DELIVERED'"
+                                                        class="text-success text-sm">
+                                                        ✓ Teslim Edildi
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+
+                                <!-- Empty State -->
+                                <div x-show="activeOrders.length === 0" class="text-center py-8">
+                                    <div class="text-4xl mb-2">📭</div>
+                                    <p class="text-base-content/60">Aktif sipariş bulunmuyor</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions & My Gigs -->
+                <div class="space-y-6">
+
+                    <!-- Quick Actions -->
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title mb-4">Hızlı Aksiyonlar</h2>
+                            <div class="space-y-2">
+                                <a href="/creator/gigs/new" class="btn btn-primary btn-block gap-2 justify-start">
+                                    ➕ Yeni İlan Oluştur
+                                </a>
+                                <a href="/creator/gigs" class="btn btn-outline btn-block gap-2 justify-start">
+                                    📋 İlanlarımı Düzenle
+                                </a>
+                                <a href="/creator/orders" class="btn btn-outline btn-block gap-2 justify-start">
+                                    📦 Tüm Siparişler
+                                </a>
+                                <a href="/creator/onboarding" class="btn btn-outline btn-block gap-2 justify-start">
+                                    👤 Profil Ayarları
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- My Gigs Summary -->
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="card-title">İlanlarım</h2>
+                                <a href="/creator/gigs" class="btn btn-ghost btn-sm">Düzenle</a>
+                            </div>
+
+                            <div class="space-y-3">
+                                <template x-for="gig in myGigs.slice(0, 3)" :key="gig.id">
+                                    <div class="flex items-center gap-3 p-2 bg-base-100 rounded-lg">
+                                        <img :src="gig.thumbnail" class="w-16 h-12 object-cover rounded"
+                                            :alt="gig.title" />
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-medium text-sm truncate" x-text="gig.title"></p>
+                                            <p class="text-xs text-base-content/60"
+                                                x-text="Utils.formatPrice(gig.price)"></p>
+                                        </div>
+                                        <span class="badge badge-success badge-sm" x-text="gig.status"></span>
+                                    </div>
+                                </template>
+                            </div>
+
+                            <div x-show="myGigs.length === 0" class="text-center py-4">
+                                <p class="text-base-content/60 text-sm">Henüz ilan oluşturmadınız</p>
+                                <a href="/creator/gigs/new" class="btn btn-primary btn-sm mt-2">İlk İlanı Oluştur</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Modal -->
+            <div class="modal" :class="{ 'modal-open': deliveryModal.open }">
+                <div class="modal-box">
+                    <h3 class="font-bold text-lg mb-4">📤 Sipariş Teslimi</h3>
+
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text">Teslim Görseli (Filigranlı)</span>
+                        </label>
+                        <input type="file" accept="image/*" class="file-input file-input-bordered w-full" />
+                        <label class="label">
+                            <span class="label-text-alt text-warning">⚠️ Güvenlik için filigranlı veya düşük
+                                çözünürlüklü görsel yükleyin</span>
+                        </label>
+                    </div>
+
+                    <div class="form-control mb-4">
+                        <label class="label">
+                            <span class="label-text">Teslim Notu</span>
+                        </label>
+                        <textarea x-model="deliveryModal.note" class="textarea textarea-bordered h-24"
+                            placeholder="Marka için notunuz..."></textarea>
+                    </div>
+
+                    <div class="modal-action">
+                        <button class="btn btn-ghost" @click="deliveryModal.open = false">İptal</button>
+                        <button class="btn btn-primary" @click="submitDelivery">
+                            Teslim Et
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-backdrop" @click="deliveryModal.open = false"></div>
+            </div>
+        </div>
+
+        <script>
+            function creatorDashboard() {
+                return {
+                    stats: {
+                        totalEarnings: 12500,
+                        activeOrders: 2,
+                        completedOrders: 47,
+                        avgRating: 4.8
+                    },
+                    activeOrders: MockData.orders.filter(o =>
+                        o.creatorId === 'creator_1' &&
+                        ['PENDING', 'IN_PROGRESS', 'DELIVERED'].includes(o.status)
+                    ),
+                    myGigs: MockData.gigs.filter(g => g.creatorId === 'creator_1'),
+                    deliveryModal: {
+                        open: false,
+                        orderId: null,
+                        note: ''
+                    },
+
+                    getGigTitle(gigId) {
+                        const gig = MockData.gigs.find(g => g.id === gigId);
+                        return gig?.title || 'Bilinmeyen İlan';
+                    },
+
+                    openDeliveryModal(order) {
+                        this.deliveryModal.orderId = order.id;
+                        this.deliveryModal.note = '';
+                        this.deliveryModal.open = true;
+                    },
+
+                    submitDelivery() {
+                        // Mock delivery submission
+                        Alpine.store('notify').success('Sipariş başarıyla teslim edildi!');
+                        this.deliveryModal.open = false;
+
+                        // Update order status locally
+                        const order = this.activeOrders.find(o => o.id === this.deliveryModal.orderId);
+                        if (order) order.status = 'DELIVERED';
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

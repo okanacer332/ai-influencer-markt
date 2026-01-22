@@ -1,0 +1,390 @@
+TECH STACK (Teknoloji Yığını)
+
+Core Backend: Java 17 (LTS), Spring Boot 3.3.x
+
+Database: MongoDB (Esnek şema yapısı ve JSON uyumu için)
+
+Template Engine: Thymeleaf (Server-Side Rendering)
+
+CSS Framework: Tailwind CSS (Stil motoru) + DaisyUI (Hazır UI Component Seti - Shadcn benzeri görünüm için)
+
+Frontend Logic: Alpine.js (Basit interaktivite, modal vb. için) + jQuery (AJAX ve DOM manipülasyonu için)
+
+Security: Spring Security (Session/Cookie tabanlı)
+
+Build Tool: Maven (Backend) + NPM (Sadece Tailwind CSS derlemek için)
+
+Payment/Mock: Iyzico Sandbox (veya basit veritabanı simülasyonu)
+
+
+
+USE CASE & USER FLOW ANALİZİ
+
+Sistem 3 ana aktör üzerine kuruludur: Creator (Satıcı), Brand (Alıcı), Admin.
+
+MODÜL A: AUTHENTICATION (Kimlik ve Yetki)
+
+UC-01: Kayıt Olma (Register)
+
+Kullanıcı "Kayıt Ol" sayfasına girer.
+
+E-posta, Şifre girer ve Rol seçer: "Marka (Brand)" veya "Yaratıcı (Creator)".
+
+Sistem e-posta adresinin benzersiz olduğunu kontrol eder.
+
+Kullanıcı DB'ye STATUS: UNVERIFIED olarak kaydedilir.
+
+Flow: Kayıt Başarılı -> Login Ekranına Yönlendir.
+
+UC-02: Giriş Yapma (Login)
+
+Kullanıcı bilgilerini girer.
+
+Spring Security, password hash kontrolü yapar.
+
+Başarılıysa sunucuda JSESSIONID oluşturulur ve tarayıcıya Cookie olarak set edilir.
+
+Flow:
+
+Rol = Brand -> Ana Sayfaya yönlendir.
+
+Rol = Creator -> Creator Dashboard'a yönlendir.
+
+Rol = Admin -> Admin Paneline yönlendir.
+
+
+
+MODÜL B: CREATOR WORKFLOW (Satıcı Akışı)
+
+UC-03: Onboarding & Portfolyo Doğrulama (Critical) Amaç: Kalitesiz AI üretimlerini engellemek.
+
+Creator, "Profilim" sayfasına girer.
+
+"Persona Yarat" formunu doldurur (Ad, Yaş, Stil, Etnik Köken).
+
+Zorunlu Adım: Aynı karakterin 3 farklı açıdan (Profil, Boy, Yakın Çekim) render alınmış görselini yükler.
+
+Sistem görselleri AWS S3/MinIO/Local klasöre kaydeder.
+
+Profil durumu STATUS: PENDING_REVIEW olur. Admin onayı beklenir.
+
+UC-04: Hizmet (Gig) Oluşturma
+
+Onaylı Creator, "Yeni İlan" butonuna basar.
+
+Paket detaylarını girer:
+
+Başlık: "Ürününüzle Cafe ortamında fotoğraf."
+
+Teslim Süresi: 2 Gün.
+
+Revizyon Hakkı: 1.
+
+Fiyat: 500 TL.
+
+İlan durumu STATUS: ACTIVE olur ve markette listelenmeye başlar.
+
+UC-05: Sipariş Teslimi (Delivery)
+
+Creator, "Aktif Siparişler" listesinde STATUS: IN_PROGRESS olan işi seçer.
+
+"Teslim Et" alanına filigranlı (watermarked) veya düşük çözünürlüklü önizleme görselini yükler (Güvenlik için).
+
+Sipariş durumu STATUS: DELIVERED olarak güncellenir.
+
+
+
+MODÜL C: BRAND WORKFLOW (Alıcı Akışı)
+
+UC-06: Keşif ve Filtreleme
+
+Brand ana sayfada filtreleri kullanır: Cinsiyet: Kadın, Saç: Sarı, Stil: Photorealistic.
+
+Thymeleaf backend'den filtrelenmiş listeyi getirir.
+
+Detay sayfasına girer, önceki işlere bakar.
+
+UC-07: Sipariş Verme (Checkout)
+
+Brand, beğendiği ilanda "Satın Al" butonuna basar.
+
+Brief Ekranı:
+
+Ürün Görseli Yükle (Zorunlu).
+
+Senaryo Metni Yaz (Zorunlu).
+
+Format Seç (Kare, Dikey).
+
+Ödeme Ekranı: Kredi kartı bilgilerini girer (Mock/Sandbox).
+
+Transaction:
+
+Markanın bakiyesinden para düşer.
+
+Para sisteme ait "Escrow (Havuz)" hesabına geçer.
+
+Sipariş STATUS: PENDING olarak oluşur.
+
+UC-08: Onay ve Revizyon Döngüsü
+
+Sipariş DELIVERED statüsüne geldiğinde Brand bildirim alır.
+
+Teslim edilen görseli inceler.
+
+Seçenek A (Onay): "Onaylıyorum" der.
+
+Sipariş COMPLETED olur.
+
+Havuzdaki para (Komisyon düşülerek) Creator cüzdanına geçer.
+
+Filigransız orijinal dosya indirme linki açılır.
+
+Seçenek B (Revizyon): "Revize İste" der ve not yazar.
+
+Sipariş IN_PROGRESS durumuna geri döner.
+
+Creator'a bildirim gider.
+
+
+
+MODÜL D: ADMIN WORKFLOW
+
+UC-09: Creator Denetimi
+
+Admin, "Bekleyen Onaylar" listesine girer.
+
+Yüklenen 3 kanıt fotoğrafını inceler.
+
+Tutarlıysa -> APPROVE (Profil aktif olur).
+
+Tutarsızsa -> REJECT (Nedenini yazar, kullanıcıya mail gider).
+
+UC-10: Dispute (İtiraz) Çözümü
+
+Eğer Brand ve Creator anlaşamazsa "Dispute" butonuna basarlar.
+
+Admin chat loglarını ve teslim edilen işi inceler.
+
+Karar verir: "Para Markaya İade" veya "Para Creator'a Aktar".
+
+
+
+
+
+FOLDER STRUCTURE (Spring Boot Monolith)
+
+
+
+ai-influencer-marketplace/
+
+├── pom.xml                     # Maven dependencies
+
+├── tailwind.config.js          # Tailwind ayarları
+
+├── package.json                # CSS build scriptleri
+
+├── src/
+
+│   ├── main/
+
+│   │   ├── java/com/acrtech/aimarket/
+
+│   │   │   ├── Application.java
+
+│   │   │   │
+
+│   │   │   ├── config/
+
+│   │   │   │   ├── SecurityConfig.java     # Rol tabanlı erişim ayarları
+
+│   │   │   │   ├── MongoConfig.java        # DB bağlantı ayarları
+
+│   │   │   │   └── WebMvcConfig.java       # Static resource handler
+
+│   │   │   │
+
+│   │   │   ├── constant/                   # Sabitler ve Enumlar
+
+│   │   │   │   ├── UserRole.java           # BRAND, CREATOR, ADMIN
+
+│   │   │   │   ├── OrderStatus.java        # PENDING, IN_PROGRESS, DELIVERED...
+
+│   │   │   │   └── GigCategory.java
+
+│   │   │   │
+
+│   │   │   ├── controller/
+
+│   │   │   │   ├── view/                   # HTML Döndüren Controllerlar
+
+│   │   │   │   │   ├── PublicViewController.java (Home, Search)
+
+│   │   │   │   │   ├── AuthViewController.java   (Login, Register)
+
+│   │   │   │   │   ├── BrandViewController.java  (Dashboard, Orders)
+
+│   │   │   │   │   └── CreatorViewController.java
+
+│   │   │   │   │
+
+│   │   │   │   └── api/                    # AJAX için JSON Döndürenler
+
+│   │   │   │       ├── FileUploadApi.java
+
+│   │   │   │       ├── OrderActionApi.java (Approve, Revise)
+
+│   │   │   │       └── GigApi.java
+
+│   │   │   │
+
+│   │   │   ├── dto/                        # Veri Transfer Objeleri
+
+│   │   │   │   ├── request/
+
+│   │   │   │   │   ├── CreateGigRequest.java
+
+│   │   │   │   │   └── PlaceOrderRequest.java
+
+│   │   │   │   └── response/
+
+│   │   │   │       └── DashboardStatsDto.java
+
+│   │   │   │
+
+│   │   │   ├── model/                      # MongoDB Document Classes
+
+│   │   │   │   ├── User.java
+
+│   │   │   │   ├── Persona.java            # AI Karakter Detayları
+
+│   │   │   │   ├── Gig.java                # Satış İlanı
+
+│   │   │   │   ├── Order.java              # Sipariş ve Durumları
+
+│   │   │   │   └── WalletTransaction.java  # Para hareketleri
+
+│   │   │   │
+
+│   │   │   ├── repository/                 # MongoRepository Arayüzleri
+
+│   │   │   │   ├── UserRepository.java
+
+│   │   │   │   └── OrderRepository.java
+
+│   │   │   │
+
+│   │   │   ├── service/                    # İş Mantığı (Logic Layer)
+
+│   │   │   │   ├── AuthService.java
+
+│   │   │   │   ├── OrderFlowService.java   # State Machine mantığı burada
+
+│   │   │   │   ├── PaymentService.java     # Escrow yönetimi
+
+│   │   │   │   └── FileStorageService.java
+
+│   │   │   │
+
+│   │   │   └── exception/                  # Global Hata Yönetimi
+
+│   │   │       └── GlobalExceptionHandler.java
+
+│   │   │
+
+│   │   └── resources/
+
+│   │       ├── application.properties
+
+│   │       │
+
+│   │       ├── static/                     # Public Assets
+
+│   │       │   ├── css/
+
+│   │       │   │   ├── output.css          # Tailwind'in ürettiği final CSS
+
+│   │       │   │   └── input.css           # Bizim yazdığımız custom CSS
+
+│   │       │   ├── js/
+
+│   │       │   │   ├── core/               # Libs (Alpine, jQuery)
+
+│   │       │   │   └── app/                # Kendi JS kodlarımız
+
+│   │       │   │       ├── order-flow.js
+
+│   │       │   │       └── image-uploader.js
+
+│   │       │   └── images/
+
+│   │       │
+
+│   │       └── templates/                  # Thymeleaf HTML Dosyaları
+
+│   │           ├── layout/
+
+│   │           │   ├── base.html           # <head>, scripts, meta tags
+
+│   │           │   ├── navbar.html         # Üst menü (Role göre değişir)
+
+│   │           │   └── sidebar.html
+
+│   │           │
+
+│   │           ├── fragments/              # REUSABLE COMPONENTS
+
+│   │           │   ├── cards/
+
+│   │           │   │   ├── influencer-card.html
+
+│   │           │   │   └── gig-card.html
+
+│   │           │   ├── modals/
+
+│   │           │   │   ├── order-detail-modal.html
+
+│   │           │   │   └── review-modal.html
+
+│   │           │   └── ui/
+
+│   │           │       ├── badge.html
+
+│   │           │       └── alert.html
+
+│   │           │
+
+│   │           ├── public/
+
+│   │           │   ├── home.html
+
+│   │           │   ├── search.html
+
+│   │           │   └── login.html
+
+│   │           │
+
+│   │           ├── brand/
+
+│   │           │   ├── dashboard.html
+
+│   │           │   └── order-history.html
+
+│   │           │
+
+│   │           └── creator/
+
+│   │               ├── dashboard.html
+
+│   │               ├── my-gigs.html
+
+│   │               └── deliver-work.html
+
+│   │
+
+│   └── test/
+
+
+
+ 
+

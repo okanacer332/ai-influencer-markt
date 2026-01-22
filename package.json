@@ -1,0 +1,15 @@
+{
+  "name": "ai-influencer-marketplace",
+  "version": "1.0.0",
+  "description": "Tailwind CSS build for AI Influencer Marketplace",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css",
+    "watch:css": "npx @tailwindcss/cli -i ./src/main/resources/static/css/input.css -o ./src/main/resources/static/css/output.css --watch",
+    "dev": "npm run watch:css"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.0.0",
+    "tailwindcss": "^4.0.0",
+    "daisyui": "^5.0.0"
+  }
+}

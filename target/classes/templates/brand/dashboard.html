@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Brand Dashboard</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="container mx-auto px-4 py-8" x-data="brandDashboard()">
+
+            <!-- Welcome Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold">
+                        Merhaba, <span x-text="$store.auth.user?.name || 'Marka'" class="text-primary"></span> 👋
+                    </h1>
+                    <p class="text-base-content/60 mt-1">AI Influencer içeriklerinizi yönetin</p>
+                </div>
+                <a href="/search" class="btn btn-primary gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Yeni Creator Bul
+                </a>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Active Orders -->
+                <div class="stat bg-gradient-to-br from-primary/20 to-primary/5 rounded-box shadow">
+                    <div class="stat-figure text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">Aktif Siparişler</div>
+                    <div class="stat-value text-primary" x-text="stats.activeOrders">0</div>
+                    <div class="stat-desc">Devam eden</div>
+                </div>
+
+                <!-- Pending Review -->
+                <div class="stat bg-gradient-to-br from-warning/20 to-warning/5 rounded-box shadow">
+                    <div class="stat-figure text-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">İnceleme Bekleyen</div>
+                    <div class="stat-value text-warning" x-text="stats.pendingReview">0</div>
+                    <div class="stat-desc">Onayınızı bekliyor</div>
+                </div>
+
+                <!-- Completed -->
+                <div class="stat bg-gradient-to-br from-success/20 to-success/5 rounded-box shadow">
+                    <div class="stat-figure text-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">Tamamlanan</div>
+                    <div class="stat-value text-success" x-text="stats.completed">0</div>
+                    <div class="stat-desc">Toplam sipariş</div>
+                </div>
+
+                <!-- Total Spent -->
+                <div class="stat bg-gradient-to-br from-secondary/20 to-secondary/5 rounded-box shadow">
+                    <div class="stat-figure text-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div class="stat-title">Toplam Harcama</div>
+                    <div class="stat-value text-secondary" x-text="Utils.formatPrice(stats.totalSpent)">₺0</div>
+                    <div class="stat-desc">Bu ay</div>
+                </div>
+            </div>
+
+            <!-- Orders Requiring Action -->
+            <div x-show="pendingReviewOrders.length > 0" class="mb-8">
+                <div class="alert alert-warning shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <div>
+                        <h3 class="font-bold">İnceleme Bekleyen Teslimatlar</h3>
+                        <p class="text-sm" x-text="pendingReviewOrders.length + ' sipariş onayınızı bekliyor'"></p>
+                    </div>
+                    <a href="/brand/orders" class="btn btn-sm">İncele</a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Recent Orders -->
+                <div class="lg:col-span-2">
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <div class="flex justify-between items-center mb-4">
+                                <h2 class="card-title">📦 Son Siparişler</h2>
+                                <a href="/brand/orders" class="btn btn-ghost btn-sm">Tümünü Gör</a>
+                            </div>
+
+                            <div class="space-y-4">
+                                <template x-for="order in recentOrders" :key="order.id">
+                                    <div
+                                        class="flex items-center gap-4 p-4 bg-base-100 rounded-lg hover:shadow-md transition-shadow">
+                                        <img :src="order.brief.productImage" class="w-16 h-16 object-cover rounded-lg"
+                                            alt="Product" />
+                                        <div class="flex-1 min-w-0">
+                                            <p class="font-semibold truncate" x-text="getGigTitle(order.gigId)"></p>
+                                            <p class="text-sm text-base-content/60"
+                                                x-text="Utils.formatDate(order.createdAt)"></p>
+                                        </div>
+                                        <span class="badge" :class="{
+                                              'badge-warning': order.status === 'PENDING',
+                                              'badge-info': order.status === 'IN_PROGRESS',
+                                              'badge-accent': order.status === 'DELIVERED',
+                                              'badge-success': order.status === 'COMPLETED'
+                                          }" x-text="getStatusText(order.status)"></span>
+                                        <template x-if="order.status === 'DELIVERED'">
+                                            <button class="btn btn-primary btn-sm" @click="openReviewModal(order)">
+                                                İncele
+                                            </button>
+                                        </template>
+                                    </div>
+                                </template>
+
+                                <div x-show="recentOrders.length === 0" class="text-center py-8">
+                                    <div class="text-4xl mb-2">🛒</div>
+                                    <p class="text-base-content/60">Henüz sipariş yok</p>
+                                    <a href="/search" class="btn btn-primary btn-sm mt-2">Creator Bul</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions & Favorites -->
+                <div class="space-y-6">
+                    <!-- Quick Actions -->
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title mb-4">⚡ Hızlı Aksiyonlar</h2>
+                            <div class="space-y-2">
+                                <a href="/search" class="btn btn-primary btn-block gap-2 justify-start">
+                                    🔍 Creator Keşfet
+                                </a>
+                                <a href="/brand/orders" class="btn btn-outline btn-block gap-2 justify-start">
+                                    📦 Tüm Siparişler
+                                </a>
+                                <a href="#" class="btn btn-outline btn-block gap-2 justify-start">
+                                    ❤️ Favorilerim
+                                </a>
+                                <a href="#" class="btn btn-outline btn-block gap-2 justify-start">
+                                    💳 Ödeme Yöntemleri
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Creators -->
+                    <div class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title mb-4">👥 Son Çalıştıklarınız</h2>
+                            <div class="space-y-3">
+                                <template x-for="persona in recentCreators" :key="persona.id">
+                                    <a :href="'/creator/' + persona.id"
+                                        class="flex items-center gap-3 p-2 bg-base-100 rounded-lg hover:shadow-md transition-shadow">
+                                        <div class="avatar">
+                                            <div class="w-12 rounded-full">
+                                                <img :src="persona.profileImages[0]" :alt="persona.name" />
+                                            </div>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="font-medium" x-text="persona.name"></p>
+                                            <div class="flex items-center gap-1 text-sm text-warning">
+                                                <span>⭐</span>
+                                                <span x-text="persona.stats.avgRating"></span>
+                                            </div>
+                                        </div>
+                                        <span class="badge badge-ghost badge-sm" x-text="persona.style"></span>
+                                    </a>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Modal -->
+            <div class="modal" :class="{ 'modal-open': reviewModal.open }">
+                <div class="modal-box max-w-2xl">
+                    <h3 class="font-bold text-lg mb-4">🔍 Teslimatı İncele</h3>
+
+                    <template x-if="reviewModal.order">
+                        <div>
+                            <!-- Delivered Image -->
+                            <div class="mb-6">
+                                <img :src="reviewModal.order.deliveryFile || 'https://picsum.photos/seed/delivery/600/400'"
+                                    class="w-full rounded-lg shadow-lg" alt="Delivered work" />
+                                <p class="text-sm text-warning mt-2">⚠️ Bu filigranlı önizlemedir. Onay sonrası orijinal
+                                    dosya açılacaktır.</p>
+                            </div>
+
+                            <!-- Delivery Note -->
+                            <div x-show="reviewModal.order.deliveryNote" class="alert mb-4">
+                                <span class="font-medium">Creator Notu:</span>
+                                <span x-text="reviewModal.order.deliveryNote"></span>
+                            </div>
+
+                            <!-- Original Brief -->
+                            <div class="collapse collapse-arrow bg-base-200 mb-4">
+                                <input type="checkbox" />
+                                <div class="collapse-title font-medium">📋 Orijinal Brief</div>
+                                <div class="collapse-content">
+                                    <p><strong>Senaryo:</strong> <span
+                                            x-text="reviewModal.order.brief?.scenario"></span></p>
+                                    <p><strong>Format:</strong> <span x-text="reviewModal.order.brief?.format"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Revision Request -->
+                            <div x-show="showRevisionForm" class="form-control mb-4">
+                                <label class="label">
+                                    <span class="label-text">Revizyon Notu</span>
+                                </label>
+                                <textarea x-model="revisionNote" class="textarea textarea-bordered"
+                                    placeholder="Neyin değişmesini istiyorsunuz?"></textarea>
+                            </div>
+                        </div>
+                    </template>
+
+                    <div class="modal-action">
+                        <button class="btn btn-ghost" @click="closeReviewModal">Kapat</button>
+                        <template x-if="!showRevisionForm">
+                            <div class="flex gap-2">
+                                <button class="btn btn-warning" @click="showRevisionForm = true">
+                                    🔄 Revizyon İste
+                                </button>
+                                <button class="btn btn-success" @click="approveOrder">
+                                    ✅ Onayla
+                                </button>
+                            </div>
+                        </template>
+                        <template x-if="showRevisionForm">
+                            <div class="flex gap-2">
+                                <button class="btn btn-ghost" @click="showRevisionForm = false">İptal</button>
+                                <button class="btn btn-warning" @click="requestRevision">
+                                    Revizyon Gönder
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="modal-backdrop" @click="closeReviewModal"></div>
+            </div>
+        </div>
+
+        <script>
+            function brandDashboard() {
+                return {
+                    stats: {
+                        activeOrders: 2,
+                        pendingReview: 1,
+                        completed: 5,
+                        totalSpent: 8500
+                    },
+                    recentOrders: MockData.orders.filter(o => o.brandId === 'brand_1').slice(0, 5),
+                    pendingReviewOrders: MockData.orders.filter(o => o.brandId === 'brand_1' && o.status === 'DELIVERED'),
+                    recentCreators: MockData.personas.slice(0, 3),
+                    reviewModal: {
+                        open: false,
+                        order: null
+                    },
+                    showRevisionForm: false,
+                    revisionNote: '',
+
+                    getGigTitle(gigId) {
+                        const gig = MockData.gigs.find(g => g.id === gigId);
+                        return gig?.title || 'Bilinmeyen İlan';
+                    },
+
+                    getStatusText(status) {
+                        const texts = {
+                            'PENDING': 'Beklemede',
+                            'IN_PROGRESS': 'Hazırlanıyor',
+                            'DELIVERED': 'Teslim Edildi',
+                            'COMPLETED': 'Tamamlandı'
+                        };
+                        return texts[status] || status;
+                    },
+
+                    openReviewModal(order) {
+                        this.reviewModal.order = order;
+                        this.reviewModal.open = true;
+                        this.showRevisionForm = false;
+                        this.revisionNote = '';
+                    },
+
+                    closeReviewModal() {
+                        this.reviewModal.open = false;
+                        this.reviewModal.order = null;
+                    },
+
+                    approveOrder() {
+                        if (this.reviewModal.order) {
+                            this.reviewModal.order.status = 'COMPLETED';
+                            Alpine.store('notify').success('Sipariş onaylandı! Orijinal dosya indirme linki e-posta ile gönderildi.');
+                            this.closeReviewModal();
+                        }
+                    },
+
+                    requestRevision() {
+                        if (this.reviewModal.order && this.revisionNote) {
+                            this.reviewModal.order.status = 'IN_PROGRESS';
+                            Alpine.store('notify').warning('Revizyon talebi gönderildi. Creator bilgilendirildi.');
+                            this.closeReviewModal();
+                        }
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

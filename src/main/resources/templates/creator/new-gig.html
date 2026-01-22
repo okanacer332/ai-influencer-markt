@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Yeni İlan Oluştur</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="container mx-auto px-4 py-8 max-w-3xl" x-data="newGigForm()">
+
+            <!-- Header -->
+            <div class="mb-8">
+                <a href="/creator/gigs" class="btn btn-ghost btn-sm gap-2 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    İlanlarıma Dön
+                </a>
+                <h1 class="text-3xl font-bold">
+                    <span class="text-3xl mr-2">✨</span>
+                    Yeni İlan Oluştur
+                </h1>
+                <p class="text-base-content/60 mt-2">Hizmetinizi tanımlayın ve kazanmaya başlayın</p>
+            </div>
+
+            <form @submit.prevent="createGig" class="space-y-6">
+
+                <!-- Basic Info Card -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">📝 Temel Bilgiler</h2>
+
+                        <!-- Title -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">İlan Başlığı</span>
+                                <span class="label-text-alt" x-text="gig.title.length + '/80'"></span>
+                            </label>
+                            <input type="text" x-model="gig.title" maxlength="80"
+                                placeholder="Örn: Ürününüzle cafe ortamında profesyonel fotoğraf"
+                                class="input input-bordered" required />
+                        </div>
+
+                        <!-- Description -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Açıklama</span>
+                            </label>
+                            <textarea x-model="gig.description" rows="4"
+                                placeholder="Hizmetinizi detaylı bir şekilde açıklayın. Neler dahil? Hangi formatlarda teslim?"
+                                class="textarea textarea-bordered" required></textarea>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Kategori</span>
+                            </label>
+                            <select x-model="gig.category" class="select select-bordered" required>
+                                <option value="">Kategori Seçin</option>
+                                <option value="Ürün Fotoğrafçılığı">📦 Ürün Fotoğrafçılığı</option>
+                                <option value="Sosyal Medya">📱 Sosyal Medya</option>
+                                <option value="Oyun & Teknoloji">🎮 Oyun & Teknoloji</option>
+                                <option value="Lüks Markalar">💎 Lüks Markalar</option>
+                                <option value="Moda">👗 Moda</option>
+                                <option value="Yemek">🍕 Yemek</option>
+                            </select>
+                        </div>
+
+                        <!-- Tags -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Etiketler</span>
+                                <span class="label-text-alt">Virgülle ayırın</span>
+                            </label>
+                            <input type="text" x-model="tagsInput" placeholder="Örn: lifestyle, cafe, ürün, instagram"
+                                class="input input-bordered" />
+                            <div class="flex flex-wrap gap-2 mt-2" x-show="parsedTags.length > 0">
+                                <template x-for="tag in parsedTags">
+                                    <span class="badge badge-primary" x-text="tag"></span>
+                                </template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing & Delivery Card -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">💰 Fiyat & Teslim</h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Price -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">Fiyat (₺)</span>
+                                </label>
+                                <div class="relative">
+                                    <input type="number" x-model="gig.price" min="50" step="50" placeholder="500"
+                                        class="input input-bordered w-full pl-8" required />
+                                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">₺</span>
+                                </div>
+                            </div>
+
+                            <!-- Delivery Days -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">Teslim Süresi (Gün)</span>
+                                </label>
+                                <select x-model="gig.deliveryDays" class="select select-bordered" required>
+                                    <option value="1">1 Gün</option>
+                                    <option value="2">2 Gün</option>
+                                    <option value="3">3 Gün</option>
+                                    <option value="5">5 Gün</option>
+                                    <option value="7">7 Gün</option>
+                                    <option value="14">14 Gün</option>
+                                </select>
+                            </div>
+
+                            <!-- Revisions -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">Revizyon Hakkı</span>
+                                </label>
+                                <select x-model="gig.revisions" class="select select-bordered" required>
+                                    <option value="0">Revizyon Yok</option>
+                                    <option value="1">1 Revizyon</option>
+                                    <option value="2">2 Revizyon</option>
+                                    <option value="3">3 Revizyon</option>
+                                    <option value="unlimited">Sınırsız</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Pricing Summary -->
+                        <div class="bg-base-100 rounded-lg p-4 mt-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-base-content/70">Alıcı göreceği fiyat:</span>
+                                <span class="text-2xl font-bold text-primary"
+                                    x-text="Utils.formatPrice(gig.price || 0)"></span>
+                            </div>
+                            <div class="flex justify-between items-center text-sm mt-2">
+                                <span class="text-base-content/50">Platform komisyonu (%10):</span>
+                                <span class="text-base-content/50"
+                                    x-text="'- ' + Utils.formatPrice((gig.price || 0) * 0.1)"></span>
+                            </div>
+                            <div class="divider my-2"></div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Size kalacak:</span>
+                                <span class="text-xl font-bold text-success"
+                                    x-text="Utils.formatPrice((gig.price || 0) * 0.9)"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images Card -->
+                <div class="card bg-base-200 shadow-xl">
+                    <div class="card-body">
+                        <h2 class="card-title mb-4">🖼️ Örnek Görseller</h2>
+                        <p class="text-base-content/60 mb-4">Bu hizmet için daha önce yaptığınız işlerden örnekler
+                            ekleyin</p>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <!-- Thumbnail (Main) -->
+                            <div class="form-control col-span-2">
+                                <label class="label">
+                                    <span class="label-text font-medium">Ana Görsel (Zorunlu)</span>
+                                </label>
+                                <div class="aspect-video bg-base-300 rounded-lg border-2 border-dashed border-base-content/20 
+                                        flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                                    :class="{ 'border-primary': uploadedImages.thumbnail }"
+                                    @click="$refs.thumbnailInput.click()">
+                                    <template x-if="!uploadedImages.thumbnail">
+                                        <div class="text-center">
+                                            <div class="text-4xl mb-2">📷</div>
+                                            <p class="text-sm text-base-content/60">Ana görsel yükle</p>
+                                        </div>
+                                    </template>
+                                    <template x-if="uploadedImages.thumbnail">
+                                        <img :src="uploadedImages.thumbnail"
+                                            class="w-full h-full object-cover rounded-lg" />
+                                    </template>
+                                </div>
+                                <input type="file" accept="image/*" class="hidden" x-ref="thumbnailInput"
+                                    @change="handleImageUpload($event, 'thumbnail')" />
+                            </div>
+
+                            <!-- Additional Images -->
+                            <template x-for="i in 2" :key="i">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-medium">Ek Görsel</span>
+                                    </label>
+                                    <div class="aspect-square bg-base-300 rounded-lg border-2 border-dashed border-base-content/20 
+                                            flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                                        @click="$refs['extraInput' + i].click()">
+                                        <div class="text-center">
+                                            <div class="text-2xl">➕</div>
+                                        </div>
+                                    </div>
+                                    <input type="file" accept="image/*" class="hidden" :x-ref="'extraInput' + i" />
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <div class="flex justify-end gap-4">
+                    <a href="/creator/gigs" class="btn btn-ghost">İptal</a>
+                    <button type="submit" class="btn btn-primary btn-lg gap-2" :disabled="!isFormValid">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        İlanı Yayınla
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function newGigForm() {
+                return {
+                    gig: {
+                        title: '',
+                        description: '',
+                        category: '',
+                        price: 500,
+                        deliveryDays: '2',
+                        revisions: '1'
+                    },
+                    tagsInput: '',
+                    uploadedImages: {
+                        thumbnail: null
+                    },
+
+                    get parsedTags() {
+                        return this.tagsInput
+                            .split(',')
+                            .map(t => t.trim())
+                            .filter(t => t.length > 0);
+                    },
+
+                    get isFormValid() {
+                        return this.gig.title &&
+                            this.gig.description &&
+                            this.gig.category &&
+                            this.gig.price >= 50;
+                    },
+
+                    handleImageUpload(event, type) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                this.uploadedImages[type] = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    },
+
+                    createGig() {
+                        // Mock gig creation
+                        const newGig = {
+                            id: 'gig_' + Date.now(),
+                            ...this.gig,
+                            tags: this.parsedTags,
+                            thumbnail: this.uploadedImages.thumbnail || 'https://picsum.photos/seed/' + Date.now() + '/400/300',
+                            status: 'ACTIVE',
+                            createdAt: new Date().toISOString()
+                        };
+
+                        // Save to localStorage
+                        const gigs = JSON.parse(localStorage.getItem('myGigs') || '[]');
+                        gigs.push(newGig);
+                        localStorage.setItem('myGigs', JSON.stringify(gigs));
+
+                        Alpine.store('notify').success('İlan başarıyla oluşturuldu!');
+
+                        setTimeout(() => {
+                            window.location.href = '/creator/gigs';
+                        }, 1000);
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

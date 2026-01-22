@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Profilini Tamamla</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="container mx-auto px-4 py-8 max-w-4xl" x-data="onboardingForm()">
+
+            <!-- Progress Steps -->
+            <div class="mb-8">
+                <ul class="steps steps-horizontal w-full">
+                    <li class="step" :class="{ 'step-primary': currentStep >= 1 }">Persona Bilgileri</li>
+                    <li class="step" :class="{ 'step-primary': currentStep >= 2 }">Görsel Yükleme</li>
+                    <li class="step" :class="{ 'step-primary': currentStep >= 3 }">Onay Bekle</li>
+                </ul>
+            </div>
+
+            <!-- Step 1: Persona Info -->
+            <div x-show="currentStep === 1" class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-6">
+                        <span class="text-3xl mr-2">🎭</span>
+                        AI Karakterinizi Tanıtın
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Name -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Karakter Adı</span>
+                            </label>
+                            <input type="text" x-model="persona.name" placeholder="Örn: Luna, Aylin"
+                                class="input input-bordered" required />
+                        </div>
+
+                        <!-- Age -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Yaş</span>
+                            </label>
+                            <input type="number" x-model="persona.age" min="18" max="50" class="input input-bordered"
+                                required />
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Cinsiyet</span>
+                            </label>
+                            <select x-model="persona.gender" class="select select-bordered">
+                                <option value="">Seçin</option>
+                                <option value="Kadın">Kadın</option>
+                                <option value="Erkek">Erkek</option>
+                                <option value="Non-Binary">Non-Binary</option>
+                            </select>
+                        </div>
+
+                        <!-- Ethnicity -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Etnik Köken</span>
+                            </label>
+                            <input type="text" x-model="persona.ethnicity" placeholder="Örn: Türk, Kore, Latin"
+                                class="input input-bordered" />
+                        </div>
+
+                        <!-- Hair Color -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Saç Rengi</span>
+                            </label>
+                            <select x-model="persona.hairColor" class="select select-bordered">
+                                <option value="">Seçin</option>
+                                <option value="Siyah">Siyah</option>
+                                <option value="Kahverengi">Kahverengi</option>
+                                <option value="Sarı">Sarı</option>
+                                <option value="Kızıl">Kızıl</option>
+                                <option value="Beyaz">Beyaz</option>
+                                <option value="Mavi">Mavi</option>
+                                <option value="Pembe">Pembe</option>
+                            </select>
+                        </div>
+
+                        <!-- Eye Color -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">Göz Rengi</span>
+                            </label>
+                            <select x-model="persona.eyeColor" class="select select-bordered">
+                                <option value="">Seçin</option>
+                                <option value="Kahverengi">Kahverengi</option>
+                                <option value="Mavi">Mavi</option>
+                                <option value="Yeşil">Yeşil</option>
+                                <option value="Ela">Ela</option>
+                                <option value="Siyah">Siyah</option>
+                            </select>
+                        </div>
+
+                        <!-- Style -->
+                        <div class="form-control md:col-span-2">
+                            <label class="label">
+                                <span class="label-text font-medium">Görsel Stil</span>
+                            </label>
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                <template x-for="style in ['Photorealistic', 'Anime', '3D Render', 'Illustration']">
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="style" :value="style" x-model="persona.style"
+                                            class="hidden peer" />
+                                        <div
+                                            class="card bg-base-100 border-2 border-base-300 peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
+                                            <div class="card-body items-center text-center py-4">
+                                                <span class="text-2xl"
+                                                    x-text="{'Photorealistic': '📷', 'Anime': '🎌', '3D Render': '🎮', 'Illustration': '🎨'}[style]"></span>
+                                                <span class="text-sm font-medium" x-text="style"></span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Bio -->
+                        <div class="form-control md:col-span-2">
+                            <label class="label">
+                                <span class="label-text font-medium">Karakter Açıklaması</span>
+                            </label>
+                            <textarea x-model="persona.bio" rows="3"
+                                placeholder="AI karakterinizin hangi tür içerikler üreteceğini açıklayın..."
+                                class="textarea textarea-bordered"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="card-actions justify-end mt-6">
+                        <button class="btn btn-primary" @click="nextStep" :disabled="!isStep1Valid">
+                            Devam Et
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 5l7 7-7 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Image Upload -->
+            <div x-show="currentStep === 2" x-cloak class="card bg-base-200 shadow-xl">
+                <div class="card-body">
+                    <h2 class="card-title text-2xl mb-2">
+                        <span class="text-3xl mr-2">📸</span>
+                        Doğrulama Görselleri
+                    </h2>
+                    <p class="text-base-content/60 mb-6">
+                        AI karakterinizin tutarlılığını doğrulamak için 3 farklı açıdan görsel yükleyin.
+                    </p>
+
+                    <div class="alert alert-info mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            class="stroke-current shrink-0 w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="font-bold">Neden 3 farklı açı?</h3>
+                            <p class="text-sm">Kalitesiz AI üretimlerini engellemek için karakterinizin farklı açılardan
+                                tutarlı olduğunu doğrulamamız gerekiyor.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Profile View -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">1. Profil (Yandan)</span>
+                            </label>
+                            <div class="relative group">
+                                <div class="aspect-[3/4] bg-base-300 rounded-lg border-2 border-dashed border-base-content/20 
+                                        flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                                    :class="{ 'border-primary bg-primary/10': uploadedImages.profile }"
+                                    @click="triggerUpload('profile')">
+                                    <template x-if="!uploadedImages.profile">
+                                        <div class="text-center">
+                                            <div class="text-4xl mb-2">👤</div>
+                                            <p class="text-sm text-base-content/60">Yandan görünüm</p>
+                                        </div>
+                                    </template>
+                                    <template x-if="uploadedImages.profile">
+                                        <img :src="uploadedImages.profile"
+                                            class="w-full h-full object-cover rounded-lg" />
+                                    </template>
+                                </div>
+                                <input type="file" accept="image/*" class="hidden" x-ref="profileInput"
+                                    @change="handleImageUpload($event, 'profile')" />
+                            </div>
+                        </div>
+
+                        <!-- Full Body View -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">2. Boy (Tam Vücut)</span>
+                            </label>
+                            <div class="relative group">
+                                <div class="aspect-[3/4] bg-base-300 rounded-lg border-2 border-dashed border-base-content/20 
+                                        flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                                    :class="{ 'border-primary bg-primary/10': uploadedImages.fullBody }"
+                                    @click="triggerUpload('fullBody')">
+                                    <template x-if="!uploadedImages.fullBody">
+                                        <div class="text-center">
+                                            <div class="text-4xl mb-2">🧍</div>
+                                            <p class="text-sm text-base-content/60">Tam boy görünüm</p>
+                                        </div>
+                                    </template>
+                                    <template x-if="uploadedImages.fullBody">
+                                        <img :src="uploadedImages.fullBody"
+                                            class="w-full h-full object-cover rounded-lg" />
+                                    </template>
+                                </div>
+                                <input type="file" accept="image/*" class="hidden" x-ref="fullBodyInput"
+                                    @change="handleImageUpload($event, 'fullBody')" />
+                            </div>
+                        </div>
+
+                        <!-- Close-up View -->
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="label-text font-medium">3. Yakın Çekim</span>
+                            </label>
+                            <div class="relative group">
+                                <div class="aspect-[3/4] bg-base-300 rounded-lg border-2 border-dashed border-base-content/20 
+                                        flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                                    :class="{ 'border-primary bg-primary/10': uploadedImages.closeUp }"
+                                    @click="triggerUpload('closeUp')">
+                                    <template x-if="!uploadedImages.closeUp">
+                                        <div class="text-center">
+                                            <div class="text-4xl mb-2">🔍</div>
+                                            <p class="text-sm text-base-content/60">Yüz yakın çekim</p>
+                                        </div>
+                                    </template>
+                                    <template x-if="uploadedImages.closeUp">
+                                        <img :src="uploadedImages.closeUp"
+                                            class="w-full h-full object-cover rounded-lg" />
+                                    </template>
+                                </div>
+                                <input type="file" accept="image/*" class="hidden" x-ref="closeUpInput"
+                                    @change="handleImageUpload($event, 'closeUp')" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-actions justify-between mt-6">
+                        <button class="btn btn-ghost" @click="prevStep">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 19l-7-7 7-7" />
+                            </svg>
+                            Geri
+                        </button>
+                        <button class="btn btn-primary" @click="submitOnboarding" :disabled="!isStep2Valid">
+                            Onaya Gönder
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Pending Approval -->
+            <div x-show="currentStep === 3" x-cloak class="card bg-base-200 shadow-xl">
+                <div class="card-body items-center text-center">
+                    <div class="text-8xl mb-6">⏳</div>
+                    <h2 class="card-title text-2xl mb-4">Onay Bekleniyor</h2>
+                    <p class="text-base-content/60 max-w-md mb-6">
+                        Profiliniz admin ekibimiz tarafından inceleniyor.
+                        Genellikle 24 saat içinde sonuçlanır.
+                    </p>
+
+                    <div class="stats shadow">
+                        <div class="stat">
+                            <div class="stat-title">Durum</div>
+                            <div class="stat-value text-warning">BEKLEMEDE</div>
+                            <div class="stat-desc">Gönderim: Bugün</div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-6 max-w-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            class="stroke-current shrink-0 w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>Onay sonrası e-posta ile bilgilendirileceksiniz.</span>
+                    </div>
+
+                    <div class="card-actions mt-6">
+                        <a href="/creator/dashboard" class="btn btn-primary">Dashboard'a Git</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function onboardingForm() {
+                return {
+                    currentStep: 1,
+                    persona: {
+                        name: '',
+                        age: 24,
+                        gender: '',
+                        ethnicity: '',
+                        hairColor: '',
+                        eyeColor: '',
+                        style: '',
+                        bio: ''
+                    },
+                    uploadedImages: {
+                        profile: null,
+                        fullBody: null,
+                        closeUp: null
+                    },
+
+                    get isStep1Valid() {
+                        return this.persona.name && this.persona.gender && this.persona.style;
+                    },
+
+                    get isStep2Valid() {
+                        return this.uploadedImages.profile && this.uploadedImages.fullBody && this.uploadedImages.closeUp;
+                    },
+
+                    nextStep() {
+                        if (this.currentStep < 3) this.currentStep++;
+                    },
+
+                    prevStep() {
+                        if (this.currentStep > 1) this.currentStep--;
+                    },
+
+                    triggerUpload(type) {
+                        this.$refs[type + 'Input'].click();
+                    },
+
+                    async handleImageUpload(event, type) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            // Convert to base64 for preview
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                this.uploadedImages[type] = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    },
+
+                    submitOnboarding() {
+                        // Save to localStorage (mock)
+                        const user = Alpine.store('auth').user;
+                        if (user) {
+                            user.status = 'PENDING_REVIEW';
+                            user.persona = this.persona;
+                            localStorage.setItem('user', JSON.stringify(user));
+                        }
+
+                        Alpine.store('notify').success('Profiliniz onaya gönderildi!');
+                        this.currentStep = 3;
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>

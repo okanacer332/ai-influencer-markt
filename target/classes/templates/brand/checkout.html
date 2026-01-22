@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Sipariş Ver</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="container mx-auto px-4 py-8 max-w-4xl" x-data="checkoutPage()">
+
+            <!-- Breadcrumb -->
+            <div class="text-sm breadcrumbs mb-6">
+                <ul>
+                    <li><a href="/">Ana Sayfa</a></li>
+                    <li><a href="/search">Keşfet</a></li>
+                    <li class="text-primary">Sipariş Ver</li>
+                </ul>
+            </div>
+
+            <!-- Progress Steps -->
+            <div class="mb-8">
+                <ul class="steps steps-horizontal w-full">
+                    <li class="step" :class="{ 'step-primary': currentStep >= 1 }">Brief</li>
+                    <li class="step" :class="{ 'step-primary': currentStep >= 2 }">Özet</li>
+                    <li class="step" :class="{ 'step-primary': currentStep >= 3 }">Ödeme</li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Main Content -->
+                <div class="lg:col-span-2">
+
+                    <!-- Step 1: Brief -->
+                    <div x-show="currentStep === 1" class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title text-2xl mb-6">
+                                <span class="text-3xl mr-2">📝</span>
+                                Brief Hazırlayın
+                            </h2>
+
+                            <!-- Product Image Upload -->
+                            <div class="form-control mb-6">
+                                <label class="label">
+                                    <span class="label-text font-medium">Ürün Görseli</span>
+                                    <span class="label-text-alt text-error">Zorunlu</span>
+                                </label>
+                                <div class="flex gap-4 items-start">
+                                    <div class="w-32 h-32 bg-base-300 rounded-lg border-2 border-dashed border-base-content/20 
+                                            flex items-center justify-center cursor-pointer hover:border-primary transition-colors"
+                                        :class="{ 'border-primary': brief.productImage }"
+                                        @click="$refs.productInput.click()">
+                                        <template x-if="!brief.productImage">
+                                            <div class="text-center">
+                                                <div class="text-3xl">📦</div>
+                                                <p class="text-xs mt-1">Yükle</p>
+                                            </div>
+                                        </template>
+                                        <template x-if="brief.productImage">
+                                            <img :src="brief.productImage"
+                                                class="w-full h-full object-cover rounded-lg" />
+                                        </template>
+                                    </div>
+                                    <input type="file" accept="image/*" class="hidden" x-ref="productInput"
+                                        @change="handleProductUpload" />
+                                    <div class="flex-1">
+                                        <p class="text-sm text-base-content/70">
+                                            Creator'ın içerikte kullanacağı ürün görselini yükleyin.
+                                            Net, yüksek çözünürlüklü bir görsel en iyi sonucu verecektir.
+                                        </p>
+                                        <p class="text-xs text-base-content/50 mt-2">JPG, PNG • Max 10MB</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Scenario -->
+                            <div class="form-control mb-6">
+                                <label class="label">
+                                    <span class="label-text font-medium">Senaryo / Konsept</span>
+                                    <span class="label-text-alt text-error">Zorunlu</span>
+                                </label>
+                                <textarea x-model="brief.scenario" rows="4"
+                                    placeholder="Creator'ın nasıl bir içerik oluşturmasını istiyorsunuz? Ortam, poz, mood vb. detayları yazın..."
+                                    class="textarea textarea-bordered"></textarea>
+                                <label class="label">
+                                    <span class="label-text-alt" x-text="brief.scenario.length + '/500'"></span>
+                                </label>
+                            </div>
+
+                            <!-- Format -->
+                            <div class="form-control mb-6">
+                                <label class="label">
+                                    <span class="label-text font-medium">Format</span>
+                                </label>
+                                <div class="grid grid-cols-3 gap-4">
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="format" value="square" x-model="brief.format"
+                                            class="hidden peer" />
+                                        <div
+                                            class="card bg-base-100 border-2 border-base-300 peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
+                                            <div class="card-body items-center text-center py-4">
+                                                <div class="w-12 h-12 bg-base-300 rounded"></div>
+                                                <span class="text-sm mt-2">Kare (1:1)</span>
+                                                <span class="text-xs text-base-content/50">Instagram Post</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="format" value="vertical" x-model="brief.format"
+                                            class="hidden peer" />
+                                        <div
+                                            class="card bg-base-100 border-2 border-base-300 peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
+                                            <div class="card-body items-center text-center py-4">
+                                                <div class="w-8 h-12 bg-base-300 rounded"></div>
+                                                <span class="text-sm mt-2">Dikey (9:16)</span>
+                                                <span class="text-xs text-base-content/50">Story/Reels</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="format" value="horizontal" x-model="brief.format"
+                                            class="hidden peer" />
+                                        <div
+                                            class="card bg-base-100 border-2 border-base-300 peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
+                                            <div class="card-body items-center text-center py-4">
+                                                <div class="w-16 h-10 bg-base-300 rounded"></div>
+                                                <span class="text-sm mt-2">Yatay (16:9)</span>
+                                                <span class="text-xs text-base-content/50">Banner</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Additional Notes -->
+                            <div class="form-control">
+                                <label class="label">
+                                    <span class="label-text font-medium">Ek Notlar (Opsiyonel)</span>
+                                </label>
+                                <textarea x-model="brief.notes" rows="2"
+                                    placeholder="Marka renkleri, font tercihi, kaçınılması gerekenler..."
+                                    class="textarea textarea-bordered"></textarea>
+                            </div>
+
+                            <div class="card-actions justify-end mt-6">
+                                <button class="btn btn-primary" @click="nextStep" :disabled="!isStep1Valid">
+                                    Devam Et
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Summary -->
+                    <div x-show="currentStep === 2" x-cloak class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title text-2xl mb-6">
+                                <span class="text-3xl mr-2">📋</span>
+                                Sipariş Özeti
+                            </h2>
+
+                            <!-- Brief Summary -->
+                            <div class="bg-base-100 rounded-lg p-4 mb-6">
+                                <div class="flex gap-4">
+                                    <img :src="brief.productImage" class="w-24 h-24 object-cover rounded-lg"
+                                        alt="Product" />
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold mb-2">Brief Detayları</h4>
+                                        <p class="text-sm text-base-content/70" x-text="brief.scenario"></p>
+                                        <div class="flex gap-2 mt-2">
+                                            <span class="badge badge-outline" x-text="'Format: ' + brief.format"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Terms -->
+                            <div class="alert mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    class="stroke-current shrink-0 w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div class="text-sm">
+                                    <p><strong>Teslim Süresi:</strong> <span
+                                            x-text="selectedGig?.deliveryDays + ' gün'"></span></p>
+                                    <p><strong>Revizyon Hakkı:</strong> <span x-text="selectedGig?.revisions"></span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="form-control mb-4">
+                                <label class="label cursor-pointer justify-start gap-3">
+                                    <input type="checkbox" x-model="acceptTerms" class="checkbox checkbox-primary" />
+                                    <span class="label-text">
+                                        <a href="#" class="link link-primary">Sipariş Şartları</a>'nı okudum ve kabul
+                                        ediyorum.
+                                    </span>
+                                </label>
+                            </div>
+
+                            <div class="card-actions justify-between mt-6">
+                                <button class="btn btn-ghost" @click="prevStep">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    Geri
+                                </button>
+                                <button class="btn btn-primary" @click="nextStep" :disabled="!acceptTerms">
+                                    Ödemeye Geç
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Payment -->
+                    <div x-show="currentStep === 3" x-cloak class="card bg-base-200 shadow-xl">
+                        <div class="card-body">
+                            <h2 class="card-title text-2xl mb-6">
+                                <span class="text-3xl mr-2">💳</span>
+                                Ödeme Bilgileri
+                            </h2>
+
+                            <div class="alert alert-info mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    class="stroke-current shrink-0 w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <span>Bu bir demo ödemesidir. Gerçek ödeme alınmayacaktır.</span>
+                            </div>
+
+                            <!-- Card Form (Mock) -->
+                            <div class="space-y-4">
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-medium">Kart Numarası</span>
+                                    </label>
+                                    <input type="text" placeholder="4242 4242 4242 4242" class="input input-bordered"
+                                        maxlength="19" />
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">Son Kullanma</span>
+                                        </label>
+                                        <input type="text" placeholder="AA/YY" class="input input-bordered"
+                                            maxlength="5" />
+                                    </div>
+                                    <div class="form-control">
+                                        <label class="label">
+                                            <span class="label-text font-medium">CVV</span>
+                                        </label>
+                                        <input type="text" placeholder="123" class="input input-bordered"
+                                            maxlength="4" />
+                                    </div>
+                                </div>
+
+                                <div class="form-control">
+                                    <label class="label">
+                                        <span class="label-text font-medium">Kart Üzerindeki İsim</span>
+                                    </label>
+                                    <input type="text" placeholder="AD SOYAD" class="input input-bordered" />
+                                </div>
+                            </div>
+
+                            <!-- Secure Badge -->
+                            <div class="flex items-center gap-2 mt-4 text-success text-sm">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                </svg>
+                                <span>256-bit SSL şifrelemesi ile güvenli ödeme</span>
+                            </div>
+
+                            <div class="card-actions justify-between mt-6">
+                                <button class="btn btn-ghost" @click="prevStep">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                    Geri
+                                </button>
+                                <button class="btn btn-success btn-lg" @click="placeOrder" :disabled="isProcessing">
+                                    <span x-show="!isProcessing">
+                                        🔒 Siparişi Tamamla
+                                    </span>
+                                    <span x-show="isProcessing" class="loading loading-spinner"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success State -->
+                    <div x-show="orderComplete" x-cloak class="card bg-base-200 shadow-xl">
+                        <div class="card-body items-center text-center">
+                            <div class="text-8xl mb-6">🎉</div>
+                            <h2 class="card-title text-2xl mb-4">Sipariş Başarılı!</h2>
+                            <p class="text-base-content/60 max-w-md mb-6">
+                                Siparişiniz oluşturuldu ve Creator'a iletildi.
+                                Siparişinizin durumunu dashboard'dan takip edebilirsiniz.
+                            </p>
+                            <div class="card-actions">
+                                <a href="/brand/dashboard" class="btn btn-primary">Dashboard'a Git</a>
+                                <a href="/search" class="btn btn-ghost">Alışverişe Devam Et</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Summary Sidebar -->
+                <div class="lg:col-span-1" x-show="!orderComplete">
+                    <div class="card bg-base-200 shadow-xl sticky top-24">
+                        <div class="card-body">
+                            <h3 class="card-title text-lg mb-4">Sipariş Özeti</h3>
+
+                            <!-- Gig Info -->
+                            <div class="flex gap-3 mb-4 pb-4 border-b border-base-300">
+                                <img :src="selectedGig?.thumbnail" class="w-16 h-12 object-cover rounded" alt="" />
+                                <div class="flex-1 min-w-0">
+                                    <p class="font-medium text-sm line-clamp-2" x-text="selectedGig?.title"></p>
+                                </div>
+                            </div>
+
+                            <!-- Persona -->
+                            <div class="flex items-center gap-3 mb-4">
+                                <div class="avatar">
+                                    <div class="w-10 rounded-full">
+                                        <img :src="selectedPersona?.profileImages[0]" alt="" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-sm" x-text="selectedPersona?.name"></p>
+                                    <div class="flex items-center gap-1 text-xs text-warning">
+                                        <span>⭐</span>
+                                        <span x-text="selectedPersona?.stats.avgRating"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Price Breakdown -->
+                            <div class="space-y-2 text-sm border-t border-base-300 pt-4">
+                                <div class="flex justify-between">
+                                    <span class="text-base-content/70">Hizmet Bedeli</span>
+                                    <span x-text="Utils.formatPrice(selectedGig?.price || 0)"></span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-base-content/70">Platform Hizmet Bedeli</span>
+                                    <span>₺0</span>
+                                </div>
+                                <div class="divider my-2"></div>
+                                <div class="flex justify-between text-lg font-bold">
+                                    <span>Toplam</span>
+                                    <span class="text-primary"
+                                        x-text="Utils.formatPrice(selectedGig?.price || 0)"></span>
+                                </div>
+                            </div>
+
+                            <!-- Guarantees -->
+                            <div class="mt-4 space-y-2 text-xs text-base-content/60">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-success">✓</span>
+                                    <span>Memnuniyet garantisi</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-success">✓</span>
+                                    <span>Güvenli escrow ödemesi</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-success">✓</span>
+                                    <span>7/24 destek</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function checkoutPage() {
+                // Get gig from URL or use first one as demo
+                const gigId = window.location.pathname.split('/').pop();
+                const gig = MockData.gigs.find(g => g.id === gigId) || MockData.gigs[0];
+                const persona = MockData.personas.find(p => p.id === gig?.personaId);
+
+                return {
+                    currentStep: 1,
+                    orderComplete: false,
+                    isProcessing: false,
+                    acceptTerms: false,
+                    selectedGig: gig,
+                    selectedPersona: persona,
+                    brief: {
+                        productImage: null,
+                        scenario: '',
+                        format: 'square',
+                        notes: ''
+                    },
+
+                    get isStep1Valid() {
+                        return this.brief.productImage && this.brief.scenario.length >= 20;
+                    },
+
+                    nextStep() {
+                        if (this.currentStep < 3) this.currentStep++;
+                    },
+
+                    prevStep() {
+                        if (this.currentStep > 1) this.currentStep--;
+                    },
+
+                    handleProductUpload(event) {
+                        const file = event.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                this.brief.productImage = e.target.result;
+                            };
+                            reader.readAsDataURL(file);
+                        }
+                    },
+
+                    placeOrder() {
+                        this.isProcessing = true;
+
+                        setTimeout(() => {
+                            // Create order in mock data
+                            const order = {
+                                id: 'order_' + Date.now(),
+                                gigId: this.selectedGig.id,
+                                brandId: Alpine.store('auth').user?.id || 'brand_1',
+                                creatorId: this.selectedGig.creatorId,
+                                status: 'PENDING',
+                                brief: this.brief,
+                                price: this.selectedGig.price,
+                                createdAt: new Date().toISOString()
+                            };
+
+                            // Save to localStorage
+                            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+                            orders.push(order);
+                            localStorage.setItem('orders', JSON.stringify(orders));
+
+                            this.isProcessing = false;
+                            this.orderComplete = true;
+                            Alpine.store('notify').success('Sipariş başarıyla oluşturuldu!');
+                        }, 2000);
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>
