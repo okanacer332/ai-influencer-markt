@@ -1,0 +1,123 @@
+<!-- ============================================
+     CAROUSEL COMPONENT (C-06)
+     Image/content slider
+     ============================================ -->
+
+<!-- Basic Image Carousel -->
+<th:block th:fragment="carousel(images, id)">
+    <div th:id="${id}" class="carousel w-full rounded-xl overflow-hidden"
+        x-data="{ current: 0, total: [[${#lists.size(images)}]] }">
+        <!-- Slides -->
+        <div th:each="image, iterStat : ${images}" :id="'slide-' + '[[${id}]]' + '-' + [[${iterStat.index}]]"
+            class="carousel-item relative w-full">
+            <img th:src="${image.src}" th:alt="${image.alt}" class="w-full object-cover" />
+
+            <!-- Caption -->
+            <div th:if="${image.caption}"
+                class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/70 to-transparent">
+                <p class="text-white" th:text="${image.caption}">Caption</p>
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <div class="absolute flex justify-between transform -translate-y-1/2 left-2 right-2 top-1/2 z-10">
+            <button @click="current = (current - 1 + total) % total"
+                class="btn btn-circle btn-sm bg-base-100/80 hover:bg-base-100">❮</button>
+            <button @click="current = (current + 1) % total"
+                class="btn btn-circle btn-sm bg-base-100/80 hover:bg-base-100">❯</button>
+        </div>
+
+        <!-- Dots -->
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+            <button th:each="image, iterStat : ${images}" @click="current = [[${iterStat.index}]]"
+                class="w-2 h-2 rounded-full transition-colors"
+                :class="current === [[${iterStat.index}]] ? 'bg-primary' : 'bg-base-100/50'"></button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Carousel with Thumbnails -->
+<th:block th:fragment="carouselThumbnails(images, id)">
+    <div x-data="{ active: 0 }">
+        <!-- Main Image -->
+        <div class="relative aspect-square rounded-xl overflow-hidden mb-4">
+            <template x-for="(img, index) in [[${#strings.replace(images, '\"', ' &quot;')}]]" :key="index">
+                <img x-show="active === index" :src="img.src" :alt="img.alt" class="w-full h-full object-cover"
+                    x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+                    x-transition:enter-end="opacity-100" />
+            </template>
+
+            <!-- Arrows -->
+            <button @click="active = (active - 1 + [[${#lists.size(images)}]]) % [[${#lists.size(images)}]]"
+                class="absolute left-2 top-1/2 -translate-y-1/2 btn btn-circle btn-sm">❮</button>
+            <button @click="active = (active + 1) % [[${#lists.size(images)}]]"
+                class="absolute right-2 top-1/2 -translate-y-1/2 btn btn-circle btn-sm">❯</button>
+        </div>
+
+        <!-- Thumbnails -->
+        <div class="flex gap-2 overflow-x-auto scrollbar-thin pb-2">
+            <button th:each="image, iterStat : ${images}" @click="active = [[${iterStat.index}]]"
+                class="flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden ring-2 ring-offset-2 transition-all"
+                :class="active === [[${iterStat.index}]] ? 'ring-primary' : 'ring-transparent'">
+                <img th:src="${image.src}" class="w-full h-full object-cover" />
+            </button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Auto-play Carousel -->
+<th:block th:fragment="carouselAuto(images, interval)">
+    <div class="relative rounded-xl overflow-hidden" x-data="{ 
+             current: 0, 
+             total: [[${#lists.size(images)}]],
+             interval: [[${interval != null ? interval : 5000}]],
+             timer: null,
+             start() {
+                 this.timer = setInterval(() => {
+                     this.current = (this.current + 1) % this.total;
+                 }, this.interval);
+             },
+             stop() {
+                 clearInterval(this.timer);
+             }
+         }" x-init="start()" @mouseenter="stop()" @mouseleave="start()">
+
+        <div th:each="image, iterStat : ${images}" x-show="current === [[${iterStat.index}]]"
+            x-transition:enter="transition ease-out duration-500"
+            x-transition:enter-start="opacity-0 transform translate-x-4"
+            x-transition:enter-end="opacity-100 transform translate-x-0" class="w-full">
+            <img th:src="${image.src}" th:alt="${image.alt}" class="w-full object-cover" />
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="absolute bottom-0 left-0 right-0 h-1 bg-base-100/30">
+            <div class="h-full bg-primary transition-all" :style="'width: ' + ((current + 1) / total * 100) + '%'">
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Card Carousel (Multiple visible) -->
+<th:block th:fragment="carouselCards(items)">
+    <div class="relative" x-data="{ scroll: 0 }">
+        <div class="carousel carousel-center space-x-4 pb-4" x-ref="carousel">
+            <div th:each="item : ${items}" class="carousel-item w-72">
+                <div class="card bg-base-100 shadow-md w-full">
+                    <figure>
+                        <img th:src="${item.image}" class="h-40 w-full object-cover" />
+                    </figure>
+                    <div class="card-body p-4">
+                        <h3 class="card-title text-base" th:text="${item.title}">Title</h3>
+                        <p class="text-sm text-base-content/70 line-clamp-2" th:text="${item.description}">Desc</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <button @click="$refs.carousel.scrollBy({ left: -300, behavior: 'smooth' })"
+            class="absolute left-0 top-1/2 -translate-y-1/2 btn btn-circle btn-sm shadow-lg">❮</button>
+        <button @click="$refs.carousel.scrollBy({ left: 300, behavior: 'smooth' })"
+            class="absolute right-0 top-1/2 -translate-y-1/2 btn btn-circle btn-sm shadow-lg">❯</button>
+    </div>
+</th:block>

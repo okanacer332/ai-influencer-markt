@@ -1,0 +1,91 @@
+<!-- ============================================
+     FEATURE CARD COMPONENT (C-02)
+     Feature/benefit highlight cards
+     ============================================ -->
+
+<!-- Standard Feature Card -->
+<th:block th:fragment="featureCard(icon, title, description)">
+    <div class="card bg-base-100 shadow-md hover:shadow-xl transition-shadow">
+        <div class="card-body items-center text-center">
+            <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-3xl mb-4">
+                <span th:utext="${icon}">🚀</span>
+            </div>
+            <h3 class="card-title" th:text="${title}">Feature Title</h3>
+            <p class="text-base-content/70" th:text="${description}">Feature description goes here.</p>
+        </div>
+    </div>
+</th:block>
+
+<!-- Horizontal Feature Card -->
+<th:block th:fragment="featureCardHorizontal(icon, title, description)">
+    <div class="flex gap-4 p-4 bg-base-100 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div class="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-2xl flex-shrink-0">
+            <span th:utext="${icon}">🚀</span>
+        </div>
+        <div>
+            <h3 class="font-semibold mb-1" th:text="${title}">Feature Title</h3>
+            <p class="text-sm text-base-content/70" th:text="${description}">Description</p>
+        </div>
+    </div>
+</th:block>
+
+<!-- Feature Card with Link -->
+<th:block th:fragment="featureCardLink(icon, title, description, href)">
+    <a th:href="${href}" class="card bg-base-100 shadow-md hover:shadow-xl transition-all card-hover group">
+        <div class="card-body">
+            <div
+                class="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-2xl text-white mb-2">
+                <span th:utext="${icon}">🚀</span>
+            </div>
+            <h3 class="card-title" th:text="${title}">Feature</h3>
+            <p class="text-base-content/70 text-sm" th:text="${description}">Description</p>
+            <div class="card-actions justify-end mt-2">
+                <span class="text-primary group-hover:translate-x-1 transition-transform">→</span>
+            </div>
+        </div>
+    </a>
+</th:block>
+
+<!-- Numbered Feature Card (for steps) -->
+<th:block th:fragment="featureCardNumbered(number, title, description)">
+    <div class="relative">
+        <!-- Number Badge -->
+        <div class="absolute -top-3 -left-3 w-10 h-10 rounded-full gradient-cta text-white font-bold flex items-center justify-center shadow-lg z-10"
+            th:text="${number}">1</div>
+
+        <div class="card bg-base-100 shadow-md pt-6">
+            <div class="card-body">
+                <h3 class="card-title" th:text="${title}">Step Title</h3>
+                <p class="text-base-content/70" th:text="${description}">Step description</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Feature Grid -->
+<th:block th:fragment="featureGrid(features)">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="feature : ${features}"
+            th:replace="~{components/content/feature-card :: featureCard(${feature.icon}, ${feature.title}, ${feature.description})}">
+        </div>
+    </div>
+</th:block>
+
+<!-- Large Feature (Hero-like) -->
+<th:block th:fragment="featureCardLarge(icon, title, description, image)">
+    <div class="card lg:card-side bg-base-100 shadow-xl overflow-hidden">
+        <figure class="lg:w-1/2">
+            <img th:src="${image}" class="w-full h-64 lg:h-full object-cover" />
+        </figure>
+        <div class="card-body lg:w-1/2 justify-center">
+            <div class="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center text-3xl mb-4">
+                <span th:utext="${icon}">🚀</span>
+            </div>
+            <h2 class="card-title text-2xl" th:text="${title}">Feature Title</h2>
+            <p class="text-base-content/70" th:text="${description}">Description</p>
+            <div class="card-actions mt-4">
+                <button class="btn btn-primary">Daha Fazla</button>
+            </div>
+        </div>
+    </div>
+</th:block>

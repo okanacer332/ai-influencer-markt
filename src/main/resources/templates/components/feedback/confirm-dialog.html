@@ -1,0 +1,134 @@
+<!-- ============================================
+     CONFIRM DIALOG COMPONENT (FB-09)
+     Action confirmation modal
+     ============================================ -->
+
+<!-- Basic Confirm Dialog -->
+<th:block th:fragment="confirmDialog(id, title, message, confirmText, cancelText, confirmClass)">
+    <dialog th:id="${id}" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg" th:text="${title}">Emin misiniz?</h3>
+            <p class="py-4 text-base-content/70" th:text="${message}">Bu işlemi geri alamazsınız.</p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost"
+                        th:text="${cancelText != null} ? ${cancelText} : 'İptal'">İptal</button>
+                </form>
+                <button th:text="${confirmText != null} ? ${confirmText} : 'Onayla'"
+                    th:classappend="${confirmClass != null} ? ${confirmClass} : 'btn-primary'" class="btn"
+                    onclick="this.closest('dialog').confirmed = true; this.closest('dialog').close()"></button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+</th:block>
+
+<!-- Danger Confirm (Delete) -->
+<th:block th:fragment="confirmDelete(id, itemName)">
+    <dialog th:id="${id}" class="modal">
+        <div class="modal-box">
+            <div class="text-center mb-4">
+                <div class="text-6xl mb-4">⚠️</div>
+                <h3 class="font-bold text-xl">Silmek istediğinize emin misiniz?</h3>
+            </div>
+            <p class="text-center text-base-content/70">
+                "<span th:text="${itemName}" class="font-semibold"></span>" kalıcı olarak silinecek.
+                <br />Bu işlem geri alınamaz.
+            </p>
+            <div class="modal-action justify-center gap-4">
+                <form method="dialog">
+                    <button class="btn btn-ghost">Vazgeç</button>
+                </form>
+                <button class="btn btn-error"
+                    onclick="this.closest('dialog').confirmed = true; this.closest('dialog').close()">
+                    🗑️ Sil
+                </button>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop bg-black/60">
+            <button>close</button>
+        </form>
+    </dialog>
+</th:block>
+
+<!-- Confirm with Input -->
+<th:block th:fragment="confirmWithInput(id, title, message, inputLabel, expectedValue)">
+    <dialog th:id="${id}" class="modal" x-data="{ inputValue: '' }">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg" th:text="${title}">Emin misiniz?</h3>
+            <p class="py-4 text-base-content/70" th:text="${message}"></p>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text" th:text="${inputLabel}">Onaylamak için yazın:</span>
+                </label>
+                <input type="text" x-model="inputValue" th:placeholder="${expectedValue}"
+                    class="input input-bordered" />
+            </div>
+
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-ghost">İptal</button>
+                </form>
+                <button class="btn btn-error" :disabled="inputValue !== '[[${expectedValue}]]'"
+                    onclick="this.closest('dialog').confirmed = true; this.closest('dialog').close()">
+                    Onayla
+                </button>
+            </div>
+        </div>
+    </dialog>
+</th:block>
+
+<!-- Success Dialog -->
+<th:block th:fragment="successDialog(id, title, message)">
+    <dialog th:id="${id}" class="modal">
+        <div class="modal-box text-center">
+            <div class="text-6xl mb-4">✅</div>
+            <h3 class="font-bold text-xl" th:text="${title}">Başarılı!</h3>
+            <p class="py-4 text-base-content/70" th:text="${message}"></p>
+            <div class="modal-action justify-center">
+                <form method="dialog">
+                    <button class="btn btn-primary">Tamam</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+</th:block>
+
+<!-- Info Dialog -->
+<th:block th:fragment="infoDialog(id, title, content)">
+    <dialog th:id="${id}" class="modal">
+        <div class="modal-box max-w-2xl">
+            <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+                onclick="this.closest('dialog').close()">✕</button>
+            <h3 class="font-bold text-lg mb-4" th:text="${title}">Bilgi</h3>
+            <div class="prose prose-sm max-w-none" th:utext="${content}"></div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+</th:block>
+
+<!-- JavaScript Helper -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    window.showConfirm = function (dialogId) {
+        return new Promise((resolve) => {
+            const dialog = document.getElementById(dialogId);
+            dialog.confirmed = false;
+            dialog.showModal();
+            dialog.addEventListener('close', () => {
+                resolve(dialog.confirmed);
+            }, { once: true });
+        });
+    };
+
+    // Usage: 
+    // const confirmed = await showConfirm('delete-dialog');
+    // if (confirmed) { ... }
+    /*]]>*/
+</script>
+</th:block>

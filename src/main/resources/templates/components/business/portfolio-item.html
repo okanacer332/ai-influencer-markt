@@ -1,0 +1,119 @@
+<!-- ============================================
+     PORTFOLIO ITEM COMPONENT (B-10)
+     Creator portfolio showcase
+     ============================================ -->
+
+<!-- Standard Portfolio Item -->
+<th:block th:fragment="portfolioItem(item)">
+    <div class="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer" x-data="{ hover: false }"
+        @mouseenter="hover = true" @mouseleave="hover = false">
+
+        <!-- Image -->
+        <img th:src="${item.image}" th:alt="${item.title}"
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+
+        <!-- Overlay -->
+        <div
+            class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+            <h3 class="text-white font-semibold mb-1" th:text="${item.title}">Title</h3>
+            <p th:if="${item.category}" class="text-white/70 text-sm" th:text="${item.category}">Category</p>
+
+            <!-- Quick Actions -->
+            <div class="flex gap-2 mt-3">
+                <button class="btn btn-sm btn-primary"
+                    @click.stop="$dispatch('view-portfolio', { id: '[[${item.id}]]' })">
+                    👁️ Görüntüle
+                </button>
+                <a th:if="${item.orderLink}" th:href="${item.orderLink}"
+                    class="btn btn-sm btn-ghost text-white border-white/30" @click.stop>
+                    🛒 Sipariş Ver
+                </a>
+            </div>
+        </div>
+
+        <!-- Category Badge -->
+        <div class="absolute top-3 left-3">
+            <span th:if="${item.category}" class="badge badge-sm bg-black/50 text-white border-0"
+                th:text="${item.category}">Category</span>
+        </div>
+
+        <!-- AI Badge -->
+        <div class="absolute top-3 right-3">
+            <span class="badge badge-sm badge-secondary">🤖 AI</span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Portfolio Card (with more info) -->
+<th:block th:fragment="portfolioCard(item)">
+    <div class="card bg-base-100 shadow-md overflow-hidden card-hover">
+        <figure class="aspect-[4/3] relative">
+            <img th:src="${item.image}" th:alt="${item.title}" class="w-full h-full object-cover" loading="lazy" />
+            <div class="absolute top-2 right-2 flex gap-1">
+                <span th:if="${item.featured}" class="badge badge-warning badge-sm">⭐ Öne Çıkan</span>
+            </div>
+        </figure>
+
+        <div class="card-body p-4">
+            <h3 class="card-title text-base" th:text="${item.title}">Portfolio Title</h3>
+            <p th:if="${item.description}" class="text-sm text-base-content/70 line-clamp-2"
+                th:text="${item.description}">Description</p>
+
+            <!-- Tags -->
+            <div th:if="${item.tags}" class="flex flex-wrap gap-1 mt-2">
+                <span th:each="tag : ${item.tags}" class="badge badge-outline badge-xs" th:text="${tag}">Tag</span>
+            </div>
+
+            <!-- Stats -->
+            <div class="flex items-center gap-4 mt-3 text-sm text-base-content/60">
+                <span th:if="${item.views}">👁️ <span th:text="${item.views}">0</span></span>
+                <span th:if="${item.likes}">❤️ <span th:text="${item.likes}">0</span></span>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Minimal Portfolio Item -->
+<th:block th:fragment="portfolioItemMinimal(item)">
+    <div class="aspect-square rounded-lg overflow-hidden group cursor-pointer">
+        <img th:src="${item.image}" th:alt="${item.title}"
+            class="w-full h-full object-cover transition-all duration-300 group-hover:scale-105 group-hover:brightness-110"
+            loading="lazy" />
+    </div>
+</th:block>
+
+<!-- Portfolio Grid -->
+<th:block th:fragment="portfolioGrid(items, columns)">
+    <div class="grid gap-4" th:classappend="${columns == 2} ? 'grid-cols-1 sm:grid-cols-2' : 
+                         (${columns == 4} ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-4' : 
+                         'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3')">
+        <div th:each="item : ${items}" th:replace="~{components/business/portfolio-item :: portfolioItem(${item})}">
+        </div>
+    </div>
+</th:block>
+
+<!-- Featured Portfolio (Large First) -->
+<th:block th:fragment="portfolioFeatured(items)">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Large Featured Item -->
+        <div th:if="${!items.isEmpty()}" class="md:row-span-2" th:with="item=${items[0]}">
+            <div
+                class="group relative aspect-square md:aspect-auto md:h-full rounded-xl overflow-hidden cursor-pointer">
+                <img th:src="${item.image}" th:alt="${item.title}"
+                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    loading="lazy" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-6">
+                    <div>
+                        <span class="badge badge-warning mb-2">⭐ Öne Çıkan</span>
+                        <h3 class="text-white text-xl font-bold" th:text="${item.title}">Title</h3>
+                        <p class="text-white/70" th:text="${item.category}">Category</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Smaller Items -->
+        <div th:each="item, iterStat : ${items}" th:if="${iterStat.index > 0 && iterStat.index < 5}"
+            th:replace="~{components/business/portfolio-item :: portfolioItem(${item})}"></div>
+    </div>
+</th:block>
