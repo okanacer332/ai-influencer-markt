@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/base}">
+
+<head>
+    <title>Creator Profili</title>
+</head>
+
+<body>
+    <main layout:fragment="content">
+
+        <div class="bg-gray-50 min-h-screen pb-12" x-data="creatorProfile()">
+
+            <!-- Hero Overlay -->
+            <div class="h-64 bg-gray-900 absolute top-0 w-full z-0"></div>
+
+            <div class="container-custom relative z-10 pt-12">
+
+                <!-- Loading State -->
+                <div x-show="!persona" class="text-center py-20 bg-white rounded-xl shadow">
+                    <span class="loading loading-spinner loading-lg text-primary"></span>
+                    <p class="mt-4 text-gray-500">Profil yükleniyor...</p>
+                </div>
+
+                <!-- Profile Content -->
+                <div x-show="persona" class="grid grid-cols-1 lg:grid-cols-3 gap-8" x-cloak>
+
+                    <!-- Left Sidebar -->
+                    <div class="lg:col-span-1">
+                        <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden sticky top-24">
+                            <!-- Profile Image -->
+                            <div class="aspect-[3/4] relative">
+                                <img :src="persona?.profileImages[0]" class="w-full h-full object-cover">
+                                <div
+                                    class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                                    <h1 class="text-3xl font-bold text-white mb-1" x-text="persona?.name"></h1>
+                                    <div class="flex items-center gap-2 text-white/90">
+                                        <span class="badge badge-primary border-none">✓ Doğrulanmış</span>
+                                        <span class="text-sm" x-text="persona?.style"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Quick Stats -->
+                            <div class="p-6 border-b border-gray-100">
+                                <div class="grid grid-cols-2 gap-4 text-center">
+                                    <div>
+                                        <div class="text-2xl font-bold text-gray-900" x-text="persona?.stats.avgRating">
+                                        </div>
+                                        <div class="text-xs text-gray-500 uppercase tracking-wide">Puan</div>
+                                    </div>
+                                    <div>
+                                        <div class="text-2xl font-bold text-gray-900"
+                                            x-text="persona?.stats.completedOrders"></div>
+                                        <div class="text-xs text-gray-500 uppercase tracking-wide">Sipariş</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Attributes -->
+                            <div class="p-6 space-y-4">
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-500">Yanıt Süresi</span>
+                                    <span class="font-semibold text-gray-900"
+                                        x-text="persona?.stats.responseTime"></span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-500">Dil</span>
+                                    <span class="font-semibold text-gray-900">Türkçe, İngilizce</span>
+                                </div>
+                                <div class="flex justify-between items-center text-sm">
+                                    <span class="text-gray-500">Cinsiyet</span>
+                                    <span class="font-semibold text-gray-900" x-text="persona?.gender"></span>
+                                </div>
+                            </div>
+
+                            <!-- Action -->
+                            <div class="p-6 bg-gray-50 border-t border-gray-100">
+                                <button class="btn btn-primary btn-block btn-lg shadow-lg shadow-primary/20">
+                                    İletişime Geç
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 space-y-8">
+
+                        <!-- About Section -->
+                        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8">
+                            <h2 class="text-2xl font-bold text-gray-900 mb-4">Hakkında</h2>
+                            <p class="text-gray-600 leading-relaxed text-lg" x-text="persona?.bio"></p>
+
+                            <div class="flex flex-wrap gap-2 mt-6">
+                                <template x-for="tag in ['Moda', 'Lifestyle', 'Güzellik', 'Marka Yüzü']">
+                                    <span class="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm font-medium"
+                                        x-text="tag"></span>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Gigs/Services -->
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Hizmet Paketleri</h2>
+                            <div class="space-y-4">
+                                <template x-for="gig in gigs" :key="gig.id">
+                                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow group cursor-pointer"
+                                        @click="window.location.href='/gig/' + gig.id">
+                                        <div class="flex flex-col sm:flex-row">
+                                            <div class="sm:w-48 h-48 sm:h-auto relative">
+                                                <img :src="gig.thumbnail" class="w-full h-full object-cover">
+                                            </div>
+                                            <div class="p-6 flex-1 flex flex-col justify-between">
+                                                <div>
+                                                    <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors"
+                                                        x-text="gig.title"></h3>
+                                                    <p class="text-gray-600 mt-2 line-clamp-2" x-text="gig.description">
+                                                    </p>
+                                                </div>
+                                                <div class="flex items-center justify-between mt-4">
+                                                    <div class="flex items-center gap-4 text-sm text-gray-500">
+                                                        <span class="flex items-center gap-1">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                            </svg>
+                                                            <span x-text="gig.deliveryDays + ' gün'"></span>
+                                                        </span>
+                                                        <span class="flex items-center gap-1">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                                viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    stroke-width="2"
+                                                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                                                            </svg>
+                                                            <span x-text="gig.revisions + ' revizyon'"></span>
+                                                        </span>
+                                                    </div>
+                                                    <div class="text-2xl font-bold text-primary"
+                                                        x-text="'₺' + gig.price"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                        <!-- Portfolio Grid -->
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 mb-6">Portfolio</h2>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                <template x-for="img in persona?.portfolioImages" :key="img">
+                                    <div class="aspect-[3/4] rounded-lg overflow-hidden cursor-zoom-in">
+                                        <img :src="img"
+                                            class="w-full h-full object-cover hover:scale-110 transition-transform duration-500">
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            const creatorIdFromUrl = /*[[${creatorId}]]*/ '';
+
+            function creatorProfile() {
+                return {
+                    persona: null,
+                    gigs: [],
+
+                    init() {
+                        this.loadData();
+                    },
+
+                    loadData() {
+                        // Mock data loading
+                        this.persona = MockData.getPersonaById(creatorIdFromUrl);
+                        if (this.persona) {
+                            this.gigs = MockData.getGigsByPersona(this.persona.id);
+                        } else {
+                            console.error('Persona not found:', creatorIdFromUrl);
+                        }
+                    }
+                }
+            }
+        </script>
+
+    </main>
+</body>
+
+</html>
