@@ -1,0 +1,150 @@
+<!-- ============================================
+     CARD COMPONENT (D-01)
+     Multiple card variants
+     ============================================ -->
+
+<!-- Basic Card -->
+<th:block th:fragment="card(title, content)">
+    <div class="card bg-base-100 shadow-md">
+        <div class="card-body">
+            <h3 th:if="${title}" class="card-title" th:text="${title}">Title</h3>
+            <div th:utext="${content}"></div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Card with Image -->
+<th:block th:fragment="cardImage(image, title, description, href)">
+    <div class="card bg-base-100 shadow-md card-hover overflow-hidden">
+        <figure>
+            <img th:src="${image}" th:alt="${title}" class="w-full h-48 object-cover" loading="lazy" />
+        </figure>
+        <div class="card-body">
+            <h3 class="card-title" th:text="${title}">Title</h3>
+            <p th:if="${description}" class="text-base-content/70" th:text="${description}">Description</p>
+            <div th:if="${href}" class="card-actions justify-end">
+                <a th:href="${href}" class="btn btn-primary btn-sm">Görüntüle</a>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Horizontal Card -->
+<th:block th:fragment="cardHorizontal(image, title, description, meta)">
+    <div class="card card-side bg-base-100 shadow-md overflow-hidden">
+        <figure class="w-1/3 flex-shrink-0">
+            <img th:src="${image}" th:alt="${title}" class="h-full w-full object-cover" loading="lazy" />
+        </figure>
+        <div class="card-body">
+            <h3 class="card-title" th:text="${title}">Title</h3>
+            <p class="text-base-content/70" th:text="${description}">Description</p>
+            <div th:if="${meta}" class="text-sm text-base-content/50" th:text="${meta}"></div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Compact Card -->
+<th:block th:fragment="cardCompact(icon, title, value)">
+    <div class="card bg-base-100 shadow-sm p-4">
+        <div class="flex items-center gap-3">
+            <div th:if="${icon}" class="text-2xl" th:utext="${icon}"></div>
+            <div>
+                <p class="text-sm text-base-content/60" th:text="${title}">Title</p>
+                <p class="font-bold text-lg" th:text="${value}">Value</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Glass Card -->
+<th:block th:fragment="cardGlass(title, content)">
+    <div class="card glass-card">
+        <div class="card-body">
+            <h3 th:if="${title}" class="card-title" th:text="${title}">Title</h3>
+            <div th:utext="${content}"></div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Interactive Card -->
+<th:block th:fragment="cardInteractive(href, image, title, badge)">
+    <a th:href="${href}" class="card bg-base-100 shadow-md card-interactive overflow-hidden group">
+        <figure class="relative">
+            <img th:src="${image}" th:alt="${title}"
+                class="w-full h-40 object-cover transition-transform group-hover:scale-105" loading="lazy" />
+            <div th:if="${badge}" class="absolute top-2 right-2">
+                <span class="badge badge-primary" th:text="${badge}">Badge</span>
+            </div>
+        </figure>
+        <div class="card-body p-4">
+            <h3 class="card-title text-base group-hover:text-primary transition-colors" th:text="${title}">Title</h3>
+        </div>
+    </a>
+</th:block>
+
+<!-- Bordered Card -->
+<th:block th:fragment="cardBordered(title, content, borderColor)">
+    <div class="card bg-base-100 border-l-4"
+        th:classappend="${borderColor != null} ? 'border-' + ${borderColor} : 'border-primary'">
+        <div class="card-body">
+            <h3 th:if="${title}" class="card-title" th:text="${title}">Title</h3>
+            <div th:utext="${content}"></div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Overlay Card -->
+<th:block th:fragment="cardOverlay(image, title, subtitle, href)">
+    <div class="card image-full shadow-xl overflow-hidden group">
+        <figure>
+            <img th:src="${image}" th:alt="${title}"
+                class="w-full h-64 object-cover transition-transform group-hover:scale-110" loading="lazy" />
+        </figure>
+        <div class="card-body justify-end">
+            <h3 class="card-title text-white" th:text="${title}">Title</h3>
+            <p th:if="${subtitle}" class="text-white/70" th:text="${subtitle}">Subtitle</p>
+            <div th:if="${href}" class="card-actions justify-end">
+                <a th:href="${href}" class="btn btn-primary btn-sm">Keşfet</a>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Pricing Card -->
+<th:block th:fragment="cardPricing(name, price, period, features, featured, href)">
+    <div class="card bg-base-100 shadow-xl" th:classappend="${featured} ? 'border-2 border-primary' : ''">
+        <div class="card-body text-center">
+            <span th:if="${featured}" class="badge badge-primary mx-auto mb-2">En Popüler</span>
+            <h3 class="text-xl font-bold" th:text="${name}">Plan Name</h3>
+            <div class="my-4">
+                <span class="text-4xl font-bold" th:text="${price}">₺99</span>
+                <span class="text-base-content/60" th:text="'/' + ${period}">/ ay</span>
+            </div>
+            <ul class="space-y-2 text-left mb-6">
+                <li th:each="feature : ${features}" class="flex items-center gap-2">
+                    <span class="text-success">✓</span>
+                    <span th:text="${feature}">Feature</span>
+                </li>
+            </ul>
+            <a th:href="${href}" class="btn w-full" th:classappend="${featured} ? 'btn-primary' : 'btn-outline'">
+                Başla
+            </a>
+        </div>
+    </div>
+</th:block>
+
+<!-- Action Card -->
+<th:block th:fragment="cardAction(icon, title, description, actions)">
+    <div class="card bg-base-100 shadow-md">
+        <div class="card-body">
+            <div class="flex items-start gap-4">
+                <div th:if="${icon}" class="text-3xl text-primary" th:utext="${icon}"></div>
+                <div class="flex-1">
+                    <h3 class="font-semibold" th:text="${title}">Title</h3>
+                    <p class="text-sm text-base-content/70" th:text="${description}">Description</p>
+                </div>
+            </div>
+            <div th:if="${actions}" class="card-actions justify-end mt-4" th:utext="${actions}"></div>
+        </div>
+    </div>
+</th:block>

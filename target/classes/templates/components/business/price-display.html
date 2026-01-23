@@ -1,0 +1,109 @@
+<!-- ============================================
+     PRICE DISPLAY COMPONENT (B-07)
+     Formatted price display
+     ============================================ -->
+
+<!-- Basic Price -->
+<th:block th:fragment="price(amount, currency)">
+    <span class="font-bold" th:text="${currency != null ? currency : '₺'} + ${amount}">₺500</span>
+</th:block>
+
+<!-- Large Price -->
+<th:block th:fragment="priceLarge(amount, currency, period)">
+    <div class="text-center">
+        <span class="text-4xl font-bold" th:text="${currency != null ? currency : '₺'} + ${amount}">₺500</span>
+        <span th:if="${period}" class="text-base-content/60" th:text="'/' + ${period}">/ ay</span>
+    </div>
+</th:block>
+
+<!-- Price with Old Price (Discount) -->
+<th:block th:fragment="priceDiscount(amount, oldAmount, currency)">
+    <div class="flex items-baseline gap-2">
+        <span class="text-xl font-bold text-primary"
+            th:text="${currency != null ? currency : '₺'} + ${amount}">₺400</span>
+        <span th:if="${oldAmount}" class="text-base-content/50 line-through text-sm"
+            th:text="${currency != null ? currency : '₺'} + ${oldAmount}">₺500</span>
+        <span th:if="${oldAmount}" class="badge badge-sm badge-error"
+            th:text="'-' + ${#numbers.formatDecimal((oldAmount - amount) * 100 / oldAmount, 0, 0)} + '%'">-20%</span>
+    </div>
+</th:block>
+
+<!-- Price Range -->
+<th:block th:fragment="priceRange(minPrice, maxPrice, currency)">
+    <span class="font-bold">
+        <span th:text="${currency != null ? currency : '₺'} + ${minPrice}">₺500</span>
+        <span class="text-base-content/50 mx-1">-</span>
+        <span th:text="${currency != null ? currency : '₺'} + ${maxPrice}">₺1000</span>
+    </span>
+</th:block>
+
+<!-- Starting Price -->
+<th:block th:fragment="priceStarting(amount, currency)">
+    <div>
+        <span class="text-xs text-base-content/50">Başlangıç</span>
+        <p class="text-xl font-bold text-primary" th:text="${currency != null ? currency : '₺'} + ${amount}">₺500</p>
+    </div>
+</th:block>
+
+<!-- Price Tag -->
+<th:block th:fragment="priceTag(amount, label)">
+    <div class="badge badge-lg badge-primary gap-1">
+        <span th:text="${label}" th:if="${label}"></span>
+        <span class="font-bold" th:text="'₺' + ${amount}">₺500</span>
+    </div>
+</th:block>
+
+<!-- Price Breakdown -->
+<th:block th:fragment="priceBreakdown(items, total)">
+    <div class="space-y-2">
+        <div th:each="item : ${items}" class="flex justify-between text-sm">
+            <span th:text="${item.label}" th:classappend="${item.type == 'discount'} ? 'text-success' : ''">Item</span>
+            <span th:classappend="${item.type == 'discount'} ? 'text-success' : 'font-medium'">
+                <span th:if="${item.type == 'discount'}">-</span>
+                <span th:text="'₺' + ${item.amount}">₺100</span>
+            </span>
+        </div>
+        <div class="divider my-2"></div>
+        <div class="flex justify-between font-bold text-lg">
+            <span>Toplam</span>
+            <span class="text-primary" th:text="'₺' + ${total}">₺500</span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Pricing Packages -->
+<th:block th:fragment="pricingPackages(packages)">
+    <div class="flex flex-col lg:flex-row gap-4">
+        <div th:each="pkg : ${packages}" class="flex-1 card bg-base-100 shadow-md"
+            th:classappend="${pkg.featured} ? 'ring-2 ring-primary' : ''">
+            <div class="card-body text-center">
+                <span th:if="${pkg.featured}" class="badge badge-primary mx-auto -mt-2 mb-2">En Popüler</span>
+                <h3 class="font-bold text-lg" th:text="${pkg.name}">Basic</h3>
+                <div class="my-4">
+                    <span class="text-3xl font-bold" th:text="'₺' + ${pkg.price}">₺500</span>
+                </div>
+                <ul class="space-y-2 text-sm text-left">
+                    <li th:each="feature : ${pkg.features}" class="flex items-center gap-2">
+                        <span class="text-success">✓</span>
+                        <span th:text="${feature}">Feature</span>
+                    </li>
+                </ul>
+                <p class="text-xs text-base-content/50 mt-4" th:text="${pkg.deliveryDays} + ' gün teslimat'">3 gün</p>
+                <button class="btn w-full mt-4" th:classappend="${pkg.featured} ? 'btn-primary' : 'btn-outline'">
+                    Seç
+                </button>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Credit Display -->
+<th:block th:fragment="creditBalance(amount)">
+    <div class="flex items-center gap-2 bg-gradient-to-r from-primary/10 to-secondary/10 px-4 py-2 rounded-full">
+        <span class="text-xl">💰</span>
+        <div>
+            <p class="text-xs text-base-content/60">Bakiye</p>
+            <p class="font-bold text-primary" th:text="'₺' + ${amount}">₺1,250</p>
+        </div>
+    </div>
+</th:block>

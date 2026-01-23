@@ -1,0 +1,140 @@
+<!-- ============================================
+     DRAWER COMPONENT (FB-04)
+     Sliding side panel
+     ============================================ -->
+
+<!-- Right Drawer -->
+<th:block th:fragment="drawer(id, title, size)">
+    <div th:id="${id}" class="drawer drawer-end" x-data="{ open: false }" @keydown.escape.window="open = false">
+
+        <input :id="'drawer-toggle-' + '[[${id}]]'" type="checkbox" class="drawer-toggle" x-model="open" />
+
+        <div class="drawer-side z-50">
+            <!-- Overlay -->
+            <label :for="'drawer-toggle-' + '[[${id}]]'" class="drawer-overlay" @click="open = false"></label>
+
+            <!-- Content -->
+            <aside class="bg-base-100 min-h-screen flex flex-col shadow-xl"
+                th:classappend="${size == 'lg'} ? 'w-96' : (${size == 'sm'} ? 'w-64' : 'w-80')">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between p-4 border-b border-base-300">
+                    <h3 class="text-lg font-semibold" th:text="${title}">Drawer Title</h3>
+                    <button @click="open = false" class="btn btn-ghost btn-sm btn-square">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Body (scrollable) -->
+                <div class="flex-1 overflow-y-auto p-4">
+                    <th:block th:replace="${~{::#body}}"></th:block>
+                </div>
+
+                <!-- Footer (optional) -->
+                <div class="p-4 border-t border-base-300">
+                    <th:block th:replace="${~{::#footer}}"></th:block>
+                </div>
+            </aside>
+        </div>
+    </div>
+</th:block>
+
+<!-- Left Drawer -->
+<th:block th:fragment="drawerLeft(id, title)">
+    <div th:id="${id}" class="drawer" x-data="{ open: false }">
+
+        <input :id="'drawer-toggle-' + '[[${id}]]'" type="checkbox" class="drawer-toggle" x-model="open" />
+
+        <div class="drawer-side z-50">
+            <label :for="'drawer-toggle-' + '[[${id}]]'" class="drawer-overlay"></label>
+
+            <aside class="bg-base-100 w-80 min-h-screen flex flex-col shadow-xl">
+                <div class="flex items-center justify-between p-4 border-b border-base-300">
+                    <h3 class="text-lg font-semibold" th:text="${title}">Drawer</h3>
+                    <button @click="open = false" class="btn btn-ghost btn-sm btn-square">✕</button>
+                </div>
+                <div class="flex-1 overflow-y-auto p-4">
+                    <th:block th:replace="${~{::#content}}"></th:block>
+                </div>
+            </aside>
+        </div>
+    </div>
+</th:block>
+
+<!-- Filter Drawer (Mobile) -->
+<th:block th:fragment="drawerFilter">
+    <div class="drawer drawer-end lg:hidden" x-data="{ open: false }">
+
+        <!-- Toggle Button -->
+        <button @click="open = true" class="btn btn-outline gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+            </svg>
+            Filtrele
+        </button>
+
+        <input id="filter-drawer" type="checkbox" class="drawer-toggle" x-model="open" />
+
+        <div class="drawer-side z-50">
+            <label for="filter-drawer" class="drawer-overlay" @click="open = false"></label>
+
+            <aside class="bg-base-100 w-80 min-h-screen flex flex-col">
+                <div class="flex items-center justify-between p-4 border-b border-base-300">
+                    <h3 class="text-lg font-semibold">Filtreler</h3>
+                    <button @click="open = false" class="btn btn-ghost btn-sm btn-square">✕</button>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4">
+                    <th:block th:replace="${~{::#filters}}"></th:block>
+                </div>
+
+                <div class="p-4 border-t border-base-300 flex gap-2">
+                    <button class="btn btn-outline flex-1">Temizle</button>
+                    <button @click="open = false" class="btn btn-primary flex-1">Uygula</button>
+                </div>
+            </aside>
+        </div>
+    </div>
+</th:block>
+
+<!-- Bottom Sheet (Mobile) -->
+<th:block th:fragment="bottomSheet(id, title)">
+    <div th:id="${id}" x-data="{ open: false }" @keydown.escape.window="open = false" class="fixed inset-0 z-50"
+        x-show="open" x-cloak>
+
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/50" @click="open = false"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"></div>
+
+        <!-- Sheet -->
+        <div class="absolute bottom-0 left-0 right-0 bg-base-100 rounded-t-2xl max-h-[80vh] flex flex-col"
+            x-transition:enter="transition ease-out duration-200" x-transition:enter-start="translate-y-full"
+            x-transition:enter-end="translate-y-0" x-transition:leave="transition ease-in duration-150"
+            x-transition:leave-start="translate-y-0" x-transition:leave-end="translate-y-full">
+
+            <!-- Handle -->
+            <div class="flex justify-center py-2">
+                <div class="w-10 h-1 bg-base-300 rounded-full"></div>
+            </div>
+
+            <!-- Header -->
+            <div class="flex items-center justify-between px-4 pb-3 border-b border-base-300">
+                <h3 class="text-lg font-semibold" th:text="${title}">Title</h3>
+                <button @click="open = false" class="btn btn-ghost btn-sm btn-square">✕</button>
+            </div>
+
+            <!-- Content -->
+            <div class="flex-1 overflow-y-auto p-4">
+                <th:block th:replace="${~{::#content}}"></th:block>
+            </div>
+        </div>
+    </div>
+</th:block>

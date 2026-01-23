@@ -3,149 +3,123 @@
     layout:decorate="~{layout/base}">
 
 <head>
-    <title>Ana Sayfa</title>
+    <title>AI Influencer Marketplace - Türkiye'nin İlk AI İçerik Platformu</title>
 </head>
 
 <body>
     <main layout:fragment="content">
 
         <!-- Hero Section -->
-        <section class="hero min-h-[70vh] bg-gradient-to-br from-primary/10 via-secondary/10 to-accent/10">
-            <div class="hero-content text-center py-20">
-                <div class="max-w-3xl">
-                    <div class="mb-8">
-                        <span class="text-7xl">🤖</span>
-                    </div>
-                    <h1 class="text-5xl md:text-6xl font-bold mb-6">
-                        <span
-                            class="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
-                            AI Influencer
-                        </span>
-                        <br />
-                        <span class="text-base-content">Marketplace</span>
+        <section class="bg-gray-50 py-16 md:py-24">
+            <div class="container-custom">
+                <div class="max-w-3xl mx-auto text-center">
+                    <span
+                        class="inline-block bg-primary/10 text-primary text-sm font-medium px-4 py-2 rounded-full mb-6">
+                        🚀 Türkiye'nin İlk AI Influencer Platformu
+                    </span>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+                        AI Influencer<br />
+                        <span class="text-primary">Marketplace</span>
                     </h1>
-                    <p class="text-xl text-base-content/70 mb-8 max-w-xl mx-auto">
-                        Yapay zeka ile oluşturulmuş sanal influencer karakterlerden profesyonel içerik satın alın.
-                        Markanız için benzersiz görseller, sadece birkaç tıkla.
+                    <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+                        Yapay zeka ile oluşturulmuş sanal influencer karakterlerden
+                        profesyonel içerik satın alın.
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="/search" class="btn btn-primary btn-lg gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
+                        <a href="/search" class="btn btn-primary btn-lg">
                             Creator'ları Keşfet
                         </a>
-                        <a href="/register" class="btn btn-outline btn-lg gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                            </svg>
+                        <a href="/register?role=creator" class="btn btn-outline btn-lg">
                             Creator Ol
                         </a>
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-6 mt-10 text-sm text-gray-500">
+                        <span class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            Güvenli Ödeme
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            48 Saat Teslim
+                        </span>
+                        <span class="flex items-center gap-2">
+                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                            %100 Memnuniyet
+                        </span>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Stats Section -->
-        <section class="bg-base-200 py-12">
-            <div class="container mx-auto px-4">
-                <div class="stats stats-vertical lg:stats-horizontal shadow w-full">
-                    <div class="stat">
-                        <div class="stat-figure text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                class="inline-block w-8 h-8 stroke-current">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="stat-title">Aktif Creator</div>
-                        <div class="stat-value text-primary">150+</div>
-                        <div class="stat-desc">Onaylanmış AI karakterler</div>
+        <section class="py-12 border-b border-gray-200">
+            <div class="container-custom">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                    <div>
+                        <p class="text-3xl md:text-4xl font-bold text-primary">150+</p>
+                        <p class="text-gray-600 mt-1">Aktif Creator</p>
                     </div>
-
-                    <div class="stat">
-                        <div class="stat-figure text-secondary">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                class="inline-block w-8 h-8 stroke-current">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
-                                </path>
-                            </svg>
-                        </div>
-                        <div class="stat-title">Tamamlanan Sipariş</div>
-                        <div class="stat-value text-secondary">2,500+</div>
-                        <div class="stat-desc">Mutlu marka</div>
+                    <div>
+                        <p class="text-3xl md:text-4xl font-bold text-primary">2,500+</p>
+                        <p class="text-gray-600 mt-1">Tamamlanan Sipariş</p>
                     </div>
-
-                    <div class="stat">
-                        <div class="stat-figure text-accent">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                class="inline-block w-8 h-8 stroke-current">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                            </svg>
-                        </div>
-                        <div class="stat-title">Ortalama Teslim</div>
-                        <div class="stat-value text-accent">48</div>
-                        <div class="stat-desc">Saat içinde</div>
+                    <div>
+                        <p class="text-3xl md:text-4xl font-bold text-primary">48h</p>
+                        <p class="text-gray-600 mt-1">Ortalama Teslim</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl md:text-4xl font-bold text-primary">4.9</p>
+                        <p class="text-gray-600 mt-1">Ortalama Puan</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Featured Creators Section -->
-        <section class="py-16 bg-base-100">
-            <div class="container mx-auto px-4">
+        <section class="py-16 md:py-20">
+            <div class="container-custom">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold mb-4">Öne Çıkan Creator'lar</h2>
-                    <p class="text-base-content/60 max-w-xl mx-auto">En popüler AI influencer karakterlerimizi keşfedin
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Öne Çıkan Creator'lar</h2>
+                    <p class="text-gray-600 max-w-xl mx-auto">
+                        En popüler AI influencer karakterlerimizi keşfedin
                     </p>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" x-data>
-                    <!-- Creator Cards (from mock data) -->
-                    <template x-for="persona in MockData.personas" :key="persona.id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" x-data>
+                    <template x-for="persona in MockData.personas.slice(0, 4)" :key="persona.id">
                         <div
-                            class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                            <figure class="px-4 pt-4">
+                            class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
+                            <div class="aspect-[3/4] overflow-hidden">
                                 <img :src="persona.profileImages[0]" :alt="persona.name"
-                                    class="rounded-xl h-64 w-full object-cover" />
-                            </figure>
-                            <div class="card-body">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="card-title" x-text="persona.name"></h3>
-                                    <div class="badge badge-primary" x-text="persona.style"></div>
+                                    class="w-full h-full object-cover" />
+                            </div>
+                            <div class="p-4">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <h3 class="font-semibold text-gray-900" x-text="persona.name"></h3>
+                                    <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded"
+                                        x-text="persona.style"></span>
                                 </div>
-                                <p class="text-sm text-base-content/70 line-clamp-2" x-text="persona.bio"></p>
-
-                                <!-- Stats -->
-                                <div class="flex gap-4 mt-2 text-sm">
+                                <p class="text-sm text-gray-500 line-clamp-2 mb-3" x-text="persona.bio"></p>
+                                <div class="flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-1">
-                                        <span class="text-warning">★</span>
-                                        <span x-text="persona.stats.avgRating"></span>
+                                        <span class="text-yellow-500">★</span>
+                                        <span x-text="persona.stats.avgRating">4.9</span>
+                                        <span class="text-gray-400"
+                                            x-text="'(' + persona.stats.completedOrders + ')'"></span>
                                     </div>
-                                    <div class="flex items-center gap-1">
-                                        <span>📦</span>
-                                        <span x-text="persona.stats.completedOrders + ' sipariş'"></span>
-                                    </div>
-                                </div>
-
-                                <!-- Tags -->
-                                <div class="flex gap-2 mt-2">
-                                    <span class="badge badge-outline badge-sm" x-text="persona.gender"></span>
-                                    <span class="badge badge-outline badge-sm"
-                                        x-text="persona.hairColor + ' saç'"></span>
-                                </div>
-
-                                <div class="card-actions justify-end mt-4">
-                                    <a :href="'/creator/' + persona.id" class="btn btn-primary btn-sm">
-                                        Profili Gör
-                                    </a>
+                                    <span class="font-semibold text-primary">₺500'den</span>
                                 </div>
                             </div>
                         </div>
@@ -153,87 +127,75 @@
                 </div>
 
                 <div class="text-center mt-10">
-                    <a href="/search" class="btn btn-outline btn-primary btn-lg">
-                        Tüm Creator'ları Gör
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                        </svg>
+                    <a href="/search" class="btn btn-outline btn-primary">
+                        Tüm Creator'ları Gör →
                     </a>
                 </div>
             </div>
         </section>
 
         <!-- How It Works Section -->
-        <section class="py-16 bg-base-200">
-            <div class="container mx-auto px-4">
+        <section class="py-16 md:py-20 bg-gray-50">
+            <div class="container-custom">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold mb-4">Nasıl Çalışır?</h2>
-                    <p class="text-base-content/60">3 basit adımda içeriğinizi alın</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Nasıl Çalışır?</h2>
+                    <p class="text-gray-600">3 basit adımda AI içeriğinizi alın</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Step 1 -->
-                    <div class="card bg-base-100 shadow-xl">
-                        <div class="card-body items-center text-center">
-                            <div
-                                class="w-16 h-16 rounded-full bg-primary/20 flex items-center justify-center text-3xl mb-4">
-                                1️⃣
-                            </div>
-                            <h3 class="card-title">Creator Seçin</h3>
-                            <p class="text-base-content/70">
-                                Filtreleri kullanarak markanıza uygun AI influencer karakteri bulun.
-                            </p>
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div
+                            class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                            1
                         </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Creator Seçin</h3>
+                        <p class="text-gray-600">
+                            Filtreleri kullanarak markanıza uygun AI influencer karakteri bulun.
+                        </p>
                     </div>
 
                     <!-- Step 2 -->
-                    <div class="card bg-base-100 shadow-xl">
-                        <div class="card-body items-center text-center">
-                            <div
-                                class="w-16 h-16 rounded-full bg-secondary/20 flex items-center justify-center text-3xl mb-4">
-                                2️⃣
-                            </div>
-                            <h3 class="card-title">Brief Gönderin</h3>
-                            <p class="text-base-content/70">
-                                Ürün görseli ve senaryo detaylarını paylaşın, güvenli ödeme yapın.
-                            </p>
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div
+                            class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                            2
                         </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Brief Gönderin</h3>
+                        <p class="text-gray-600">
+                            Ürün görseli ve senaryo detaylarını paylaşın, güvenli ödeme yapın.
+                        </p>
                     </div>
 
                     <!-- Step 3 -->
-                    <div class="card bg-base-100 shadow-xl">
-                        <div class="card-body items-center text-center">
-                            <div
-                                class="w-16 h-16 rounded-full bg-accent/20 flex items-center justify-center text-3xl mb-4">
-                                3️⃣
-                            </div>
-                            <h3 class="card-title">İçeriği Alın</h3>
-                            <p class="text-base-content/70">
-                                Creator işi tamamlasın, onaylayın ve orijinal dosyalarınızı indirin.
-                            </p>
+                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                        <div
+                            class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                            3
                         </div>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">İçeriği Alın</h3>
+                        <p class="text-gray-600">
+                            Creator işi tamamlasın, onaylayın ve orijinal dosyalarınızı indirin.
+                        </p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- CTA Section -->
-        <section class="py-20 bg-gradient-to-r from-primary to-secondary text-primary-content">
-            <div class="container mx-auto px-4 text-center">
-                <h2 class="text-4xl font-bold mb-6">Hemen Başlayın</h2>
-                <p class="text-xl opacity-90 mb-8 max-w-xl mx-auto">
+        <section class="py-16 md:py-20 bg-primary">
+            <div class="container-custom text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Hemen Başlayın</h2>
+                <p class="text-white/80 mb-8 max-w-xl mx-auto">
                     AI influencer içerik üretiminin geleceğine katılın.
-                    Marka olarak sipariş verin veya creator olarak kazanmaya başlayın.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/register?role=brand" class="btn btn-lg bg-white text-primary hover:bg-white/90">
-                        🏢 Marka Olarak Başla
+                    <a href="/register?role=brand" class="btn btn-lg bg-white text-primary hover:bg-gray-100 border-0">
+                        Marka Olarak Başla
                     </a>
                     <a href="/register?role=creator"
-                        class="btn btn-lg btn-outline border-white text-white hover:bg-white hover:text-primary">
-                        🎨 Creator Olarak Başla
+                        class="btn btn-lg btn-outline text-white border-white hover:bg-white hover:text-primary">
+                        Creator Olarak Başla
                     </a>
                 </div>
             </div>

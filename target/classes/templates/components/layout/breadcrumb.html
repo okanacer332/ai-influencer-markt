@@ -1,0 +1,112 @@
+<!-- ============================================
+     BREADCRUMB COMPONENT (L-05)
+     Navigation path indicator
+     ============================================ -->
+
+<!-- Standard Breadcrumb -->
+<th:block th:fragment="breadcrumb(items)">
+    <nav aria-label="Breadcrumb">
+        <ul class="breadcrumbs text-sm">
+            <!-- Home Icon -->
+            <li>
+                <a href="/" class="link-hover inline-flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <span class="hide-mobile">Ana Sayfa</span>
+                </a>
+            </li>
+
+            <!-- Path Items -->
+            <th:block th:each="item, iterStat : ${items}">
+                <li>
+                    <!-- Separator -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-base-content/40" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+
+                    <!-- Link (not last item) -->
+                    <a th:if="${!iterStat.last && item.href != null}" th:href="${item.href}" th:text="${item.label}"
+                        class="link-hover"></a>
+
+                    <!-- Current Page (last item) -->
+                    <span th:if="${iterStat.last}" th:text="${item.label}"
+                        class="text-base-content/60 font-medium"></span>
+                </li>
+            </th:block>
+        </ul>
+    </nav>
+</th:block>
+
+<!-- Compact Breadcrumb (for mobile) -->
+<th:block th:fragment="breadcrumbCompact(currentPage, parentHref, parentLabel)">
+    <nav aria-label="Breadcrumb" class="text-sm">
+        <a th:href="${parentHref}" class="inline-flex items-center gap-1 link-hover text-base-content/60">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <span th:text="${parentLabel}"></span>
+        </a>
+    </nav>
+</th:block>
+
+<!-- Breadcrumb with Dropdown (for long paths) -->
+<th:block th:fragment="breadcrumbDropdown(items)">
+    <nav aria-label="Breadcrumb">
+        <ul class="breadcrumbs text-sm">
+            <!-- Home -->
+            <li>
+                <a href="/">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                </a>
+            </li>
+
+            <!-- Ellipsis Dropdown (if more than 3 items) -->
+            <li th:if="${#lists.size(items) > 3}">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-base-content/40" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+                <div class="dropdown dropdown-hover">
+                    <button tabindex="0" class="btn btn-ghost btn-xs">•••</button>
+                    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                        <th:block th:each="item, iterStat : ${items}"
+                            th:if="${!iterStat.first && iterStat.index < #lists.size(items) - 2}">
+                            <li><a th:href="${item.href}" th:text="${item.label}"></a></li>
+                        </th:block>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- Last 2 items always visible -->
+            <th:block th:each="item, iterStat : ${items}" th:if="${iterStat.index >= #lists.size(items) - 2}">
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mx-2 text-base-content/40" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                    <a th:if="${!iterStat.last}" th:href="${item.href}" th:text="${item.label}" class="link-hover"></a>
+                    <span th:if="${iterStat.last}" th:text="${item.label}" class="font-medium"></span>
+                </li>
+            </th:block>
+        </ul>
+    </nav>
+</th:block>
+
+<style>
+    .breadcrumbs {
+        @apply flex items-center flex-wrap;
+    }
+
+    .breadcrumbs li {
+        @apply inline-flex items-center;
+    }
+</style>

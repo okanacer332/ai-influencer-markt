@@ -1,0 +1,151 @@
+<!-- ============================================
+     RATING STARS COMPONENT (B-06)
+     Star rating display and input
+     ============================================ -->
+
+<!-- Display Only (Read) -->
+<th:block th:fragment="ratingDisplay(rating, maxRating, showValue)">
+    <div class="flex items-center gap-1">
+        <!-- Stars -->
+        <div class="flex">
+            <th:block th:each="i : ${#numbers.sequence(1, maxRating != null ? maxRating : 5)}">
+                <!-- Full star -->
+                <span th:if="${i <= rating}" class="text-warning">★</span>
+                <!-- Half star -->
+                <span th:if="${i > rating && i - 0.5 <= rating}" class="text-warning">⯨</span>
+                <!-- Empty star -->
+                <span th:if="${i > rating && i - 0.5 > rating}" class="text-base-300">★</span>
+            </th:block>
+        </div>
+
+        <!-- Numeric value -->
+        <span th:if="${showValue}" class="text-sm ml-1" th:text="${rating}">4.5</span>
+    </div>
+</th:block>
+
+<!-- Display with Count -->
+<th:block th:fragment="ratingDisplayWithCount(rating, reviewCount)">
+    <div class="flex items-center gap-2">
+        <div class="flex text-warning">
+            <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                <span th:if="${i <= rating}">★</span>
+                <span th:if="${i > rating}" class="text-base-300">★</span>
+            </th:block>
+        </div>
+        <span class="font-medium" th:text="${rating}">4.5</span>
+        <span class="text-base-content/50" th:text="'(' + ${reviewCount} + ' değerlendirme)'"></span>
+    </div>
+</th:block>
+
+<!-- Compact Rating Badge -->
+<th:block th:fragment="ratingBadge(rating)">
+    <div class="badge badge-warning gap-1">
+        <span>★</span>
+        <span th:text="${rating}">4.5</span>
+    </div>
+</th:block>
+
+<!-- Interactive Rating Input -->
+<th:block th:fragment="ratingInput(name, currentValue)">
+    <div class="rating-input" x-data="{ 
+             rating: [[${currentValue != null ? currentValue : 0}]], 
+             hover: 0,
+             labels: ['Çok Kötü', 'Kötü', 'Orta', 'İyi', 'Mükemmel']
+         }">
+        <input type="hidden" th:name="${name}" x-model="rating" />
+
+        <div class="flex items-center gap-2">
+            <!-- Stars -->
+            <div class="flex gap-1">
+                <template x-for="i in 5" :key="i">
+                    <button type="button" @click="rating = i" @mouseenter="hover = i" @mouseleave="hover = 0"
+                        class="text-3xl transition-transform hover:scale-110 focus:outline-none"
+                        :class="(hover || rating) >= i ? 'text-warning' : 'text-base-300'">
+                        ★
+                    </button>
+                </template>
+            </div>
+
+            <!-- Label -->
+            <span x-show="hover > 0 || rating > 0" class="text-sm font-medium ml-2"
+                x-text="labels[(hover || rating) - 1]"></span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Larger Interactive Rating -->
+<th:block th:fragment="ratingInputLarge(name, currentValue)">
+    <div class="rating-input-large text-center" x-data="{ 
+             rating: [[${currentValue != null ? currentValue : 0}]], 
+             labels: ['Çok Kötü', 'Kötü', 'Orta', 'İyi', 'Mükemmel'],
+             emojis: ['😞', '😕', '😐', '🙂', '😍']
+         }">
+        <input type="hidden" th:name="${name}" x-model="rating" />
+
+        <!-- Emoji Display -->
+        <div class="text-6xl mb-4" x-text="rating > 0 ? emojis[rating - 1] : '🤔'"></div>
+
+        <!-- Stars -->
+        <div class="flex justify-center gap-2 mb-2">
+            <template x-for="i in 5" :key="i">
+                <button type="button" @click="rating = i"
+                    class="text-4xl transition-all hover:scale-125 focus:outline-none"
+                    :class="rating >= i ? 'text-warning' : 'text-base-300'">
+                    ★
+                </button>
+            </template>
+        </div>
+
+        <!-- Label -->
+        <p class="font-medium" x-text="rating > 0 ? labels[rating - 1] : 'Puanınızı seçin'"></p>
+    </div>
+</th:block>
+
+<!-- Rating Summary (for review sections) -->
+<th:block th:fragment="ratingSummary(avgRating, totalReviews, distribution)">
+    <div class="flex flex-col md:flex-row gap-6">
+        <!-- Average -->
+        <div class="text-center md:text-left">
+            <div class="text-5xl font-bold text-warning" th:text="${avgRating}">4.8</div>
+            <div class="flex justify-center md:justify-start text-warning mt-1">
+                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                    <span th:if="${i <= avgRating}">★</span>
+                    <span th:if="${i > avgRating}" class="text-base-300">★</span>
+                </th:block>
+            </div>
+            <p class="text-sm text-base-content/60 mt-1" th:text="${totalReviews} + ' değerlendirme'"></p>
+        </div>
+
+        <!-- Distribution Bars -->
+        <div class="flex-1 space-y-2">
+            <th:block th:each="i : ${#numbers.sequence(5, 1, -1)}">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm w-12" th:text="${i} + ' yıldız'"></span>
+                    <progress class="progress progress-warning flex-1" th:value="${distribution[i-1]}"
+                        max="100"></progress>
+                    <span class="text-sm text-base-content/60 w-12 text-right"
+                        th:text="${distribution[i-1]} + '%'"></span>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</th:block>
+
+<!-- Size Variants -->
+<th:block th:fragment="ratingSmall(rating)">
+    <div class="flex text-xs text-warning">
+        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+            <span th:if="${i <= rating}">★</span>
+            <span th:if="${i > rating}" class="text-base-300">★</span>
+        </th:block>
+    </div>
+</th:block>
+
+<th:block th:fragment="ratingLarge(rating)">
+    <div class="flex text-2xl text-warning">
+        <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+            <span th:if="${i <= rating}">★</span>
+            <span th:if="${i > rating}" class="text-base-300">★</span>
+        </th:block>
+    </div>
+</th:block>

@@ -1,0 +1,239 @@
+<!-- ============================================
+     FILE UPLOAD COMPONENT (F-08)
+     Drag & drop file upload with preview
+     ============================================ -->
+
+<!-- Standard File Upload -->
+<th:block th:fragment="fileUpload(id, accept, multiple, maxSize)">
+    <div class="file-upload-container" x-data="fileUpload({
+             id: '[[${id}]]',
+             accept: '[[${accept}]]',
+             multiple: [[${multiple != null ? multiple : false}]],
+             maxSize: [[${maxSize != null ? maxSize : 5}]]
+         })">
+
+        <!-- Drop Zone -->
+        <div class="border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200"
+            :class="isDragging ? 'border-primary bg-primary/5' : 'border-base-300 hover:border-primary/50'"
+            @dragover.prevent="isDragging = true" @dragleave.prevent="isDragging = false"
+            @drop.prevent="handleDrop($event)">
+
+            <!-- Upload Icon -->
+            <div class="text-4xl mb-4">
+                <span x-show="!isDragging">📁</span>
+                <span x-show="isDragging">📥</span>
+            </div>
+
+            <!-- Text -->
+            <p class="font-medium mb-2">
+                <span x-show="!isDragging">Dosyaları sürükleyip bırakın</span>
+                <span x-show="isDragging" class="text-primary">Bırakın!</span>
+            </p>
+            <p class="text-sm text-base-content/60 mb-4">veya</p>
+
+            <!-- Browse Button -->
+            <label :for="'file-input-' + id" class="btn btn-primary btn-sm">
+                Dosya Seç
+            </label>
+            <input :id="'file-input-' + id" type="file" class="hidden" :accept="accept" :multiple="multiple"
+                @change="handleSelect($event)" />
+
+            <!-- Hint -->
+            <p class="text-xs text-base-content/50 mt-4">
+                Maksimum <span x-text="maxSize"></span>MB •
+                <span x-text="accept || 'Tüm dosyalar'"></span>
+            </p>
+        </div>
+
+        <!-- Preview List -->
+        <div x-show="files.length > 0" class="mt-4 space-y-2">
+            <template x-for="(file, index) in files" :key="index">
+                <div class="flex items-center gap-3 p-3 bg-base-200 rounded-lg">
+                    <!-- Thumbnail or Icon -->
+                    <div class="w-12 h-12 rounded-lg overflow-hidden bg-base-300 flex items-center justify-center">
+                        <img x-show="file.preview" :src="file.preview" class="w-full h-full object-cover" />
+                        <span x-show="!file.preview" class="text-2xl">📄</span>
+                    </div>
+
+                    <!-- File Info -->
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium truncate" x-text="file.name"></p>
+                        <p class="text-xs text-base-content/60" x-text="formatSize(file.size)"></p>
+                    </div>
+
+                    <!-- Progress / Status -->
+                    <div x-show="file.uploading" class="w-20">
+                        <progress class="progress progress-primary w-full" :value="file.progress" max="100"></progress>
+                    </div>
+                    <span x-show="file.uploaded" class="text-success">✓</span>
+                    <span x-show="file.error" class="text-error text-sm" x-text="file.error"></span>
+
+                    <!-- Remove Button -->
+                    <button @click="removeFile(index)" class="btn btn-ghost btn-sm btn-square">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </template>
+        </div>
+
+        <!-- Upload Button -->
+        <div x-show="files.length > 0 && !allUploaded" class="mt-4">
+            <button @click="uploadAll()" class="btn btn-primary w-full" :disabled="uploading">
+                <span x-show="!uploading">📤 Yükle</span>
+                <span x-show="uploading" class="loading loading-spinner loading-sm"></span>
+            </button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Simple Image Upload -->
+<th:block th:fragment="imageUpload(id, aspectRatio)">
+    <div class="image-upload" x-data="{ preview: null, file: null }">
+
+        <label :for="'img-' + '[[${id}]]'"
+            class="block aspect-[[${aspectRatio != null ? aspectRatio : 'square'}]] border-2 border-dashed border-base-300 rounded-xl cursor-pointer hover:border-primary/50 transition-colors overflow-hidden">
+
+            <!-- Preview -->
+            <img x-show="preview" :src="preview" class="w-full h-full object-cover" />
+
+            <!-- Placeholder -->
+            <div x-show="!preview" class="w-full h-full flex flex-col items-center justify-center text-base-content/50">
+                <span class="text-4xl mb-2">🖼️</span>
+                <span class="text-sm">Görsel seçin</span>
+            </div>
+        </label>
+
+        <input :id="'img-' + '[[${id}]]'" type="file" accept="image/*" class="hidden" @change="
+                   file = $event.target.files[0];
+                   if (file) {
+                       const reader = new FileReader();
+                       reader.onload = (e) => preview = e.target.result;
+                       reader.readAsDataURL(file);
+                   }
+               " />
+
+        <!-- Change Button -->
+        <button x-show="preview" @click="preview = null; file = null;" class="btn btn-sm btn-ghost mt-2 w-full">
+            Değiştir
+        </button>
+    </div>
+</th:block>
+
+<!-- Avatar Upload -->
+<th:block th:fragment="avatarUpload(currentImage)">
+    <div class="avatar-upload inline-block" x-data="{ preview: null }">
+        <div class="relative">
+            <div class="avatar">
+                <div
+                    class="w-24 h-24 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2 overflow-hidden">
+                    <img x-show="preview" :src="preview" />
+                    <img x-show="!preview" th:src="${currentImage}" th:if="${currentImage != null}" />
+                    <div x-show="!preview" th:if="${currentImage == null}"
+                        class="w-full h-full bg-base-300 flex items-center justify-center">
+                        <span class="text-3xl">👤</span>
+                    </div>
+                </div>
+            </div>
+            <label for="avatar-input" class="absolute bottom-0 right-0 btn btn-circle btn-primary btn-sm">
+                📷
+            </label>
+        </div>
+        <input id="avatar-input" type="file" accept="image/*" class="hidden" @change="
+                   const file = $event.target.files[0];
+                   if (file) {
+                       const reader = new FileReader();
+                       reader.onload = (e) => preview = e.target.result;
+                       reader.readAsDataURL(file);
+                   }
+               " />
+    </div>
+</th:block>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('fileUpload', (config) => ({
+            id: config.id,
+            accept: config.accept,
+            multiple: config.multiple,
+            maxSize: config.maxSize * 1024 * 1024, // Convert to bytes
+            files: [],
+            isDragging: false,
+            uploading: false,
+
+            handleDrop(e) {
+                this.isDragging = false;
+                this.addFiles(e.dataTransfer.files);
+            },
+
+            handleSelect(e) {
+                this.addFiles(e.target.files);
+            },
+
+            addFiles(fileList) {
+                Array.from(fileList).forEach(file => {
+                    if (file.size > this.maxSize) {
+                        Alpine.store('notify').show('error', `${file.name} çok büyük (max ${config.maxSize}MB)`);
+                        return;
+                    }
+
+                    const fileObj = {
+                        file: file,
+                        name: file.name,
+                        size: file.size,
+                        preview: null,
+                        progress: 0,
+                        uploading: false,
+                        uploaded: false,
+                        error: null
+                    };
+
+                    // Generate preview for images
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => fileObj.preview = e.target.result;
+                        reader.readAsDataURL(file);
+                    }
+
+                    this.files.push(fileObj);
+                });
+            },
+
+            removeFile(index) {
+                this.files.splice(index, 1);
+            },
+
+            formatSize(bytes) {
+                if (bytes < 1024) return bytes + ' B';
+                if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+                return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+            },
+
+            get allUploaded() {
+                return this.files.length > 0 && this.files.every(f => f.uploaded);
+            },
+
+            async uploadAll() {
+                // Implement actual upload logic here
+                this.uploading = true;
+                for (const file of this.files) {
+                    if (!file.uploaded) {
+                        file.uploading = true;
+                        // Simulated upload
+                        await new Promise(r => setTimeout(r, 1000));
+                        file.progress = 100;
+                        file.uploading = false;
+                        file.uploaded = true;
+                    }
+                }
+                this.uploading = false;
+            }
+        }));
+    });
+    /*]]>*/
+</script>
+</th:block>

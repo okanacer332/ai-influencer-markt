@@ -1,0 +1,116 @@
+<!-- ============================================
+     AVATAR COMPONENT (D-05)
+     User profile image display
+     ============================================ -->
+
+<!-- Basic Avatar -->
+<th:block th:fragment="avatar(src, alt, size)">
+    <div class="avatar" th:classappend="${src == null} ? 'placeholder' : ''">
+        <div class="rounded-full" th:classappend="${size == 'xs'} ? 'w-6' : 
+                            (${size == 'sm'} ? 'w-8' : 
+                            (${size == 'lg'} ? 'w-16' : 
+                            (${size == 'xl'} ? 'w-24' : 'w-12')))">
+            <img th:if="${src != null}" th:src="${src}" th:alt="${alt}" loading="lazy" />
+            <span th:if="${src == null}"
+                class="bg-primary text-primary-content flex items-center justify-center w-full h-full"
+                th:text="${alt != null} ? ${#strings.substring(alt, 0, 1)} : 'U'"></span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Avatar with Status -->
+<th:block th:fragment="avatarStatus(src, alt, status, size)">
+    <div class="avatar" th:classappend="${status != null} ? ${status} : ''">
+        <div class="rounded-full" th:classappend="${size == 'sm'} ? 'w-8' : (${size == 'lg'} ? 'w-16' : 'w-12')">
+            <img th:if="${src != null}" th:src="${src}" th:alt="${alt}" loading="lazy" />
+            <span th:if="${src == null}"
+                class="bg-primary text-primary-content flex items-center justify-center w-full h-full"
+                th:text="${alt != null} ? ${#strings.substring(alt, 0, 1)} : 'U'"></span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Avatar with Ring -->
+<th:block th:fragment="avatarRing(src, alt, ringColor, size)">
+    <div class="avatar" th:classappend="${src == null} ? 'placeholder' : ''">
+        <div class="rounded-full ring ring-offset-base-100 ring-offset-2" th:classappend="(${ringColor != null} ? 'ring-' + ${ringColor} : 'ring-primary') + ' ' + 
+                            (${size == 'sm'} ? 'w-8' : (${size == 'lg'} ? 'w-16' : 'w-12'))">
+            <img th:if="${src != null}" th:src="${src}" th:alt="${alt}" loading="lazy" />
+            <span th:if="${src == null}"
+                class="bg-primary text-primary-content flex items-center justify-center w-full h-full"
+                th:text="${alt != null} ? ${#strings.substring(alt, 0, 1)} : 'U'"></span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Avatar Group (Stacked) -->
+<th:block th:fragment="avatarGroup(users, maxDisplay)">
+    <div class="avatar-group -space-x-4 rtl:space-x-reverse">
+        <th:block th:each="user, iterStat : ${users}" th:if="${iterStat.index < (maxDisplay != null ? maxDisplay : 4)}">
+            <div class="avatar" th:classappend="${user.image == null} ? 'placeholder' : ''">
+                <div class="w-10 rounded-full">
+                    <img th:if="${user.image != null}" th:src="${user.image}" th:alt="${user.name}" />
+                    <span th:if="${user.image == null}" class="bg-primary text-primary-content text-sm"
+                        th:text="${#strings.substring(user.name, 0, 1)}"></span>
+                </div>
+            </div>
+        </th:block>
+
+        <!-- Overflow counter -->
+        <div th:if="${#lists.size(users) > (maxDisplay != null ? maxDisplay : 4)}" class="avatar placeholder">
+            <div class="bg-neutral text-neutral-content w-10 rounded-full">
+                <span th:text="'+' + (${#lists.size(users)} - (${maxDisplay != null ? maxDisplay : 4}))">+5</span>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Avatar with Name -->
+<th:block th:fragment="avatarWithName(src, name, subtitle, size)">
+    <div class="flex items-center gap-3">
+        <div class="avatar" th:classappend="${src == null} ? 'placeholder' : ''">
+            <div class="rounded-full" th:classappend="${size == 'sm'} ? 'w-8' : (${size == 'lg'} ? 'w-14' : 'w-10')">
+                <img th:if="${src != null}" th:src="${src}" th:alt="${name}" loading="lazy" />
+                <span th:if="${src == null}" class="bg-primary text-primary-content"
+                    th:text="${#strings.substring(name, 0, 1)}"></span>
+            </div>
+        </div>
+        <div>
+            <p class="font-medium" th:text="${name}">Name</p>
+            <p th:if="${subtitle}" class="text-sm text-base-content/60" th:text="${subtitle}"></p>
+        </div>
+    </div>
+</th:block>
+
+<!-- Creator Avatar (with verified badge) -->
+<th:block th:fragment="avatarCreator(src, name, verified, rating)">
+    <div class="flex items-center gap-3">
+        <div class="avatar">
+            <div class="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-1">
+                <img th:src="${src}" th:alt="${name}" loading="lazy" />
+            </div>
+        </div>
+        <div>
+            <div class="flex items-center gap-1">
+                <span class="font-semibold" th:text="${name}">Creator</span>
+                <span th:if="${verified}" class="text-primary" title="Doğrulanmış">✓</span>
+            </div>
+            <div th:if="${rating}" class="flex items-center gap-1 text-sm">
+                <span class="text-warning">★</span>
+                <span th:text="${rating}">4.9</span>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Square Avatar -->
+<th:block th:fragment="avatarSquare(src, alt, size)">
+    <div class="avatar" th:classappend="${src == null} ? 'placeholder' : ''">
+        <div class="rounded-xl" th:classappend="${size == 'sm'} ? 'w-8' : (${size == 'lg'} ? 'w-16' : 'w-12')">
+            <img th:if="${src != null}" th:src="${src}" th:alt="${alt}" loading="lazy" />
+            <span th:if="${src == null}"
+                class="bg-primary text-primary-content flex items-center justify-center w-full h-full"
+                th:text="${alt != null} ? ${#strings.substring(alt, 0, 1)} : 'U'"></span>
+        </div>
+    </div>
+</th:block>

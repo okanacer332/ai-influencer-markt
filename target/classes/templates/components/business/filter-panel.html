@@ -1,0 +1,179 @@
+<!-- ============================================
+     FILTER PANEL COMPONENT (B-09)
+     Search filters for listings
+     ============================================ -->
+
+<!-- Sidebar Filter Panel -->
+<th:block th:fragment="filterPanel(filters)">
+    <aside class="bg-base-100 rounded-xl p-4 sticky top-4">
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="font-semibold text-lg">Filtreler</h3>
+            <button type="button" onclick="this.closest('form').reset()" class="btn btn-ghost btn-xs text-error">
+                Temizle
+            </button>
+        </div>
+
+        <div class="space-y-6">
+            <th:block th:each="filter : ${filters}">
+                <div th:replace="~{components/business/filter-panel :: filterSection(${filter})}"></div>
+            </th:block>
+        </div>
+
+        <!-- Apply Button (Mobile) -->
+        <div class="mt-6 lg:hidden">
+            <button type="submit" class="btn btn-primary w-full">Uygula</button>
+        </div>
+    </aside>
+</th:block>
+
+<!-- Filter Section -->
+<th:block th:fragment="filterSection(filter)">
+    <div class="collapse collapse-arrow bg-base-200 rounded-lg" x-data="{ open: true }">
+        <input type="checkbox" x-model="open" />
+        <div class="collapse-title font-medium py-3">
+            <span th:text="${filter.label}">Filter Label</span>
+        </div>
+        <div class="collapse-content">
+
+            <!-- Checkbox Filter -->
+            <div th:if="${filter.type == 'checkbox'}" class="space-y-2">
+                <label th:each="option : ${filter.options}" class="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" th:name="${filter.name}" th:value="${option.value}"
+                        th:checked="${option.selected}" class="checkbox checkbox-sm checkbox-primary" />
+                    <span class="text-sm" th:text="${option.label}">Option</span>
+                    <span th:if="${option.count}" class="text-xs text-base-content/50 ml-auto"
+                        th:text="'(' + ${option.count} + ')'"></span>
+                </label>
+            </div>
+
+            <!-- Radio Filter -->
+            <div th:if="${filter.type == 'radio'}" class="space-y-2">
+                <label th:each="option : ${filter.options}" class="flex items-center gap-2 cursor-pointer">
+                    <input type="radio" th:name="${filter.name}" th:value="${option.value}"
+                        th:checked="${option.selected}" class="radio radio-sm radio-primary" />
+                    <span class="text-sm" th:text="${option.label}">Option</span>
+                </label>
+            </div>
+
+            <!-- Range Filter -->
+            <div th:if="${filter.type == 'range'}" class="space-y-3">
+                <div class="flex gap-2">
+                    <input type="number" th:name="${filter.name + 'Min'}" th:placeholder="${filter.minPlaceholder}"
+                        th:value="${filter.minValue}" class="input input-sm input-bordered w-full" />
+                    <span class="text-base-content/50">-</span>
+                    <input type="number" th:name="${filter.name + 'Max'}" th:placeholder="${filter.maxPlaceholder}"
+                        th:value="${filter.maxValue}" class="input input-sm input-bordered w-full" />
+                </div>
+            </div>
+
+            <!-- Slider Range -->
+            <div th:if="${filter.type == 'slider'}"
+                x-data="{ min: [[${filter.minValue}]], max: [[${filter.maxValue}]] }">
+                <div class="flex justify-between text-sm mb-2">
+                    <span x-text="'₺' + min"></span>
+                    <span x-text="'₺' + max"></span>
+                </div>
+                <input type="range" th:min="${filter.min}" th:max="${filter.max}" x-model="min"
+                    class="range range-primary range-xs" />
+                <input type="range" th:min="${filter.min}" th:max="${filter.max}" x-model="max"
+                    class="range range-primary range-xs mt-1" />
+                <input type="hidden" th:name="${filter.name + 'Min'}" x-model="min" />
+                <input type="hidden" th:name="${filter.name + 'Max'}" x-model="max" />
+            </div>
+
+            <!-- Select Filter -->
+            <div th:if="${filter.type == 'select'}">
+                <select th:name="${filter.name}" class="select select-sm select-bordered w-full">
+                    <option value="">Tümü</option>
+                    <option th:each="option : ${filter.options}" th:value="${option.value}" th:text="${option.label}"
+                        th:selected="${option.selected}"></option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+</th:block>
+
+<!-- Active Filters Tags -->
+<th:block th:fragment="activeFilters(filters)">
+    <div class="flex flex-wrap gap-2" x-data>
+        <th:block th:each="filter : ${filters}" th:if="${filter.active}">
+            <span class="badge badge-lg gap-1">
+                <span th:text="${filter.label}">Filter</span>
+                <button type="button" th:onclick="'removeFilter(\'' + ${filter.name} + '\')'"
+                    class="btn btn-ghost btn-xs btn-circle">×</button>
+            </span>
+        </th:block>
+
+        <button th:if="${!filters.isEmpty()}" type="button" onclick="clearAllFilters()"
+            class="text-error text-sm hover:underline">
+            Tümünü Temizle
+        </button>
+    </div>
+</th:block>
+
+<!-- Inline Filter Bar -->
+<th:block th:fragment="filterBar">
+    <div class="flex flex-wrap gap-2 p-4 bg-base-200 rounded-lg">
+        <!-- Sort -->
+        <select name="sort" class="select select-sm select-bordered">
+            <option value="">Sırala</option>
+            <option value="rating">En Yüksek Puan</option>
+            <option value="orders">En Çok Sipariş</option>
+            <option value="price_asc">Fiyat (Düşük-Yüksek)</option>
+            <option value="price_desc">Fiyat (Yüksek-Düşük)</option>
+            <option value="newest">En Yeni</option>
+        </select>
+
+        <!-- Quick Filters -->
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-sm btn-outline gap-1">
+                Stil
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </label>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                <li><a>Minimal</a></li>
+                <li><a>Renkli</a></li>
+                <li><a>Profesyonel</a></li>
+                <li><a>Casual</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown">
+            <label tabindex="0" class="btn btn-sm btn-outline gap-1">
+                Fiyat
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </label>
+            <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                <li><a>₺0 - ₺500</a></li>
+                <li><a>₺500 - ₺1000</a></li>
+                <li><a>₺1000 - ₺2500</a></li>
+                <li><a>₺2500+</a></li>
+            </ul>
+        </div>
+
+        <!-- View Toggle -->
+        <div class="ml-auto join">
+            <button class="join-item btn btn-sm btn-active">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                </svg>
+            </button>
+            <button class="join-item btn btn-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</th:block>

@@ -1,42 +1,38 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<!-- Navbar Fragment -->
-<nav th:fragment="navbar" class="navbar bg-base-100 shadow-lg sticky top-0 z-40 backdrop-blur-lg bg-base-100/90">
-    <div class="container mx-auto">
+<!-- Enhanced Navbar Fragment -->
+<nav th:fragment="navbar"
+    class="navbar bg-base-100/95 backdrop-blur-lg shadow-sm sticky top-0 z-50 border-b border-base-200">
+    <div class="container mx-auto px-4">
 
-        <!-- Logo -->
-        <div class="flex-1">
-            <a href="/" class="btn btn-ghost text-xl gap-2">
+        <!-- Left: Logo -->
+        <div class="navbar-start">
+            <a href="/" class="flex items-center gap-2 text-xl font-bold">
                 <span class="text-2xl">🤖</span>
-                <span
-                    class="font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hidden sm:inline">
-                    AI Influencer
-                </span>
+                <span class="hidden sm:inline text-gradient">AI Influencer</span>
             </a>
         </div>
 
-        <!-- Search (Desktop) -->
-        <div class="flex-none hidden md:flex">
-            <div class="form-control">
-                <div class="input-group">
-                    <input type="text" placeholder="Creator veya hizmet ara..."
-                        class="input input-bordered w-64 focus:w-80 transition-all" />
-                    <a href="/search" class="btn btn-square btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </a>
-                </div>
+        <!-- Center: Search (Desktop) -->
+        <div class="navbar-center hidden lg:flex">
+            <div class="join">
+                <input type="text" placeholder="Creator veya hizmet ara..."
+                    class="input input-bordered join-item w-80 focus:outline-none focus:border-primary" />
+                <a href="/search" class="btn btn-primary join-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                </a>
             </div>
         </div>
 
-        <!-- Navigation Links -->
-        <div class="flex-none gap-2">
+        <!-- Right: Nav Items -->
+        <div class="navbar-end gap-1">
 
-            <!-- Browse Button -->
-            <a href="/search" class="btn btn-ghost hidden sm:flex">
+            <!-- Browse Button (Desktop) -->
+            <a href="/search" class="btn btn-ghost gap-2 hidden md:flex">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                     stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -46,7 +42,7 @@
             </a>
 
             <!-- Theme Toggle -->
-            <div x-data class="dropdown dropdown-end">
+            <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -54,51 +50,49 @@
                             d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
                 </label>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-200 rounded-box w-52 mt-4">
-                    <li><a @click="$store.theme.set('light')">☀️ Açık Tema</a></li>
-                    <li><a @click="$store.theme.set('dark')">🌙 Koyu Tema</a></li>
+                <ul tabindex="0"
+                    class="dropdown-content z-[100] menu p-2 shadow-xl bg-base-100 rounded-box w-52 mt-2 border border-base-200">
+                    <li><a @click="$store.theme.set('aiMarket')">☀️ Açık Tema</a></li>
+                    <li><a @click="$store.theme.set('aiMarketDark')">🌙 Koyu Tema</a></li>
                     <li><a @click="$store.theme.set('cyberpunk')">🌈 Cyberpunk</a></li>
-                    <li><a @click="$store.theme.set('luxury')">💎 Luxury</a></li>
                 </ul>
             </div>
 
-            <!-- Auth Section - Dynamic based on login state -->
+            <!-- Auth Section -->
             <div x-data x-cloak>
-
                 <!-- Not Logged In -->
                 <template x-if="!$store.auth.isLoggedIn">
-                    <div class="flex gap-2">
-                        <a href="/login" class="btn btn-ghost">Giriş Yap</a>
-                        <a href="/register" class="btn btn-primary">Kayıt Ol</a>
+                    <div class="flex items-center gap-2">
+                        <a href="/login" class="btn btn-ghost btn-sm">Giriş Yap</a>
+                        <a href="/register" class="btn btn-primary btn-sm">Kayıt Ol</a>
                     </div>
                 </template>
 
                 <!-- Logged In - User Menu -->
                 <template x-if="$store.auth.isLoggedIn">
                     <div class="dropdown dropdown-end">
-                        <label tabindex="0" class="btn btn-ghost btn-circle avatar online">
-                            <div class="w-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                        <label tabindex="0" class="btn btn-ghost btn-circle avatar">
+                            <div class="w-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1">
                                 <img :src="$store.auth.user?.avatar" :alt="$store.auth.user?.name" />
                             </div>
                         </label>
                         <ul tabindex="0"
-                            class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-200 rounded-box w-64 mt-4">
-                            <li class="menu-title px-4 py-2">
-                                <div class="flex items-center gap-3">
+                            class="dropdown-content z-[100] menu p-2 shadow-xl bg-base-100 rounded-box w-64 mt-2 border border-base-200">
+                            <!-- User Info -->
+                            <li class="px-4 py-3 border-b border-base-200">
+                                <div class="flex items-center gap-3 hover:bg-transparent cursor-default">
                                     <div class="avatar">
-                                        <div class="w-12 rounded-full">
+                                        <div class="w-10 rounded-full">
                                             <img :src="$store.auth.user?.avatar" />
                                         </div>
                                     </div>
                                     <div>
                                         <p class="font-semibold" x-text="$store.auth.user?.name"></p>
-                                        <p class="text-xs opacity-60" x-text="$store.auth.user?.email"></p>
                                         <span class="badge badge-sm badge-primary"
                                             x-text="$store.auth.user?.role"></span>
                                     </div>
                                 </div>
                             </li>
-                            <div class="divider my-1"></div>
 
                             <!-- Role-based menu items -->
                             <template x-if="$store.auth.user?.role === 'BRAND'">
@@ -133,8 +127,8 @@
                 </template>
             </div>
 
-            <!-- Mobile Menu -->
-            <div class="dropdown dropdown-end md:hidden">
+            <!-- Mobile Menu Button -->
+            <div class="dropdown dropdown-end lg:hidden">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
                         stroke="currentColor">
@@ -142,12 +136,22 @@
                             d="M4 6h16M4 12h16M4 18h7" />
                     </svg>
                 </label>
-                <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-200 rounded-box w-52 mt-4">
+                <ul tabindex="0"
+                    class="dropdown-content z-[100] menu p-2 shadow-xl bg-base-100 rounded-box w-56 mt-2 border border-base-200">
+                    <!-- Mobile Search -->
+                    <li class="p-2">
+                        <div class="join w-full">
+                            <input type="text" placeholder="Ara..."
+                                class="input input-bordered input-sm join-item w-full" />
+                            <a href="/search" class="btn btn-primary btn-sm join-item">🔍</a>
+                        </div>
+                    </li>
+                    <div class="divider my-1"></div>
                     <li><a href="/">🏠 Ana Sayfa</a></li>
                     <li><a href="/search">🔍 Keşfet</a></li>
-                    <li class="divider"></li>
+                    <div class="divider my-1"></div>
                     <li><a href="/login">🔑 Giriş Yap</a></li>
-                    <li><a href="/register">📝 Kayıt Ol</a></li>
+                    <li><a href="/register" class="text-primary font-medium">📝 Kayıt Ol</a></li>
                 </ul>
             </div>
         </div>

@@ -1,70 +1,96 @@
 <!DOCTYPE html>
-<html lang="tr" xmlns:th="http://www.thymeleaf.org" 
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      x-data x-init="$store.theme.init(); $store.auth.init()">
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" x-data
+    x-init="$store.theme.init(); $store.auth.init()">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title th:text="${pageTitle} + ' | AI Influencer Marketplace'">AI Influencer Marketplace</title>
-    
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
-    
-    <!-- Tailwind CSS (CDN for development - will be replaced with built CSS) -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@5.0.0/daisyui.css" rel="stylesheet" type="text/css" />
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+
+    <!-- DaisyUI + Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- App Scripts -->
+    <script th:src="@{/js/mock-data.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#7C3AED',
+                        'primary-focus': '#6D28D9',
                     }
                 }
             }
         }
     </script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Alpine.js -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-    
-    <!-- App Scripts -->
-    <script th:src="@{/js/mock-data.js}"></script>
-    <script th:src="@{/js/app.js}"></script>
-    
-    <!-- Custom Styles -->
+
     <style>
-        [x-cloak] { display: none !important; }
-        
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: oklch(var(--b2)); }
-        ::-webkit-scrollbar-thumb { background: oklch(var(--p)); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: oklch(var(--pf)); }
-        
-        /* Smooth transitions */
-        * { transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
-        
-        /* Card animations */
-        .card-hover:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -12px rgba(0,0,0,0.2); }
-        
-        /* Gradient background */
-        .hero-gradient {
-            background: linear-gradient(135deg, oklch(var(--p)) 0%, oklch(var(--s)) 50%, oklch(var(--a)) 100%);
+        [x-cloak] {
+            display: none !important;
+        }
+
+        /* Base Typography */
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        /* Container */
+        .container-custom {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        @media (min-width: 640px) {
+            .container-custom {
+                padding-left: 1.5rem;
+                padding-right: 1.5rem;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #7C3AED;
+            border-radius: 3px;
         }
     </style>
 </head>
-<body class="min-h-screen bg-base-100 font-sans">
-    
+
+<body class="min-h-screen bg-base-100 flex flex-col" data-theme="light">
+
     <!-- Toast Notifications -->
-    <div class="toast toast-top toast-end z-50" x-data x-show="$store.notify.messages.length > 0">
+    <div class="toast toast-top toast-end z-[9999]" x-data x-show="$store.notify.messages.length > 0">
         <template x-for="msg in $store.notify.messages" :key="msg.id">
-            <div class="alert" :class="{
+            <div class="alert shadow-lg" :class="{
                 'alert-success': msg.type === 'success',
                 'alert-error': msg.type === 'error', 
                 'alert-warning': msg.type === 'warning',
@@ -74,34 +100,117 @@
             </div>
         </template>
     </div>
-    
-    <!-- Navigation -->
-    <div th:replace="~{layout/navbar :: navbar}"></div>
-    
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-50 w-full bg-white border-b border-gray-200">
+        <div class="container-custom">
+            <div class="flex items-center justify-between h-16">
+
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-2 font-bold text-lg">
+                    <span class="text-2xl">🤖</span>
+                    <span class="text-primary hidden sm:inline">AI Influencer</span>
+                </a>
+
+                <!-- Desktop Nav -->
+                <nav class="hidden md:flex items-center gap-6">
+                    <a href="/search" class="text-gray-600 hover:text-primary font-medium transition-colors">Keşfet</a>
+                    <a href="#" class="text-gray-600 hover:text-primary font-medium transition-colors">Nasıl
+                        Çalışır?</a>
+                </nav>
+
+                <!-- Desktop Actions -->
+                <div class="hidden md:flex items-center gap-3">
+                    <a href="/login" class="btn btn-ghost btn-sm">Giriş Yap</a>
+                    <a href="/register" class="btn btn-primary btn-sm">Kayıt Ol</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden btn btn-ghost btn-square"
+                    onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden border-t border-gray-200 py-4">
+                <nav class="flex flex-col gap-2">
+                    <a href="/search" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Keşfet</a>
+                    <a href="#" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Nasıl Çalışır?</a>
+                    <div class="border-t border-gray-200 my-2"></div>
+                    <a href="/login" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Giriş Yap</a>
+                    <a href="/register" class="px-4 py-2 bg-primary text-white rounded-lg text-center">Kayıt Ol</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
     <!-- Main Content -->
-    <main layout:fragment="content">
+    <main layout:fragment="content" class="flex-1">
         <!-- Page content will be inserted here -->
     </main>
-    
-    <!-- Footer -->
-    <footer class="footer footer-center p-10 bg-base-200 text-base-content mt-auto">
-        <aside>
-            <div class="flex items-center gap-2 mb-4">
-                <span class="text-3xl">🤖</span>
-                <span class="text-xl font-bold">AI Influencer Marketplace</span>
+
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-300">
+        <div class="container-custom py-12">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+                <!-- Brand -->
+                <div class="sm:col-span-2 lg:col-span-1">
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-2xl">🤖</span>
+                        <span class="text-white font-bold">AI Influencer</span>
+                    </div>
+                    <p class="text-sm text-gray-400">
+                        Türkiye'nin ilk AI influencer içerik platformu.
+                    </p>
+                </div>
+
+                <!-- Links 1 -->
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Platform</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="/search" class="hover:text-white transition-colors">Creator'ları Keşfet</a></li>
+                        <li><a href="/register?role=creator" class="hover:text-white transition-colors">Creator Ol</a>
+                        </li>
+                        <li><a href="#" class="hover:text-white transition-colors">Nasıl Çalışır?</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links 2 -->
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Şirket</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Hakkımızda</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">İletişim</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                    </ul>
+                </div>
+
+                <!-- Links 3 -->
+                <div>
+                    <h4 class="text-white font-semibold mb-4">Yasal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition-colors">Gizlilik Politikası</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">Kullanım Şartları</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">KVKK</a></li>
+                    </ul>
+                </div>
             </div>
-            <p class="text-sm opacity-70">AI ile oluşturulmuş influencer karakterlerle markanızı büyütün.</p>
-            <p class="text-xs opacity-50 mt-2">© 2024 ACR Tech. Tüm hakları saklıdır.</p>
-        </aside>
-        <nav>
-            <div class="grid grid-flow-col gap-4">
-                <a class="link link-hover">Hakkımızda</a>
-                <a class="link link-hover">İletişim</a>
-                <a class="link link-hover">Gizlilik Politikası</a>
-                <a class="link link-hover">Kullanım Şartları</a>
+
+            <!-- Bottom -->
+            <div
+                class="border-t border-gray-800 mt-8 pt-8 text-sm text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p>© 2024 ACR Tech. Tüm hakları saklıdır.</p>
+                <p>🇹🇷 Türkiye'de yapıldı</p>
             </div>
-        </nav>
+        </div>
     </footer>
 
 </body>
+
 </html>

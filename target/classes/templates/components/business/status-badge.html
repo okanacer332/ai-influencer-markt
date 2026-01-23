@@ -1,0 +1,144 @@
+<!-- ============================================
+     STATUS BADGE COMPONENT (B-08)
+     Order/Gig status display
+     ============================================ -->
+
+<!-- Status Badge (Standard) -->
+<th:block th:fragment="statusBadge(status)">
+    <span class="badge gap-1" th:classappend="${status == 'PENDING'} ? 'badge-warning' : 
+                         (${status == 'ACTIVE' || status == 'APPROVED'} ? 'badge-success' : 
+                         (${status == 'IN_PROGRESS'} ? 'badge-info' : 
+                         (${status == 'COMPLETED' || status == 'DELIVERED'} ? 'badge-primary' : 
+                         (${status == 'REJECTED' || status == 'CANCELLED'} ? 'badge-error' : 
+                         (${status == 'DRAFT'} ? 'badge-ghost' : 'badge-neutral')))))">
+        <span th:switch="${status}">
+            <span th:case="'PENDING'">⏳</span>
+            <span th:case="'ACTIVE'">✅</span>
+            <span th:case="'APPROVED'">✅</span>
+            <span th:case="'IN_PROGRESS'">🔄</span>
+            <span th:case="'COMPLETED'">🎉</span>
+            <span th:case="'DELIVERED'">📦</span>
+            <span th:case="'REJECTED'">❌</span>
+            <span th:case="'CANCELLED'">🚫</span>
+            <span th:case="'DRAFT'">📝</span>
+            <span th:case="'REVISION'">🔁</span>
+            <span th:case="*">•</span>
+        </span>
+        <span th:switch="${status}">
+            <span th:case="'PENDING'">Beklemede</span>
+            <span th:case="'ACTIVE'">Aktif</span>
+            <span th:case="'APPROVED'">Onaylandı</span>
+            <span th:case="'IN_PROGRESS'">Devam Ediyor</span>
+            <span th:case="'COMPLETED'">Tamamlandı</span>
+            <span th:case="'DELIVERED'">Teslim Edildi</span>
+            <span th:case="'REJECTED'">Reddedildi</span>
+            <span th:case="'CANCELLED'">İptal Edildi</span>
+            <span th:case="'DRAFT'">Taslak</span>
+            <span th:case="'REVISION'">Revizyon</span>
+            <span th:case="*" th:text="${status}">Status</span>
+        </span>
+    </span>
+</th:block>
+
+<!-- Small Status Badge -->
+<th:block th:fragment="statusBadgeSmall(status)">
+    <span class="badge badge-sm gap-1" th:classappend="${status == 'PENDING'} ? 'badge-warning' : 
+                         (${status == 'ACTIVE' || status == 'APPROVED'} ? 'badge-success' : 
+                         (${status == 'IN_PROGRESS'} ? 'badge-info' : 
+                         (${status == 'COMPLETED' || status == 'DELIVERED'} ? 'badge-primary' : 
+                         (${status == 'REJECTED' || status == 'CANCELLED'} ? 'badge-error' : 'badge-ghost'))))">
+        <span th:switch="${status}">
+            <span th:case="'PENDING'">Beklemede</span>
+            <span th:case="'ACTIVE'">Aktif</span>
+            <span th:case="'IN_PROGRESS'">Devam Ediyor</span>
+            <span th:case="'COMPLETED'">Tamamlandı</span>
+            <span th:case="'DELIVERED'">Teslim Edildi</span>
+            <span th:case="'REJECTED'">Reddedildi</span>
+            <span th:case="'CANCELLED'">İptal</span>
+            <span th:case="*" th:text="${status}">Status</span>
+        </span>
+    </span>
+</th:block>
+
+<!-- Status Dot (Minimal) -->
+<th:block th:fragment="statusDot(status)">
+    <span class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full" th:classappend="${status == 'PENDING'} ? 'bg-warning' : 
+                             (${status == 'ACTIVE'} ? 'bg-success animate-pulse' : 
+                             (${status == 'IN_PROGRESS'} ? 'bg-info animate-pulse' : 
+                             (${status == 'COMPLETED'} ? 'bg-primary' : 
+                             (${status == 'REJECTED'} ? 'bg-error' : 'bg-base-300'))))"></span>
+        <span th:switch="${status}" class="text-sm">
+            <span th:case="'PENDING'">Beklemede</span>
+            <span th:case="'ACTIVE'">Aktif</span>
+            <span th:case="'IN_PROGRESS'">Devam Ediyor</span>
+            <span th:case="'COMPLETED'">Tamamlandı</span>
+            <span th:case="'REJECTED'">Reddedildi</span>
+            <span th:case="*" th:text="${status}">Status</span>
+        </span>
+    </span>
+</th:block>
+
+<!-- Status with Progress -->
+<th:block th:fragment="statusProgress(status, progress)">
+    <div class="w-full">
+        <div class="flex justify-between items-center mb-1">
+            <span th:replace="~{components/business/status-badge :: statusBadgeSmall(${status})}"></span>
+            <span class="text-xs text-base-content/50" th:text="${progress} + '%'">50%</span>
+        </div>
+        <progress class="progress h-1.5" th:classappend="${status == 'IN_PROGRESS'} ? 'progress-info' : 
+                                 (${status == 'COMPLETED'} ? 'progress-success' : 'progress-primary')"
+            th:value="${progress}" max="100"></progress>
+    </div>
+</th:block>
+
+<!-- User Role Badge -->
+<th:block th:fragment="roleBadge(role)">
+    <span class="badge gap-1" th:classappend="${role == 'ADMIN'} ? 'badge-error' : 
+                         (${role == 'CREATOR'} ? 'badge-secondary' : 
+                         (${role == 'BRAND'} ? 'badge-primary' : 'badge-ghost'))">
+        <span th:switch="${role}">
+            <span th:case="'ADMIN'">👑</span>
+            <span th:case="'CREATOR'">🎨</span>
+            <span th:case="'BRAND'">🏢</span>
+            <span th:case="*">👤</span>
+        </span>
+        <span th:switch="${role}">
+            <span th:case="'ADMIN'">Admin</span>
+            <span th:case="'CREATOR'">Creator</span>
+            <span th:case="'BRAND'">Marka</span>
+            <span th:case="*" th:text="${role}">User</span>
+        </span>
+    </span>
+</th:block>
+
+<!-- Verification Badge -->
+<th:block th:fragment="verifiedBadge(verified)">
+    <span th:if="${verified}" class="badge badge-success badge-sm gap-1">
+        ✓ Doğrulanmış
+    </span>
+    <span th:if="${!verified}" class="badge badge-ghost badge-sm gap-1">
+        ○ Doğrulanmamış
+    </span>
+</th:block>
+
+<!-- AI Badge -->
+<th:block th:fragment="aiBadge">
+    <span class="badge badge-secondary gap-1">
+        🤖 AI
+    </span>
+</th:block>
+
+<!-- Featured Badge -->
+<th:block th:fragment="featuredBadge">
+    <span class="badge badge-warning gap-1">
+        ⭐ Öne Çıkan
+    </span>
+</th:block>
+
+<!-- New Badge -->
+<th:block th:fragment="newBadge">
+    <span class="badge badge-accent gap-1">
+        🆕 Yeni
+    </span>
+</th:block>

@@ -1,0 +1,176 @@
+<!-- ============================================
+     DATE PICKER COMPONENT (F-09)
+     Date selection input
+     ============================================ -->
+
+<!-- Basic Date Input -->
+<th:block th:fragment="datePicker(id, label, value, required)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Tarih</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+        </label>
+        <input type="date" th:id="${id}" th:name="${id}" th:value="${value}" th:required="${required}"
+            class="input input-bordered w-full" />
+    </div>
+</th:block>
+
+<!-- Date Range Picker -->
+<th:block th:fragment="dateRangePicker(startId, endId, label, startValue, endValue)">
+    <div class="form-control w-full">
+        <label class="label">
+            <span class="label-text font-medium" th:text="${label}">Tarih Aralığı</span>
+        </label>
+        <div class="flex gap-2 items-center">
+            <input type="date" th:id="${startId}" th:name="${startId}" th:value="${startValue}"
+                class="input input-bordered flex-1" />
+            <span class="text-base-content/50">→</span>
+            <input type="date" th:id="${endId}" th:name="${endId}" th:value="${endValue}"
+                class="input input-bordered flex-1" />
+        </div>
+    </div>
+</th:block>
+
+<!-- Date Time Picker -->
+<th:block th:fragment="dateTimePicker(id, label, value, required)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Tarih ve Saat</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+        </label>
+        <input type="datetime-local" th:id="${id}" th:name="${id}" th:value="${value}" th:required="${required}"
+            class="input input-bordered w-full" />
+    </div>
+</th:block>
+
+<!-- Month Picker -->
+<th:block th:fragment="monthPicker(id, label, value)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium" th:text="${label}">Ay</span>
+        </label>
+        <input type="month" th:id="${id}" th:name="${id}" th:value="${value}" class="input input-bordered w-full" />
+    </div>
+</th:block>
+
+<!-- Custom Date Picker with Calendar -->
+<th:block th:fragment="datePickerCalendar(id, label, value)">
+    <div class="form-control w-full" x-data="{ 
+             open: false, 
+             value: '[[${value}]]',
+             currentMonth: new Date(),
+             days: [],
+             
+             init() {
+                 this.generateDays();
+             },
+             
+             generateDays() {
+                 const year = this.currentMonth.getFullYear();
+                 const month = this.currentMonth.getMonth();
+                 const firstDay = new Date(year, month, 1);
+                 const lastDay = new Date(year, month + 1, 0);
+                 const startPad = firstDay.getDay();
+                 
+                 this.days = [];
+                 
+                 // Padding for previous month
+                 for (let i = 0; i < startPad; i++) {
+                     this.days.push({ day: '', disabled: true });
+                 }
+                 
+                 // Days of current month
+                 for (let i = 1; i <= lastDay.getDate(); i++) {
+                     const date = new Date(year, month, i);
+                     this.days.push({
+                         day: i,
+                         date: date.toISOString().split('T')[0],
+                         isToday: date.toDateString() === new Date().toDateString()
+                     });
+                 }
+             },
+             
+             prevMonth() {
+                 this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() - 1);
+                 this.generateDays();
+             },
+             
+             nextMonth() {
+                 this.currentMonth = new Date(this.currentMonth.getFullYear(), this.currentMonth.getMonth() + 1);
+                 this.generateDays();
+             },
+             
+             selectDate(dateStr) {
+                 this.value = dateStr;
+                 this.open = false;
+             },
+             
+             formatDate(dateStr) {
+                 if (!dateStr) return '';
+                 const date = new Date(dateStr);
+                 return date.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+             },
+             
+             get monthName() {
+                 return this.currentMonth.toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' });
+             }
+         }">
+
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium" th:text="${label}">Tarih</span>
+        </label>
+
+        <input type="hidden" th:name="${id}" x-model="value" />
+
+        <div class="relative">
+            <button type="button" @click="open = !open"
+                class="input input-bordered w-full text-left flex items-center justify-between">
+                <span x-text="value ? formatDate(value) : 'Tarih seçin...'"></span>
+                <span>📅</span>
+            </button>
+
+            <!-- Calendar Dropdown -->
+            <div x-show="open" @click.away="open = false" x-transition
+                class="absolute top-full left-0 mt-1 bg-base-100 border border-base-300 rounded-box shadow-xl z-50 p-4 w-72">
+
+                <!-- Header -->
+                <div class="flex items-center justify-between mb-4">
+                    <button type="button" @click="prevMonth()" class="btn btn-ghost btn-sm btn-circle">❮</button>
+                    <span class="font-semibold" x-text="monthName"></span>
+                    <button type="button" @click="nextMonth()" class="btn btn-ghost btn-sm btn-circle">❯</button>
+                </div>
+
+                <!-- Weekdays -->
+                <div class="grid grid-cols-7 gap-1 text-center text-xs text-base-content/60 mb-2">
+                    <span>Pz</span><span>Pt</span><span>Sa</span><span>Ça</span><span>Pe</span><span>Cu</span><span>Ct</span>
+                </div>
+
+                <!-- Days -->
+                <div class="grid grid-cols-7 gap-1">
+                    <template x-for="day in days" :key="day.date || Math.random()">
+                        <button type="button" @click="day.date && selectDate(day.date)" :disabled="day.disabled"
+                            class="w-8 h-8 rounded-full text-sm flex items-center justify-center transition-colors"
+                            :class="{
+                                    'hover:bg-primary/20': !day.disabled && day.date !== value,
+                                    'bg-primary text-primary-content': day.date === value,
+                                    'ring-2 ring-primary': day.isToday && day.date !== value,
+                                    'opacity-30': day.disabled
+                                }" x-text="day.day"></button>
+                    </template>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="flex gap-2 mt-4 pt-4 border-t border-base-300">
+                    <button type="button" @click="selectDate(new Date().toISOString().split('T')[0])"
+                        class="btn btn-xs btn-ghost flex-1">Bugün</button>
+                    <button type="button" @click="value = ''; open = false"
+                        class="btn btn-xs btn-ghost flex-1">Temizle</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>

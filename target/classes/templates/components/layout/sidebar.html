@@ -1,0 +1,152 @@
+<!-- ============================================
+     SIDEBAR COMPONENT (L-02)
+     Reusable dashboard sidebar navigation
+     ============================================ -->
+<th:block th:fragment="sidebar(menuItems, activeItem)">
+    
+    <!-- Desktop Sidebar -->
+    <aside class="hidden lg:flex flex-col w-64 min-h-screen bg-base-200 border-r border-base-300">
+        
+        <!-- Logo / Brand -->
+        <div class="p-4 border-b border-base-300">
+            <a href="/" class="flex items-center gap-3">
+                <span class="text-3xl">🤖</span>
+                <span class="font-bold text-lg text-gradient">AI Market</span>
+            </a>
+        </div>
+        
+        <!-- Navigation Menu -->
+        <nav class="flex-1 p-4 overflow-y-auto scrollbar-thin">
+            <ul class="menu menu-md gap-1">
+                <th:block th:each="item : ${menuItems}">
+                    <!-- Menu Item with Submenu -->
+                    <li th:if="${item.children != null}">
+                        <details th:open="${item.id == activeItem}">
+                            <summary class="font-medium">
+                                <span th:utext="${item.icon}" class="text-lg"></span>
+                                <span th:text="${item.label}"></span>
+                            </summary>
+                            <ul>
+                                <li th:each="child : ${item.children}">
+                                    <a th:href="${child.href}" 
+                                       th:classappend="${child.id == activeItem} ? 'active' : ''">
+                                        <span th:utext="${child.icon}" class="text-base"></span>
+                                        <span th:text="${child.label}"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </details>
+                    </li>
+                    
+                    <!-- Simple Menu Item -->
+                    <li th:if="${item.children == null}">
+                        <a th:href="${item.href}"
+                           th:classappend="${item.id == activeItem} ? 'active' : ''"
+                           class="font-medium">
+                            <span th:utext="${item.icon}" class="text-lg"></span>
+                            <span th:text="${item.label}"></span>
+                            <span th:if="${item.badge != null}" 
+                                  class="badge badge-sm badge-primary"
+                                  th:text="${item.badge}"></span>
+                        </a>
+                    </li>
+                </th:block>
+            </ul>
+        </nav>
+        
+        <!-- User Section -->
+        <div class="p-4 border-t border-base-300">
+            <div class="flex items-center gap-3" x-data>
+                <div class="avatar placeholder">
+                    <div class="bg-primary text-primary-content rounded-full w-10">
+                        <span x-text="$store.auth.user?.name?.charAt(0) || 'U'"></span>
+                    </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="font-medium truncate" x-text="$store.auth.user?.name || 'Kullanıcı'"></p>
+                    <p class="text-xs text-base-content/60 truncate" x-text="$store.auth.user?.email || ''"></p>
+                </div>
+                <div class="dropdown dropdown-top dropdown-end">
+                    <button tabindex="0" class="btn btn-ghost btn-sm btn-square">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                        </svg>
+                    </button>
+                    <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-48">
+                        <li><a href="/settings">⚙️ Ayarlar</a></li>
+                        <li><a href="/profile">👤 Profil</a></li>
+                        <li class="divider"></li>
+                        <li><a href="/logout" class="text-error">🚪 Çıkış Yap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </aside>
+    
+    <!-- Mobile Drawer -->
+    <div class="drawer lg:hidden" x-data="{ open: false }">
+        <input id="sidebar-drawer" type="checkbox" class="drawer-toggle" x-model="open" />
+        
+        <!-- Mobile Toggle Button (Fixed) -->
+        <div class="fixed bottom-4 left-4 z-50 lg:hidden">
+            <label for="sidebar-drawer" class="btn btn-primary btn-circle shadow-lg glow-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </label>
+        </div>
+        
+        <!-- Drawer Side -->
+        <div class="drawer-side z-40">
+            <label for="sidebar-drawer" class="drawer-overlay"></label>
+            <aside class="flex flex-col w-72 min-h-screen bg-base-200">
+                
+                <!-- Logo -->
+                <div class="p-4 border-b border-base-300 flex items-center justify-between">
+                    <a href="/" class="flex items-center gap-3">
+                        <span class="text-3xl">🤖</span>
+                        <span class="font-bold text-lg text-gradient">AI Market</span>
+                    </a>
+                    <label for="sidebar-drawer" class="btn btn-ghost btn-sm btn-square">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </label>
+                </div>
+                
+                <!-- Mobile Menu (same structure as desktop) -->
+                <nav class="flex-1 p-4 overflow-y-auto">
+                    <ul class="menu menu-md gap-1">
+                        <th:block th:each="item : ${menuItems}">
+                            <li th:if="${item.children == null}">
+                                <a th:href="${item.href}"
+                                   th:classappend="${item.id == activeItem} ? 'active' : ''"
+                                   class="font-medium">
+                                    <span th:utext="${item.icon}" class="text-lg"></span>
+                                    <span th:text="${item.label}"></span>
+                                </a>
+                            </li>
+                        </th:block>
+                    </ul>
+                </nav>
+            </aside>
+        </div>
+    </div>
+    
+</th:block>
+
+<!-- Mini Sidebar Variant -->
+<th:block th:fragment="sidebarMini(menuItems, activeItem)">
+    <aside class="hidden lg:flex flex-col w-16 min-h-screen bg-base-200 border-r border-base-300 items-center py-4 gap-2">
+        <a href="/" class="mb-4">
+            <span class="text-2xl">🤖</span>
+        </a>
+        <div class="tooltip tooltip-right" th:each="item : ${menuItems}" th:data-tip="${item.label}">
+            <a th:href="${item.href}"
+               class="btn btn-ghost btn-square"
+               th:classappend="${item.id == activeItem} ? 'btn-active' : ''">
+                <span th:utext="${item.icon}" class="text-xl"></span>
+            </a>
+        </div>
+    </aside>
+</th:block>

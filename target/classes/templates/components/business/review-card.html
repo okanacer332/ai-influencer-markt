@@ -1,0 +1,123 @@
+<!-- ============================================
+     REVIEW CARD COMPONENT (B-04)
+     User review display
+     ============================================ -->
+
+<!-- Standard Review Card -->
+<th:block th:fragment="reviewCard(review)">
+    <div class="bg-base-100 rounded-xl p-4 shadow-sm">
+        <!-- Header -->
+        <div class="flex items-start gap-3 mb-3">
+            <!-- Avatar -->
+            <div class="avatar placeholder">
+                <div class="w-10 rounded-full bg-primary text-primary-content">
+                    <img th:if="${review.avatar != null}" th:src="${review.avatar}" />
+                    <span th:if="${review.avatar == null}"
+                        th:text="${#strings.substring(review.authorName, 0, 1)}">U</span>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="flex-1">
+                <div class="flex items-center gap-2">
+                    <span class="font-semibold" th:text="${review.authorName}">User Name</span>
+                    <span th:if="${review.verified}" class="badge badge-xs badge-success">Doğrulanmış</span>
+                </div>
+                <p class="text-xs text-base-content/50" th:text="${review.date}">2 gün önce</p>
+            </div>
+
+            <!-- Rating -->
+            <div class="flex text-warning">
+                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                    <span th:if="${i <= review.rating}">★</span>
+                    <span th:if="${i > review.rating}" class="text-base-300">★</span>
+                </th:block>
+            </div>
+        </div>
+
+        <!-- Review Text -->
+        <p class="text-base-content/80" th:text="${review.text}">Review text goes here...</p>
+
+        <!-- Order Info (optional) -->
+        <div th:if="${review.orderTitle}" class="mt-3 pt-3 border-t border-base-300 text-sm text-base-content/60">
+            <span>Sipariş: </span>
+            <span class="font-medium text-base-content" th:text="${review.orderTitle}"></span>
+        </div>
+
+        <!-- Helpful Button -->
+        <div class="flex items-center gap-4 mt-3"
+            x-data="{ helpful: false, count: [[${review.helpfulCount != null ? review.helpfulCount : 0}]] }">
+            <button @click="helpful = !helpful; count += helpful ? 1 : -1" class="btn btn-ghost btn-xs gap-1"
+                :class="helpful ? 'text-primary' : ''">
+                <span>👍</span>
+                <span x-text="count"></span>
+            </button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Compact Review -->
+<th:block th:fragment="reviewCardCompact(review)">
+    <div class="flex gap-3 py-3 border-b border-base-200 last:border-0">
+        <div class="avatar placeholder w-8 h-8 flex-shrink-0">
+            <div class="rounded-full bg-primary text-primary-content text-xs">
+                <span th:text="${#strings.substring(review.authorName, 0, 1)}">U</span>
+            </div>
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1">
+                <span class="font-medium text-sm" th:text="${review.authorName}">User</span>
+                <div class="flex text-xs text-warning">
+                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                        <span th:if="${i <= review.rating}">★</span>
+                    </th:block>
+                </div>
+            </div>
+            <p class="text-sm text-base-content/70 line-clamp-2" th:text="${review.text}">Review...</p>
+        </div>
+    </div>
+</th:block>
+
+<!-- Featured Review (Testimonial style) -->
+<th:block th:fragment="reviewCardFeatured(review)">
+    <div class="bg-gradient-to-br from-primary/5 to-secondary/5 rounded-2xl p-6 relative">
+        <!-- Quote icon -->
+        <div class="absolute top-4 right-4 text-4xl text-primary/20">❝</div>
+
+        <!-- Rating -->
+        <div class="flex text-warning mb-4">
+            <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                <span class="text-lg" th:if="${i <= review.rating}">★</span>
+                <span class="text-lg text-base-300" th:if="${i > review.rating}">★</span>
+            </th:block>
+        </div>
+
+        <!-- Text -->
+        <p class="text-lg mb-4" th:text="${review.text}">Review text...</p>
+
+        <!-- Author -->
+        <div class="flex items-center gap-3">
+            <div class="avatar">
+                <div class="w-12 rounded-full">
+                    <img th:if="${review.avatar}" th:src="${review.avatar}" />
+                </div>
+            </div>
+            <div>
+                <p class="font-semibold" th:text="${review.authorName}">Name</p>
+                <p th:if="${review.role}" class="text-sm text-base-content/60" th:text="${review.role}">Role</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Review List -->
+<th:block th:fragment="reviewList(reviews, emptyMessage)">
+    <div th:if="${reviews != null && !reviews.isEmpty()}" class="space-y-4">
+        <div th:each="review : ${reviews}" th:replace="~{components/business/review-card :: reviewCard(${review})}">
+        </div>
+    </div>
+
+    <div th:if="${reviews == null || reviews.isEmpty()}"
+        th:replace="~{components/data/empty-state :: emptyState('💬', 'Henüz Değerlendirme Yok', ${emptyMessage}, null, null)}">
+    </div>
+</th:block>

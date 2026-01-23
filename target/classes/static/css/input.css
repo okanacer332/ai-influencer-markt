@@ -1,73 +1,393 @@
-/* Tailwind CSS 4 + DaisyUI 5 Configuration */
+/* ============================================
+   AI Influencer Marketplace - Design System
+   TailwindCSS 4 + DaisyUI 5
+   ============================================ */
+
 @import "tailwindcss";
+
+/* ============================================
+   CUSTOM THEME CONFIGURATION
+   ============================================ */
 @plugin "daisyui" {
-  themes: light --default, dark, cyberpunk, luxury;
+  themes: aiMarket --default, aiMarketDark;
 }
 
-/* Custom Base Styles */
+/* AI Market Light Theme */
+@theme aiMarket {
+  /* Primary: Electric Violet (AI/Futuristic) */
+  --color-primary: oklch(55% 0.25 285);
+  --color-primary-content: oklch(100% 0 0);
+  
+  /* Secondary: Cyber Cyan */
+  --color-secondary: oklch(70% 0.15 195);
+  --color-secondary-content: oklch(100% 0 0);
+  
+  /* Accent: Neon Pink */
+  --color-accent: oklch(65% 0.25 350);
+  --color-accent-content: oklch(100% 0 0);
+  
+  /* Neutral */
+  --color-neutral: oklch(25% 0.02 260);
+  --color-neutral-content: oklch(98% 0 0);
+  
+  /* Base colors */
+  --color-base-100: oklch(99% 0.005 270);
+  --color-base-200: oklch(96% 0.005 270);
+  --color-base-300: oklch(92% 0.01 270);
+  --color-base-content: oklch(20% 0.02 260);
+  
+  /* State colors */
+  --color-success: oklch(65% 0.2 160);
+  --color-warning: oklch(75% 0.18 85);
+  --color-error: oklch(60% 0.22 25);
+  --color-info: oklch(70% 0.15 230);
+  
+  /* Border radius */
+  --radius-box: 1rem;
+  --radius-btn: 0.5rem;
+  --radius-badge: 0.375rem;
+  
+  /* Animation */
+  --animation-btn: 0.2s;
+  --animation-input: 0.2s;
+}
+
+/* AI Market Dark Theme */
+@theme aiMarketDark {
+  --color-primary: oklch(65% 0.25 285);
+  --color-primary-content: oklch(100% 0 0);
+  
+  --color-secondary: oklch(75% 0.15 195);
+  --color-secondary-content: oklch(15% 0.02 195);
+  
+  --color-accent: oklch(70% 0.25 350);
+  --color-accent-content: oklch(15% 0.02 350);
+  
+  --color-neutral: oklch(85% 0.02 260);
+  --color-neutral-content: oklch(15% 0.02 260);
+  
+  --color-base-100: oklch(15% 0.02 270);
+  --color-base-200: oklch(12% 0.02 270);
+  --color-base-300: oklch(20% 0.02 270);
+  --color-base-content: oklch(95% 0.005 270);
+  
+  --color-success: oklch(70% 0.2 160);
+  --color-warning: oklch(80% 0.18 85);
+  --color-error: oklch(65% 0.22 25);
+  --color-info: oklch(75% 0.15 230);
+}
+
+/* ============================================
+   TYPOGRAPHY SCALE
+   ============================================ */
 @layer base {
   html {
     scroll-behavior: smooth;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
   
   body {
-    @apply min-h-screen bg-base-100 text-base-content;
+    @apply min-h-screen bg-base-100 text-base-content antialiased;
+  }
+  
+  /* Typography scale */
+  h1, .text-h1 {
+    @apply text-4xl md:text-5xl font-bold tracking-tight;
+  }
+  
+  h2, .text-h2 {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+  }
+  
+  h3, .text-h3 {
+    @apply text-2xl md:text-3xl font-semibold;
+  }
+  
+  h4, .text-h4 {
+    @apply text-xl md:text-2xl font-semibold;
+  }
+  
+  h5, .text-h5 {
+    @apply text-lg md:text-xl font-medium;
+  }
+  
+  h6, .text-h6 {
+    @apply text-base md:text-lg font-medium;
   }
 }
 
-/* Custom Component Styles */
-@layer components {
-  /* Card hover effects */
-  .card-hover {
-    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
-  }
+/* ============================================
+   SPACING TOKENS
+   ============================================ */
+:root {
+  /* Spacing scale */
+  --space-xs: 0.25rem;   /* 4px */
+  --space-sm: 0.5rem;    /* 8px */
+  --space-md: 1rem;      /* 16px */
+  --space-lg: 1.5rem;    /* 24px */
+  --space-xl: 2rem;      /* 32px */
+  --space-2xl: 3rem;     /* 48px */
+  --space-3xl: 4rem;     /* 64px */
   
-  /* Gradient text */
-  .text-gradient {
-    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
-  }
+  /* Container widths */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
   
-  /* Glass effect */
-  .glass-card {
-    @apply backdrop-blur-lg bg-base-100/70 border border-base-300;
-  }
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease-out;
+  --transition-slow: 400ms ease-in-out;
   
-  /* Status badges */
-  .status-pending {
-    @apply badge badge-warning;
-  }
-  
-  .status-active {
-    @apply badge badge-success;
-  }
-  
-  .status-completed {
-    @apply badge badge-info;
-  }
-  
-  .status-rejected {
-    @apply badge badge-error;
-  }
-  
-  /* Page container */
-  .page-container {
-    @apply container mx-auto px-4 py-8;
-  }
-  
-  /* Section title */
-  .section-title {
-    @apply text-2xl font-bold mb-6;
-  }
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 }
 
-/* Custom Utilities */
+/* ============================================
+   GRADIENT UTILITIES
+   ============================================ */
 @layer utilities {
+  /* Hero gradient */
+  .gradient-hero {
+    background: linear-gradient(135deg, 
+      oklch(55% 0.25 285) 0%, 
+      oklch(65% 0.25 350) 50%, 
+      oklch(70% 0.15 195) 100%
+    );
+  }
+  
+  /* CTA gradient */
+  .gradient-cta {
+    background: linear-gradient(90deg, 
+      oklch(55% 0.25 285) 0%, 
+      oklch(65% 0.25 350) 100%
+    );
+  }
+  
+  /* Text gradient */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background: linear-gradient(90deg, 
+      oklch(55% 0.25 285) 0%, 
+      oklch(65% 0.25 350) 50%,
+      oklch(70% 0.15 195) 100%
+    );
+  }
+  
+  /* Glow effects */
+  .glow-primary {
+    box-shadow: 0 0 20px oklch(55% 0.25 285 / 0.3);
+  }
+  
+  .glow-accent {
+    box-shadow: 0 0 20px oklch(65% 0.25 350 / 0.3);
+  }
+}
+
+/* ============================================
+   ANIMATION UTILITIES
+   ============================================ */
+@layer utilities {
+  /* Fade in */
   .animate-fade-in {
-    animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-out;
   }
   
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Slide in from right */
+  .animate-slide-in-right {
+    animation: slideInRight 0.3s ease-out;
+  }
+  
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  /* Slide in from bottom */
+  .animate-slide-in-bottom {
+    animation: slideInBottom 0.3s ease-out;
+  }
+  
+  @keyframes slideInBottom {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  /* Scale up */
+  .animate-scale-up {
+    animation: scaleUp 0.2s ease-out;
+  }
+  
+  @keyframes scaleUp {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  
+  /* Shimmer for skeleton loaders */
+  .animate-shimmer {
+    animation: shimmer 1.5s infinite;
+    background: linear-gradient(
+      90deg,
+      oklch(92% 0.01 270) 0%,
+      oklch(96% 0.005 270) 50%,
+      oklch(92% 0.01 270) 100%
+    );
+    background-size: 200% 100%;
+  }
+  
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+  
+  /* Pulse glow */
+  .animate-pulse-glow {
+    animation: pulseGlow 2s infinite;
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 5px oklch(55% 0.25 285 / 0.3); }
+    50% { box-shadow: 0 0 20px oklch(55% 0.25 285 / 0.5); }
+  }
+}
+
+/* ============================================
+   COMPONENT BASE STYLES
+   ============================================ */
+@layer components {
+  /* ---- Layout ---- */
+  .page-container {
+    @apply container mx-auto px-4 py-8;
+  }
+  
+  .section-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* ---- Cards ---- */
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+  
+  .card-interactive {
+    @apply card-hover cursor-pointer active:scale-[0.98];
+  }
+  
+  .glass-card {
+    @apply backdrop-blur-lg bg-base-100/70 border border-base-300;
+  }
+  
+  /* ---- Status Badges ---- */
+  .status-pending {
+    @apply badge badge-warning gap-1;
+  }
+  
+  .status-active {
+    @apply badge badge-success gap-1;
+  }
+  
+  .status-completed {
+    @apply badge badge-info gap-1;
+  }
+  
+  .status-rejected {
+    @apply badge badge-error gap-1;
+  }
+  
+  .status-draft {
+    @apply badge badge-ghost gap-1;
+  }
+  
+  /* ---- Buttons ---- */
+  .btn-gradient {
+    @apply btn border-0 text-white gradient-cta hover:opacity-90;
+  }
+  
+  .btn-glow {
+    @apply btn btn-primary glow-primary hover:glow-accent;
+  }
+  
+  /* ---- Section Titles ---- */
+  .section-title {
+    @apply text-2xl md:text-3xl font-bold mb-6;
+  }
+  
+  .section-subtitle {
+    @apply text-base-content/60 text-lg max-w-2xl;
+  }
+  
+  /* ---- Links ---- */
+  .link-hover {
+    @apply transition-colors hover:text-primary;
+  }
+  
+  /* ---- Dividers ---- */
+  .divider-gradient {
+    @apply h-px w-full;
+    background: linear-gradient(90deg, transparent, oklch(55% 0.25 285 / 0.3), transparent);
+  }
+}
+
+/* ============================================
+   RESPONSIVE UTILITIES
+   ============================================ */
+@layer utilities {
+  /* Hide on mobile */
+  .hide-mobile {
+    @apply hidden sm:block;
+  }
+  
+  /* Show only on mobile */
+  .show-mobile {
+    @apply block sm:hidden;
+  }
+  
+  /* Touch-friendly sizing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Scrollbar styling */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(55% 0.25 285 / 0.5) transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: oklch(55% 0.25 285 / 0.5);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+/* ============================================
+   DARK MODE OVERRIDES
+   ============================================ */
+[data-theme="aiMarketDark"] {
+  .animate-shimmer {
+    background: linear-gradient(
+      90deg,
+      oklch(20% 0.02 270) 0%,
+      oklch(25% 0.02 270) 50%,
+      oklch(20% 0.02 270) 100%
+    );
+    background-size: 200% 100%;
   }
 }
