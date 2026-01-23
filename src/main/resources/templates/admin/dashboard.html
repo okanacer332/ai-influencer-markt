@@ -9,24 +9,21 @@
 <body>
     <main layout:fragment="content">
 
-        <div class="container mx-auto px-4 py-8" x-data="adminDashboard()">
+        <div class="container-custom py-8" x-data="adminDashboard()">
 
             <!-- Header -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
                 <div>
-                    <h1 class="text-3xl font-bold">
-                        <span class="text-3xl mr-2">👑</span>
-                        Admin Panel
-                    </h1>
-                    <p class="text-base-content/60 mt-1">Platform yönetimi ve moderasyon</p>
+                    <h1 class="text-3xl font-bold text-gray-900">👑 Admin Panel</h1>
+                    <p class="text-gray-600 mt-1">Platform yönetimi ve moderasyon</p>
                 </div>
-                <div class="flex gap-2">
-                    <a href="/admin/pending-creators" class="btn btn-warning gap-2">
-                        <span class="badge badge-sm" x-text="stats.pendingCreators">0</span>
+                <div class="flex gap-3">
+                    <a href="/admin/pending-creators" class="btn btn-warning btn-sm gap-2">
+                        <span class="bg-white/20 px-2 py-0.5 rounded text-xs" x-text="stats.pendingCreators">0</span>
                         Onay Bekleyenler
                     </a>
-                    <a href="/admin/disputes" class="btn btn-error gap-2">
-                        <span class="badge badge-sm" x-text="stats.activeDisputes">0</span>
+                    <a href="/admin/disputes" class="btn btn-error btn-sm gap-2">
+                        <span class="bg-white/20 px-2 py-0.5 rounded text-xs" x-text="stats.activeDisputes">0</span>
                         İtirazlar
                     </a>
                 </div>
@@ -34,111 +31,108 @@
 
             <!-- Stats Grid -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="stat bg-base-200 rounded-box shadow">
-                    <div class="stat-figure text-primary">👥</div>
-                    <div class="stat-title">Toplam Kullanıcı</div>
-                    <div class="stat-value text-primary" x-text="stats.totalUsers">0</div>
+                <div class="bg-white border border-gray-200 rounded-xl p-5">
+                    <div class="text-2xl mb-2">👥</div>
+                    <p class="text-sm text-gray-500">Toplam Kullanıcı</p>
+                    <p class="text-2xl font-bold text-gray-900" x-text="stats.totalUsers">0</p>
                 </div>
-
-                <div class="stat bg-base-200 rounded-box shadow">
-                    <div class="stat-figure text-secondary">🎨</div>
-                    <div class="stat-title">Aktif Creator</div>
-                    <div class="stat-value text-secondary" x-text="stats.activeCreators">0</div>
+                <div class="bg-white border border-gray-200 rounded-xl p-5">
+                    <div class="text-2xl mb-2">🎨</div>
+                    <p class="text-sm text-gray-500">Aktif Creator</p>
+                    <p class="text-2xl font-bold text-gray-900" x-text="stats.activeCreators">0</p>
                 </div>
-
-                <div class="stat bg-base-200 rounded-box shadow">
-                    <div class="stat-figure text-accent">🏢</div>
-                    <div class="stat-title">Kayıtlı Marka</div>
-                    <div class="stat-value text-accent" x-text="stats.activeBrands">0</div>
+                <div class="bg-white border border-gray-200 rounded-xl p-5">
+                    <div class="text-2xl mb-2">🏢</div>
+                    <p class="text-sm text-gray-500">Kayıtlı Marka</p>
+                    <p class="text-2xl font-bold text-gray-900" x-text="stats.activeBrands">0</p>
                 </div>
-
-                <div class="stat bg-base-200 rounded-box shadow">
-                    <div class="stat-figure text-success">💰</div>
-                    <div class="stat-title">Bu Ay Ciro</div>
-                    <div class="stat-value text-success" x-text="Utils.formatPrice(stats.monthlyRevenue)">₺0</div>
+                <div class="bg-white border border-gray-200 rounded-xl p-5">
+                    <div class="text-2xl mb-2">💰</div>
+                    <p class="text-sm text-gray-500">Bu Ay Ciro</p>
+                    <p class="text-2xl font-bold text-green-600" x-text="Utils.formatPrice(stats.monthlyRevenue)">₺0</p>
                 </div>
             </div>
 
             <!-- Alerts Section -->
             <div class="space-y-4 mb-8">
-                <div x-show="stats.pendingCreators > 0" class="alert alert-warning shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
-                    <div>
-                        <h3 class="font-bold">Onay Bekleyen Creator</h3>
-                        <p class="text-sm" x-text="stats.pendingCreators + ' creator profil onayı bekliyor'"></p>
+                <div x-show="stats.pendingCreators > 0"
+                    class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center gap-4">
+                    <span class="text-2xl">⚠️</span>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900">Onay Bekleyen Creator</h3>
+                        <p class="text-sm text-gray-600"
+                            x-text="stats.pendingCreators + ' creator profil onayı bekliyor'"></p>
                     </div>
-                    <a href="/admin/pending-creators" class="btn btn-sm">İncele</a>
+                    <a href="/admin/pending-creators" class="btn btn-sm btn-outline">İncele</a>
                 </div>
 
-                <div x-show="stats.activeDisputes > 0" class="alert alert-error shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div>
-                        <h3 class="font-bold">Açık İtirazlar</h3>
-                        <p class="text-sm" x-text="stats.activeDisputes + ' sipariş itiraz aşamasında'"></p>
+                <div x-show="stats.activeDisputes > 0"
+                    class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-4">
+                    <span class="text-2xl">🚨</span>
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900">Açık İtirazlar</h3>
+                        <p class="text-sm text-gray-600" x-text="stats.activeDisputes + ' sipariş itiraz aşamasında'">
+                        </p>
                     </div>
-                    <a href="/admin/disputes" class="btn btn-sm">İncele</a>
+                    <a href="/admin/disputes" class="btn btn-sm btn-outline">İncele</a>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                 <!-- Recent Activity -->
-                <div class="card bg-base-200 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title mb-4">📊 Son Aktiviteler</h2>
-                        <div class="space-y-3">
-                            <div class="flex items-center gap-3 p-3 bg-base-100 rounded-lg">
-                                <div class="badge badge-success">✓</div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-medium">Yeni sipariş tamamlandı</p>
-                                    <p class="text-xs text-base-content/60">2 dakika önce</p>
-                                </div>
+                <div class="bg-white border border-gray-200 rounded-xl">
+                    <div class="p-5 border-b border-gray-200">
+                        <h2 class="font-semibold text-gray-900">📊 Son Aktiviteler</h2>
+                    </div>
+                    <div class="divide-y divide-gray-100">
+                        <div class="flex items-center gap-3 p-4">
+                            <span
+                                class="w-8 h-8 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-sm">✓</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Yeni sipariş tamamlandı</p>
+                                <p class="text-xs text-gray-500">2 dakika önce</p>
                             </div>
-                            <div class="flex items-center gap-3 p-3 bg-base-100 rounded-lg">
-                                <div class="badge badge-warning">⏳</div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-medium">Yeni creator başvurusu</p>
-                                    <p class="text-xs text-base-content/60">15 dakika önce</p>
-                                </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4">
+                            <span
+                                class="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center text-sm">⏳</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Yeni creator başvurusu</p>
+                                <p class="text-xs text-gray-500">15 dakika önce</p>
                             </div>
-                            <div class="flex items-center gap-3 p-3 bg-base-100 rounded-lg">
-                                <div class="badge badge-info">📦</div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-medium">Sipariş teslim edildi</p>
-                                    <p class="text-xs text-base-content/60">1 saat önce</p>
-                                </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4">
+                            <span
+                                class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm">📦</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Sipariş teslim edildi</p>
+                                <p class="text-xs text-gray-500">1 saat önce</p>
                             </div>
-                            <div class="flex items-center gap-3 p-3 bg-base-100 rounded-lg">
-                                <div class="badge badge-primary">👤</div>
-                                <div class="flex-1">
-                                    <p class="text-sm font-medium">Yeni marka kaydı</p>
-                                    <p class="text-xs text-base-content/60">2 saat önce</p>
-                                </div>
+                        </div>
+                        <div class="flex items-center gap-3 p-4">
+                            <span
+                                class="w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center text-sm">👤</span>
+                            <div class="flex-1">
+                                <p class="text-sm font-medium text-gray-900">Yeni marka kaydı</p>
+                                <p class="text-xs text-gray-500">2 saat önce</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Quick Stats Chart (Placeholder) -->
-                <div class="card bg-base-200 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title mb-4">📈 Haftalık Sipariş Grafiği</h2>
-                        <div class="flex items-end gap-2 h-48">
+                <!-- Weekly Orders Chart -->
+                <div class="bg-white border border-gray-200 rounded-xl">
+                    <div class="p-5 border-b border-gray-200">
+                        <h2 class="font-semibold text-gray-900">📈 Haftalık Siparişler</h2>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex items-end gap-2 h-40">
                             <template x-for="(value, index) in weeklyOrders" :key="index">
                                 <div class="flex-1 flex flex-col items-center">
-                                    <div class="w-full bg-primary/20 rounded-t"
-                                        :style="'height: ' + (value * 4) + 'px'">
-                                        <div class="w-full bg-primary rounded-t h-full"></div>
+                                    <div class="w-full bg-primary rounded-t" :style="'height: ' + (value * 4) + 'px'">
                                     </div>
-                                    <span class="text-xs mt-2"
+                                    <span class="text-xs text-gray-500 mt-2"
                                         x-text="['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'][index]"></span>
                                 </div>
                             </template>
@@ -147,76 +141,87 @@
                 </div>
 
                 <!-- Top Creators -->
-                <div class="card bg-base-200 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title mb-4">🏆 En Başarılı Creator'lar</h2>
-                        <div class="overflow-x-auto">
-                            <table class="table table-zebra">
-                                <thead>
+                <div class="bg-white border border-gray-200 rounded-xl">
+                    <div class="p-5 border-b border-gray-200">
+                        <h2 class="font-semibold text-gray-900">🏆 En Başarılı Creator'lar</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="text-left text-xs font-medium text-gray-500 uppercase px-5 py-3">Creator
+                                    </th>
+                                    <th class="text-left text-xs font-medium text-gray-500 uppercase px-5 py-3">Sipariş
+                                    </th>
+                                    <th class="text-left text-xs font-medium text-gray-500 uppercase px-5 py-3">Ciro
+                                    </th>
+                                    <th class="text-left text-xs font-medium text-gray-500 uppercase px-5 py-3">Puan
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <template x-for="(creator, index) in topCreators" :key="creator.id">
                                     <tr>
-                                        <th>Creator</th>
-                                        <th>Sipariş</th>
-                                        <th>Ciro</th>
-                                        <th>Puan</th>
+                                        <td class="px-5 py-3">
+                                            <div class="flex items-center gap-2">
+                                                <span x-text="['🥇', '🥈', '🥉'][index]"></span>
+                                                <span class="font-medium text-gray-900" x-text="creator.name"></span>
+                                            </div>
+                                        </td>
+                                        <td class="px-5 py-3 text-gray-600" x-text="creator.orders"></td>
+                                        <td class="px-5 py-3 text-gray-600" x-text="Utils.formatPrice(creator.revenue)">
+                                        </td>
+                                        <td class="px-5 py-3">
+                                            <span class="text-yellow-500">⭐</span>
+                                            <span x-text="creator.rating"></span>
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <template x-for="(creator, index) in topCreators" :key="creator.id">
-                                        <tr>
-                                            <td>
-                                                <div class="flex items-center gap-2">
-                                                    <span x-text="['🥇', '🥈', '🥉'][index]"></span>
-                                                    <span x-text="creator.name"></span>
-                                                </div>
-                                            </td>
-                                            <td x-text="creator.orders"></td>
-                                            <td x-text="Utils.formatPrice(creator.revenue)"></td>
-                                            <td>
-                                                <div class="flex items-center gap-1">
-                                                    <span class="text-warning">⭐</span>
-                                                    <span x-text="creator.rating"></span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-                            </table>
-                        </div>
+                                </template>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
                 <!-- System Health -->
-                <div class="card bg-base-200 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title mb-4">🖥️ Sistem Durumu</h2>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm">API Yanıt Süresi</span>
-                                    <span class="text-sm text-success">45ms</span>
-                                </div>
-                                <progress class="progress progress-success w-full" value="95" max="100"></progress>
+                <div class="bg-white border border-gray-200 rounded-xl">
+                    <div class="p-5 border-b border-gray-200">
+                        <h2 class="font-semibold text-gray-900">🖥️ Sistem Durumu</h2>
+                    </div>
+                    <div class="p-5 space-y-4">
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">API Yanıt Süresi</span>
+                                <span class="text-green-600 font-medium">45ms</span>
                             </div>
-                            <div>
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm">Veritabanı</span>
-                                    <span class="text-sm text-success">Aktif</span>
-                                </div>
-                                <progress class="progress progress-success w-full" value="100" max="100"></progress>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 95%"></div>
                             </div>
-                            <div>
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm">Önbellek</span>
-                                    <span class="text-sm text-warning">78%</span>
-                                </div>
-                                <progress class="progress progress-warning w-full" value="78" max="100"></progress>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Veritabanı</span>
+                                <span class="text-green-600 font-medium">Aktif</span>
                             </div>
-                            <div>
-                                <div class="flex justify-between mb-1">
-                                    <span class="text-sm">Depolama</span>
-                                    <span class="text-sm text-info">52%</span>
-                                </div>
-                                <progress class="progress progress-info w-full" value="52" max="100"></progress>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Önbellek</span>
+                                <span class="text-yellow-600 font-medium">78%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm mb-1">
+                                <span class="text-gray-600">Depolama</span>
+                                <span class="text-blue-600 font-medium">52%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-500 h-2 rounded-full" style="width: 52%"></div>
                             </div>
                         </div>
                     </div>
