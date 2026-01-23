@@ -3,32 +3,35 @@
     layout:decorate="~{layout/base}">
 
 <head>
-    <title>Keşfet</title>
+    <title>Creator'ları Keşfet</title>
 </head>
 
 <body>
     <main layout:fragment="content">
 
-        <div class="container mx-auto px-4 py-8" x-data="searchPage()">
+        <div class="container-custom py-8" x-data="searchPage()">
 
             <!-- Page Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold mb-2">AI Creator'ları Keşfedin</h1>
-                <p class="text-base-content/60">Markanız için mükemmel AI influencer'ı bulun</p>
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900 mb-2">AI Creator'ları Keşfet</h1>
+                <p class="text-gray-600">Markanız için mükemmel AI influencer'ı bulun</p>
             </div>
 
             <!-- Search Bar -->
-            <div class="max-w-2xl mx-auto mb-8">
-                <div class="join w-full">
-                    <input type="text" x-model="searchQuery" @input.debounce.300ms="performSearch"
-                        placeholder="Creator, stil veya kategori ara..."
-                        class="input input-bordered join-item w-full" />
-                    <button class="btn btn-primary join-item" @click="performSearch">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+            <div class="bg-white border border-gray-200 rounded-lg p-4 mb-8">
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text" x-model="searchQuery" @input.debounce.300ms="performSearch"
+                            placeholder="Creator, stil veya kategori ara..."
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none" />
+                    </div>
+                    <button class="btn btn-primary" @click="performSearch">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
+                        Ara
                     </button>
                 </div>
             </div>
@@ -36,78 +39,61 @@
             <div class="flex flex-col lg:flex-row gap-8">
 
                 <!-- Filters Sidebar -->
-                <aside class="w-full lg:w-72 shrink-0">
-                    <div class="card bg-base-200 shadow-lg sticky top-24">
-                        <div class="card-body">
-                            <h3 class="card-title text-lg mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                                </svg>
-                                Filtreler
-                            </h3>
+                <aside class="w-full lg:w-64 shrink-0">
+                    <div class="bg-white border border-gray-200 rounded-lg p-5 sticky top-20">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-gray-900">Filtreler</h3>
+                            <button @click="clearFilters" class="text-sm text-primary hover:underline">Temizle</button>
+                        </div>
 
-                            <!-- Gender Filter -->
-                            <div class="form-control mb-4">
-                                <label class="label">
-                                    <span class="label-text font-medium">Cinsiyet</span>
-                                </label>
-                                <select x-model="filters.gender" @change="applyFilters"
-                                    class="select select-bordered w-full">
-                                    <option value="">Tümü</option>
-                                    <template x-for="gender in filterOptions.genders">
-                                        <option :value="gender" x-text="gender"></option>
-                                    </template>
-                                </select>
+                        <!-- Gender Filter -->
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Cinsiyet</label>
+                            <select x-model="filters.gender" @change="applyFilters"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                <option value="">Tümü</option>
+                                <template x-for="gender in filterOptions.genders">
+                                    <option :value="gender" x-text="gender"></option>
+                                </template>
+                            </select>
+                        </div>
+
+                        <!-- Hair Color Filter -->
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Saç Rengi</label>
+                            <select x-model="filters.hairColor" @change="applyFilters"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                <option value="">Tümü</option>
+                                <template x-for="color in filterOptions.hairColors">
+                                    <option :value="color" x-text="color"></option>
+                                </template>
+                            </select>
+                        </div>
+
+                        <!-- Style Filter -->
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Stil</label>
+                            <select x-model="filters.style" @change="applyFilters"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                <option value="">Tümü</option>
+                                <template x-for="style in filterOptions.styles">
+                                    <option :value="style" x-text="style"></option>
+                                </template>
+                            </select>
+                        </div>
+
+                        <!-- Price Range -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Max Fiyat: <span class="text-primary font-semibold"
+                                    x-text="'₺' + filters.maxPrice"></span>
+                            </label>
+                            <input type="range" x-model="filters.maxPrice" min="100" max="5000" step="100"
+                                class="w-full accent-primary" />
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>₺100</span>
+                                <span>₺5000</span>
                             </div>
-
-                            <!-- Hair Color Filter -->
-                            <div class="form-control mb-4">
-                                <label class="label">
-                                    <span class="label-text font-medium">Saç Rengi</span>
-                                </label>
-                                <select x-model="filters.hairColor" @change="applyFilters"
-                                    class="select select-bordered w-full">
-                                    <option value="">Tümü</option>
-                                    <template x-for="color in filterOptions.hairColors">
-                                        <option :value="color" x-text="color"></option>
-                                    </template>
-                                </select>
-                            </div>
-
-                            <!-- Style Filter -->
-                            <div class="form-control mb-4">
-                                <label class="label">
-                                    <span class="label-text font-medium">Stil</span>
-                                </label>
-                                <select x-model="filters.style" @change="applyFilters"
-                                    class="select select-bordered w-full">
-                                    <option value="">Tümü</option>
-                                    <template x-for="style in filterOptions.styles">
-                                        <option :value="style" x-text="style"></option>
-                                    </template>
-                                </select>
-                            </div>
-
-                            <!-- Price Range -->
-                            <div class="form-control mb-4">
-                                <label class="label">
-                                    <span class="label-text font-medium">Fiyat Aralığı</span>
-                                </label>
-                                <input type="range" x-model="filters.maxPrice" min="100" max="5000" step="100"
-                                    class="range range-primary range-sm" />
-                                <div class="flex justify-between text-xs mt-1">
-                                    <span>₺100</span>
-                                    <span class="font-semibold text-primary" x-text="'₺' + filters.maxPrice"></span>
-                                    <span>₺5000</span>
-                                </div>
-                            </div>
-
-                            <!-- Clear Filters -->
-                            <button class="btn btn-outline btn-sm mt-4" @click="clearFilters">
-                                Filtreleri Temizle
-                            </button>
                         </div>
                     </div>
                 </aside>
@@ -117,11 +103,12 @@
 
                     <!-- Results Header -->
                     <div class="flex items-center justify-between mb-6">
-                        <p class="text-base-content/70">
-                            <span class="font-semibold text-base-content" x-text="filteredPersonas.length"></span>
+                        <p class="text-gray-600">
+                            <span class="font-semibold text-gray-900" x-text="filteredPersonas.length"></span>
                             creator bulundu
                         </p>
-                        <select x-model="sortBy" @change="sortResults" class="select select-bordered select-sm">
+                        <select x-model="sortBy" @change="sortResults"
+                            class="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary outline-none">
                             <option value="popular">En Popüler</option>
                             <option value="rating">En Yüksek Puan</option>
                             <option value="newest">En Yeni</option>
@@ -131,71 +118,58 @@
                     </div>
 
                     <!-- Creator Cards Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                         <template x-for="persona in filteredPersonas" :key="persona.id">
-                            <div
-                                class="card bg-base-200 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group">
+                            <a :href="'/creator/' + persona.id"
+                                class="bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow group">
                                 <!-- Image -->
-                                <figure class="relative overflow-hidden">
+                                <div class="aspect-[3/4] overflow-hidden">
                                     <img :src="persona.profileImages[0]" :alt="persona.name"
-                                        class="w-full h-72 object-cover group-hover:scale-105 transition-transform duration-300" />
-                                    <div class="absolute top-3 right-3">
-                                        <div class="badge badge-primary" x-text="persona.style"></div>
-                                    </div>
-                                    <!-- Quick Stats Overlay -->
-                                    <div
-                                        class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                                        <div class="flex justify-between text-white text-sm">
-                                            <span>⭐ <span x-text="persona.stats.avgRating"></span></span>
-                                            <span>📦 <span x-text="persona.stats.completedOrders"></span> sipariş</span>
-                                        </div>
-                                    </div>
-                                </figure>
+                                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                                </div>
 
-                                <div class="card-body">
-                                    <h3 class="card-title" x-text="persona.name"></h3>
-                                    <p class="text-sm text-base-content/70 line-clamp-2" x-text="persona.bio"></p>
+                                <div class="p-4">
+                                    <!-- Name & Style -->
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <h3 class="font-semibold text-gray-900" x-text="persona.name"></h3>
+                                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded"
+                                            x-text="persona.style"></span>
+                                    </div>
+
+                                    <!-- Bio -->
+                                    <p class="text-sm text-gray-500 line-clamp-2 mb-3" x-text="persona.bio"></p>
 
                                     <!-- Tags -->
-                                    <div class="flex flex-wrap gap-2 mt-2">
-                                        <span class="badge badge-outline badge-sm" x-text="persona.gender"></span>
-                                        <span class="badge badge-outline badge-sm"
+                                    <div class="flex flex-wrap gap-1 mb-3">
+                                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded"
+                                            x-text="persona.gender"></span>
+                                        <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded"
                                             x-text="persona.hairColor + ' saç'"></span>
-                                        <span class="badge badge-outline badge-sm"
-                                            x-text="persona.eyeColor + ' göz'"></span>
                                     </div>
 
-                                    <!-- Stats -->
-                                    <div class="flex items-center gap-4 mt-3 text-sm">
-                                        <div class="flex items-center gap-1 text-warning">
-                                            <span>⭐</span>
-                                            <span x-text="persona.stats.avgRating"></span>
+                                    <!-- Stats & Price -->
+                                    <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                                        <div class="flex items-center gap-3 text-sm">
+                                            <span class="flex items-center gap-1">
+                                                <span class="text-yellow-500">★</span>
+                                                <span x-text="persona.stats.avgRating">4.9</span>
+                                            </span>
+                                            <span class="text-gray-400">|</span>
+                                            <span class="text-gray-500"
+                                                x-text="persona.stats.completedOrders + ' sipariş'"></span>
                                         </div>
-                                        <div class="flex items-center gap-1">
-                                            <span>⏱️</span>
-                                            <span x-text="persona.stats.responseTime"></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-actions justify-between items-center mt-4">
-                                        <div>
-                                            <span class="text-xs text-base-content/50">başlayan fiyat</span>
-                                            <p class="text-lg font-bold text-primary">₺500</p>
-                                        </div>
-                                        <a :href="'/creator/' + persona.id" class="btn btn-primary btn-sm">
-                                            Profili Gör
-                                        </a>
+                                        <span class="font-semibold text-primary">₺500</span>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         </template>
                     </div>
 
                     <!-- Empty State -->
                     <div x-show="filteredPersonas.length === 0" class="text-center py-16">
                         <div class="text-6xl mb-4">🔍</div>
-                        <h3 class="text-xl font-semibold mb-2">Sonuç Bulunamadı</h3>
-                        <p class="text-base-content/60 mb-4">Arama kriterlerinize uygun creator bulunamadı.</p>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Sonuç Bulunamadı</h3>
+                        <p class="text-gray-600 mb-4">Arama kriterlerinize uygun creator bulunamadı.</p>
                         <button class="btn btn-primary" @click="clearFilters">Filtreleri Temizle</button>
                     </div>
                 </div>
