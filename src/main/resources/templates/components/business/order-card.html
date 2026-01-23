@@ -1,0 +1,163 @@
+<!-- ============================================
+     ORDER CARD COMPONENT (B-03)
+     Order summary and listing card
+     ============================================ -->
+
+<!-- Standard Order Card -->
+<th:block th:fragment="orderCard(order)">
+    <div class="card bg-base-100 shadow-sm hover:shadow-md transition-shadow">
+        <div class="card-body p-4">
+            <!-- Header -->
+            <div class="flex items-start justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <!-- Gig Thumbnail -->
+                    <div class="avatar">
+                        <div class="w-16 h-16 rounded-lg">
+                            <img th:src="${order.gig.thumbnail}" th:alt="${order.gig.title}" />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold line-clamp-1" th:text="${order.gig.title}">Gig Title</p>
+                        <p class="text-sm text-base-content/60">
+                            <span th:if="${order.role == 'BRAND'}">Creator: </span>
+                            <span th:if="${order.role == 'CREATOR'}">Müşteri: </span>
+                            <span th:text="${order.otherParty.name}">User Name</span>
+                        </p>
+                        <p class="text-xs text-base-content/50" th:text="'#' + ${order.id}">Order #123</p>
+                    </div>
+                </div>
+
+                <!-- Status Badge -->
+                <div th:replace="~{components/business/status-badge :: statusBadge(${order.status})}"></div>
+            </div>
+
+            <!-- Details -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-4 border-t border-base-200">
+                <div>
+                    <p class="text-xs text-base-content/50">Tutar</p>
+                    <p class="font-semibold" th:text="'₺' + ${order.amount}">₺500</p>
+                </div>
+                <div>
+                    <p class="text-xs text-base-content/50">Sipariş Tarihi</p>
+                    <p class="font-medium" th:text="${#dates.format(order.createdAt, 'dd.MM.yyyy')}">01.01.2025</p>
+                </div>
+                <div>
+                    <p class="text-xs text-base-content/50">Teslim Tarihi</p>
+                    <p class="font-medium" th:text="${#dates.format(order.dueDate, 'dd.MM.yyyy')}">05.01.2025</p>
+                </div>
+                <div>
+                    <p class="text-xs text-base-content/50">Paket</p>
+                    <p class="font-medium" th:text="${order.packageName}">Basic</p>
+                </div>
+            </div>
+
+            <!-- Progress (if in progress) -->
+            <div th:if="${order.status == 'IN_PROGRESS'}" class="mt-4">
+                <div class="flex justify-between text-xs mb-1">
+                    <span>İlerleme</span>
+                    <span th:text="${order.progress} + '%'">50%</span>
+                </div>
+                <progress class="progress progress-primary" th:value="${order.progress}" max="100"></progress>
+            </div>
+
+            <!-- Actions -->
+            <div class="card-actions justify-end mt-4">
+                <a th:href="'/order/' + ${order.id}" class="btn btn-sm btn-outline">Detaylar</a>
+                <a th:if="${order.status == 'IN_PROGRESS' && order.role == 'CREATOR'}"
+                    th:href="'/order/' + ${order.id} + '/deliver'" class="btn btn-sm btn-primary">Teslim Et</a>
+                <button th:if="${order.status == 'DELIVERED' && order.role == 'BRAND'}"
+                    class="btn btn-sm btn-success">Onayla</button>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Compact Order Card -->
+<th:block th:fragment="orderCardCompact(order)">
+    <div class="flex items-center gap-4 p-3 bg-base-100 rounded-lg hover:bg-base-200 transition-colors">
+        <div class="avatar">
+            <div class="w-12 h-12 rounded-lg">
+                <img th:src="${order.gig.thumbnail}" />
+            </div>
+        </div>
+        <div class="flex-1 min-w-0">
+            <p class="font-medium truncate" th:text="${order.gig.title}">Title</p>
+            <p class="text-sm text-base-content/60" th:text="'₺' + ${order.amount}">₺500</p>
+        </div>
+        <div th:replace="~{components/business/status-badge :: statusBadgeSmall(${order.status})}"></div>
+        <a th:href="'/order/' + ${order.id}" class="btn btn-ghost btn-sm btn-square">→</a>
+    </div>
+</th:block>
+
+<!-- Order Summary Card (Checkout) -->
+<th:block th:fragment="orderSummary(gig, package, extras)">
+    <div class="card bg-base-100 shadow-lg sticky top-4">
+        <div class="card-body">
+            <h3 class="card-title text-lg">Sipariş Özeti</h3>
+
+            <!-- Gig Info -->
+            <div class="flex gap-3 pb-4 border-b border-base-200">
+                <div class="avatar">
+                    <div class="w-16 rounded-lg">
+                        <img th:src="${gig.thumbnail}" />
+                    </div>
+                </div>
+                <div>
+                    <p class="font-medium text-sm line-clamp-2" th:text="${gig.title}">Title</p>
+                    <p class="text-xs text-base-content/50" th:text="${gig.creator.name}">Creator</p>
+                </div>
+            </div>
+
+            <!-- Package -->
+            <div class="py-3 border-b border-base-200">
+                <div class="flex justify-between">
+                    <span th:text="${package.name} + ' Paket'">Basic Paket</span>
+                    <span class="font-medium" th:text="'₺' + ${package.price}">₺500</span>
+                </div>
+                <p class="text-xs text-base-content/50 mt-1" th:text="${package.deliveryDays} + ' gün teslimat'">3 gün
+                    teslimat</p>
+            </div>
+
+            <!-- Extras -->
+            <div th:if="${extras != null && !extras.isEmpty()}" class="py-3 border-b border-base-200">
+                <p class="text-sm font-medium mb-2">Ekstralar</p>
+                <div th:each="extra : ${extras}" class="flex justify-between text-sm py-1">
+                    <span th:text="${extra.name}">Extra</span>
+                    <span th:text="'+₺' + ${extra.price}">+₺100</span>
+                </div>
+            </div>
+
+            <!-- Total -->
+            <div class="pt-4">
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold">Toplam</span>
+                    <span class="text-2xl font-bold text-primary" th:text="'₺' + ${total}">₺600</span>
+                </div>
+                <p class="text-xs text-base-content/50 mt-1">KDV dahil</p>
+            </div>
+
+            <button class="btn btn-primary btn-lg w-full mt-4">
+                Sipariş Ver
+            </button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Order Timeline -->
+<th:block th:fragment="orderTimeline(events)">
+    <div class="relative pl-6 border-l-2 border-base-300 space-y-6">
+        <div th:each="event : ${events}" class="relative">
+            <!-- Dot -->
+            <div class="absolute -left-[25px] w-4 h-4 rounded-full"
+                th:classappend="${event.current} ? 'bg-primary ring-4 ring-primary/30' : 'bg-base-300'"></div>
+
+            <!-- Content -->
+            <div th:classappend="${event.current} ? '' : 'opacity-60'">
+                <p class="font-medium" th:text="${event.title}">Event Title</p>
+                <p class="text-sm text-base-content/60" th:text="${event.description}">Description</p>
+                <p th:if="${event.date}" class="text-xs text-base-content/50 mt-1"
+                    th:text="${#dates.format(event.date, 'dd.MM.yyyy HH:mm')}">Date</p>
+            </div>
+        </div>
+    </div>
+</th:block>
