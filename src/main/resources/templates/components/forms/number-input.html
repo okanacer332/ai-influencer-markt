@@ -1,0 +1,122 @@
+<!-- ============================================
+     NUMBER INPUT COMPONENT (F-13)
+     Numeric input with stepper
+     ============================================ -->
+
+<!-- Basic Number Input with Stepper -->
+<th:block th:fragment="numberInput(id, label, value, min, max, step)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium" th:text="${label}">Miktar</span>
+        </label>
+        <div class="join">
+            <button type="button" class="btn join-item"
+                onclick="this.nextElementSibling.stepDown(); this.nextElementSibling.dispatchEvent(new Event('input'));">
+                −
+            </button>
+            <input type="number" th:id="${id}" th:name="${id}" th:value="${value != null} ? ${value} : 1"
+                th:min="${min}" th:max="${max}" th:step="${step != null} ? ${step} : 1"
+                class="input input-bordered join-item w-20 text-center [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+            <button type="button" class="btn join-item"
+                onclick="this.previousElementSibling.stepUp(); this.previousElementSibling.dispatchEvent(new Event('input'));">
+                +
+            </button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Inline Number Input -->
+<th:block th:fragment="numberInputInline(id, value, min, max)">
+    <div class="join" x-data="{ value: [[${value != null ? value : 1}]] }">
+        <button type="button" @click="value = Math.max([[${min != null ? min : 0}]], value - 1)"
+            class="btn btn-sm join-item">−</button>
+        <input type="number" th:name="${id}" x-model="value" th:min="${min}" th:max="${max}"
+            class="input input-bordered input-sm join-item w-16 text-center" />
+        <button type="button" @click="value = Math.min([[${max != null ? max : 999}]], value + 1)"
+            class="btn btn-sm join-item">+</button>
+    </div>
+</th:block>
+
+<!-- Number Input with Unit -->
+<th:block th:fragment="numberInputUnit(id, label, value, unit, min, max)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium" th:text="${label}">Değer</span>
+        </label>
+        <div class="join w-full">
+            <input type="number" th:id="${id}" th:name="${id}" th:value="${value}" th:min="${min}" th:max="${max}"
+                class="input input-bordered join-item flex-1" />
+            <span class="btn join-item no-animation cursor-default" th:text="${unit}">₺</span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Price Input -->
+<th:block th:fragment="priceInput(id, label, value, currency)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium" th:text="${label}">Fiyat</span>
+        </label>
+        <div class="relative">
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50"
+                th:text="${currency != null} ? ${currency} : '₺'">₺</span>
+            <input type="number" th:id="${id}" th:name="${id}" th:value="${value}" step="0.01" min="0"
+                class="input input-bordered w-full pl-8" placeholder="0.00" />
+        </div>
+    </div>
+</th:block>
+
+<!-- Quantity Selector (Large) -->
+<th:block th:fragment="quantitySelector(id, value, min, max)">
+    <div class="flex items-center gap-3"
+        x-data="{ qty: [[${value != null ? value : 1}]], min: [[${min != null ? min : 1}]], max: [[${max != null ? max : 99}]] }">
+        <button type="button" @click="qty = Math.max(min, qty - 1)" :disabled="qty <= min"
+            class="btn btn-circle btn-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
+            </svg>
+        </button>
+
+        <input type="number" th:name="${id}" x-model="qty" :min="min" :max="max"
+            class="input input-bordered w-20 text-center text-xl font-bold" />
+
+        <button type="button" @click="qty = Math.min(max, qty + 1)" :disabled="qty >= max"
+            class="btn btn-circle btn-outline">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+        </button>
+    </div>
+</th:block>
+
+<!-- Range Number Input -->
+<th:block th:fragment="numberInputRange(id, label, value, min, max)">
+    <div class="form-control w-full" x-data="{ value: [[${value != null ? value : min}]] }">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium" th:text="${label}">Değer</span>
+            <span class="label-text-alt font-bold" x-text="value"></span>
+        </label>
+        <input type="range" th:id="${id}" th:name="${id}" x-model="value" th:min="${min}" th:max="${max}"
+            class="range range-primary" />
+        <div class="flex justify-between text-xs text-base-content/50 mt-1">
+            <span th:text="${min}">0</span>
+            <span th:text="${max}">100</span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Percentage Input -->
+<th:block th:fragment="percentageInput(id, label, value)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium" th:text="${label}">Yüzde</span>
+        </label>
+        <div class="join w-full">
+            <input type="number" th:id="${id}" th:name="${id}" th:value="${value}" min="0" max="100"
+                class="input input-bordered join-item flex-1" />
+            <span class="btn join-item no-animation cursor-default">%</span>
+        </div>
+    </div>
+</th:block>

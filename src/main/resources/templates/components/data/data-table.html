@@ -1,0 +1,178 @@
+<!-- ============================================
+     DATA TABLE COMPONENT (D-02)
+     Sortable, filterable data table
+     ============================================ -->
+
+<!-- Basic Data Table -->
+<th:block th:fragment="dataTable(columns, rows, emptyMessage)">
+    <div class="overflow-x-auto">
+        <table class="table table-zebra">
+            <thead>
+                <tr>
+                    <th th:each="col : ${columns}" th:text="${col.label}">Column</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row : ${rows}">
+                    <td th:each="col : ${columns}" th:text="${row[col.key]}">Value</td>
+                </tr>
+                <tr th:if="${rows == null || rows.isEmpty()}">
+                    <td th:colspan="${#lists.size(columns)}" class="text-center py-8">
+                        <span class="text-base-content/50"
+                            th:text="${emptyMessage != null} ? ${emptyMessage} : 'Veri bulunamadı'"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<!-- Sortable Data Table -->
+<th:block th:fragment="dataTableSortable(columns, rows, sortColumn, sortDir, baseUrl)">
+    <div class="overflow-x-auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th th:each="col : ${columns}">
+                        <a th:if="${col.sortable}"
+                            th:href="${baseUrl + '?sort=' + col.key + '&dir=' + (sortColumn == col.key && sortDir == 'asc' ? 'desc' : 'asc')}"
+                            class="flex items-center gap-1 hover:text-primary">
+                            <span th:text="${col.label}">Column</span>
+                            <span th:if="${sortColumn == col.key}" class="text-primary">
+                                <span th:if="${sortDir == 'asc'}">↑</span>
+                                <span th:if="${sortDir == 'desc'}">↓</span>
+                            </span>
+                            <span th:if="${sortColumn != col.key}" class="text-base-content/30">↕</span>
+                        </a>
+                        <span th:if="${!col.sortable}" th:text="${col.label}">Column</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row : ${rows}" class="hover">
+                    <td th:each="col : ${columns}">
+                        <span th:if="${col.type == null || col.type == 'text'}" th:text="${row[col.key]}">Value</span>
+                        <span th:if="${col.type == 'badge'}" class="badge" th:classappend="${row[col.key + 'Class']}"
+                            th:text="${row[col.key]}">Badge</span>
+                        <span th:if="${col.type == 'date'}"
+                            th:text="${#dates.format(row[col.key], 'dd.MM.yyyy')}">Date</span>
+                        <span th:if="${col.type == 'currency'}" th:text="'₺' + ${row[col.key]}">₺0</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<!-- Data Table with Actions -->
+<th:block th:fragment="dataTableActions(columns, rows, actions)">
+    <div class="overflow-x-auto">
+        <table class="table">
+            <thead>
+                <tr class="bg-base-200">
+                    <th th:each="col : ${columns}" th:text="${col.label}">Column</th>
+                    <th class="w-20">İşlemler</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row : ${rows}" class="hover">
+                    <td th:each="col : ${columns}" th:text="${row[col.key]}">Value</td>
+                    <td>
+                        <div class="dropdown dropdown-end">
+                            <label tabindex="0" class="btn btn-ghost btn-sm btn-square">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                                </svg>
+                            </label>
+                            <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-40">
+                                <li th:each="action : ${actions}">
+                                    <a th:href="${action.href + '/' + row.id}"
+                                        th:classappend="${action.danger} ? 'text-error' : ''">
+                                        <span th:utext="${action.icon}"></span>
+                                        <span th:text="${action.label}">Action</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<!-- Data Table with Checkboxes -->
+<th:block th:fragment="dataTableSelectable(columns, rows)">
+    <div class="overflow-x-auto" x-data="{ selectedAll: false, selected: [] }">
+        <!-- Bulk Actions Bar -->
+        <div x-show="selected.length > 0" class="bg-primary/10 p-3 rounded-lg mb-3 flex items-center gap-4">
+            <span class="text-sm font-medium" x-text="selected.length + ' öğe seçildi'"></span>
+            <div class="flex gap-2 ml-auto">
+                <button class="btn btn-sm btn-ghost">İptal</button>
+                <button class="btn btn-sm btn-error">🗑️ Sil</button>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="w-12">
+                        <input type="checkbox" class="checkbox checkbox-sm" x-model="selectedAll"
+                            @change="selected = selectedAll ? [...document.querySelectorAll('.row-checkbox')].map(c => c.value) : []" />
+                    </th>
+                    <th th:each="col : ${columns}" th:text="${col.label}">Column</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row : ${rows}" class="hover">
+                    <td>
+                        <input type="checkbox" class="checkbox checkbox-sm row-checkbox" th:value="${row.id}"
+                            x-model="selected" />
+                    </td>
+                    <td th:each="col : ${columns}" th:text="${row[col.key]}">Value</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<!-- Mobile-Friendly Card Table -->
+<th:block th:fragment="dataTableCards(items, columns)">
+    <!-- Desktop Table -->
+    <div class="hidden lg:block">
+        <div th:replace="~{components/data/data-table :: dataTable(${columns}, ${items}, null)}"></div>
+    </div>
+
+    <!-- Mobile Cards -->
+    <div class="lg:hidden space-y-3">
+        <div th:each="item : ${items}" class="card bg-base-100 shadow-sm">
+            <div class="card-body p-4">
+                <div th:each="col : ${columns}"
+                    class="flex justify-between py-1 border-b border-base-200 last:border-0">
+                    <span class="text-base-content/60 text-sm" th:text="${col.label}">Label</span>
+                    <span class="font-medium" th:text="${item[col.key]}">Value</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Compact Data Table -->
+<th:block th:fragment="dataTableCompact(columns, rows)">
+    <div class="overflow-x-auto">
+        <table class="table table-xs">
+            <thead>
+                <tr class="bg-base-200">
+                    <th th:each="col : ${columns}" th:text="${col.label}" class="font-medium">Column</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="row : ${rows}">
+                    <td th:each="col : ${columns}" th:text="${row[col.key]}">Value</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
