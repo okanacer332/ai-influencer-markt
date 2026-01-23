@@ -1,0 +1,196 @@
+<!-- ============================================
+     FORM GROUP COMPONENT (F-11)
+     Label + Input + Error wrapper
+     ============================================ -->
+
+<!-- Standard Form Group -->
+<th:block th:fragment="formGroup(id, label, type, required, error, hint)">
+    <div class="form-control w-full">
+        <!-- Label -->
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+            <span th:if="${hint}" class="label-text-alt text-base-content/50" th:text="${hint}"></span>
+        </label>
+
+        <!-- Input field will be inserted here -->
+        <th:block th:replace="${~{::#content}}"></th:block>
+
+        <!-- Error / Helper -->
+        <label class="label" th:if="${error != null}">
+            <span class="label-text-alt text-error" th:text="${error}"></span>
+        </label>
+    </div>
+</th:block>
+
+<!-- Text Input Group -->
+<th:block th:fragment="inputGroup(id, label, type, value, placeholder, required, error, hint)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+            <span th:if="${hint}" class="label-text-alt text-base-content/50" th:text="${hint}"></span>
+        </label>
+
+        <input th:type="${type != null} ? ${type} : 'text'" th:id="${id}" th:name="${id}" th:value="${value}"
+            th:placeholder="${placeholder}" th:required="${required}"
+            th:classappend="${error != null} ? 'input-error' : ''" class="input input-bordered w-full" />
+
+        <label class="label" th:if="${error != null}">
+            <span class="label-text-alt text-error" th:text="${error}"></span>
+        </label>
+    </div>
+</th:block>
+
+<!-- Textarea Group -->
+<th:block th:fragment="textareaGroup(id, label, value, placeholder, rows, required, error, hint)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+            <span th:if="${hint}" class="label-text-alt text-base-content/50" th:text="${hint}"></span>
+        </label>
+
+        <textarea th:id="${id}" th:name="${id}" th:placeholder="${placeholder}" th:rows="${rows != null} ? ${rows} : 4"
+            th:required="${required}" th:classappend="${error != null} ? 'textarea-error' : ''"
+            class="textarea textarea-bordered w-full" th:text="${value}"></textarea>
+
+        <label class="label" th:if="${error != null}">
+            <span class="label-text-alt text-error" th:text="${error}"></span>
+        </label>
+    </div>
+</th:block>
+
+<!-- Select Group -->
+<th:block th:fragment="selectGroup(id, label, options, selectedValue, placeholder, required, error)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+        </label>
+
+        <select th:id="${id}" th:name="${id}" th:required="${required}"
+            th:classappend="${error != null} ? 'select-error' : ''" class="select select-bordered w-full">
+            <option value="" th:if="${placeholder != null}" th:text="${placeholder}" disabled selected></option>
+            <option th:each="opt : ${options}" th:value="${opt.value}" th:text="${opt.label}"
+                th:selected="${opt.value == selectedValue}"></option>
+        </select>
+
+        <label class="label" th:if="${error != null}">
+            <span class="label-text-alt text-error" th:text="${error}"></span>
+        </label>
+    </div>
+</th:block>
+
+<!-- Checkbox Group -->
+<th:block th:fragment="checkboxGroup(id, label, checked, description)">
+    <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-3">
+            <input type="checkbox" th:id="${id}" th:name="${id}" th:checked="${checked}"
+                class="checkbox checkbox-primary" />
+            <div>
+                <span class="label-text font-medium" th:text="${label}">Label</span>
+                <p th:if="${description}" class="text-xs text-base-content/60 mt-0.5" th:text="${description}"></p>
+            </div>
+        </label>
+    </div>
+</th:block>
+
+<!-- Radio Group -->
+<th:block th:fragment="radioGroup(name, label, options, selectedValue, required, error)">
+    <div class="form-control w-full">
+        <label class="label">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+        </label>
+
+        <div class="space-y-2">
+            <label th:each="opt : ${options}" class="label cursor-pointer justify-start gap-3">
+                <input type="radio" th:name="${name}" th:value="${opt.value}" th:checked="${opt.value == selectedValue}"
+                    class="radio radio-primary" />
+                <div>
+                    <span class="label-text" th:text="${opt.label}"></span>
+                    <p th:if="${opt.description}" class="text-xs text-base-content/60" th:text="${opt.description}"></p>
+                </div>
+            </label>
+        </div>
+
+        <label class="label" th:if="${error != null}">
+            <span class="label-text-alt text-error" th:text="${error}"></span>
+        </label>
+    </div>
+</th:block>
+
+<!-- Toggle Group -->
+<th:block th:fragment="toggleGroup(id, label, checked, description)">
+    <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-3">
+            <input type="checkbox" th:id="${id}" th:name="${id}" th:checked="${checked}"
+                class="toggle toggle-primary" />
+            <div>
+                <span class="label-text font-medium" th:text="${label}">Label</span>
+                <p th:if="${description}" class="text-xs text-base-content/60 mt-0.5" th:text="${description}"></p>
+            </div>
+        </label>
+    </div>
+</th:block>
+
+<!-- Input with Icon -->
+<th:block th:fragment="inputWithIcon(id, label, type, icon, iconPosition, placeholder, required, error)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+        </label>
+
+        <div class="relative">
+            <input th:type="${type != null} ? ${type} : 'text'" th:id="${id}" th:name="${id}"
+                th:placeholder="${placeholder}" th:required="${required}"
+                th:classappend="${error != null} ? 'input-error' : ''" class="input input-bordered w-full"
+                th:classappend="${iconPosition == 'left'} ? 'pl-10' : 'pr-10'" />
+            <span class="absolute top-1/2 -translate-y-1/2 text-base-content/50"
+                th:classappend="${iconPosition == 'left'} ? 'left-3' : 'right-3'" th:utext="${icon}"></span>
+        </div>
+
+        <label class="label" th:if="${error != null}">
+            <span class="label-text-alt text-error" th:text="${error}"></span>
+        </label>
+    </div>
+</th:block>
+
+<!-- Input with Addon -->
+<th:block th:fragment="inputWithAddon(id, label, addonText, addonPosition, placeholder, required, error)">
+    <div class="form-control w-full">
+        <label class="label" th:for="${id}">
+            <span class="label-text font-medium">
+                <span th:text="${label}">Label</span>
+                <span th:if="${required}" class="text-error">*</span>
+            </span>
+        </label>
+
+        <div class="join w-full">
+            <span th:if="${addonPosition == 'left'}"
+                class="join-item bg-base-200 px-4 flex items-center text-base-content/70" th:text="${addonText}"></span>
+            <input type="text" th:id="${id}" th:name="${id}" th:placeholder="${placeholder}" th:required="${required}"
+                th:classappend="${error != null} ? 'input-error' : ''" class="input input-bordered join-item flex-1" />
+            <span th:if="${addonPosition != 'left'}"
+                class="join-item bg-base-200 px-4 flex items-center text-base-content/70" th:text="${addonText}"></span>
+        </div>
+
+        <label class="label" th:if="${error != null}">
+            <span class="label-text-alt text-error" th:text="${error}"></span>
+        </label>
+    </div>
+</th:block>

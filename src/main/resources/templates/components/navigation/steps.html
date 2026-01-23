@@ -1,0 +1,125 @@
+<!-- ============================================
+     STEPS / WIZARD COMPONENT (N-02)
+     Multi-step progress indicator
+     ============================================ -->
+
+<!-- Horizontal Steps -->
+<th:block th:fragment="steps(steps, currentStep)">
+    <ul class="steps steps-horizontal w-full">
+        <li th:each="step, iterStat : ${steps}" class="step"
+            th:classappend="${iterStat.index < currentStep} ? 'step-primary' : (${iterStat.index == currentStep} ? 'step-primary' : '')">
+            <span th:text="${step.label}"></span>
+        </li>
+    </ul>
+</th:block>
+
+<!-- Vertical Steps -->
+<th:block th:fragment="stepsVertical(steps, currentStep)">
+    <ul class="steps steps-vertical">
+        <li th:each="step, iterStat : ${steps}" class="step"
+            th:classappend="${iterStat.index < currentStep} ? 'step-primary' : (${iterStat.index == currentStep} ? 'step-primary' : '')">
+            <span th:text="${step.label}"></span>
+        </li>
+    </ul>
+</th:block>
+
+<!-- Steps with Icons -->
+<th:block th:fragment="stepsWithIcons(steps, currentStep)">
+    <ul class="steps steps-horizontal w-full">
+        <li th:each="step, iterStat : ${steps}" class="step"
+            th:classappend="${iterStat.index < currentStep} ? 'step-primary' : (${iterStat.index == currentStep} ? 'step-primary' : '')"
+            th:data-content="${iterStat.index < currentStep} ? '✓' : (${step.icon != null} ? ${step.icon} : ${iterStat.index + 1})">
+            <span th:text="${step.label}"></span>
+        </li>
+    </ul>
+</th:block>
+
+<!-- Detailed Steps (with description) -->
+<th:block th:fragment="stepsDetailed(steps, currentStep)">
+    <div class="hidden lg:flex items-center justify-between mb-8">
+        <th:block th:each="step, iterStat : ${steps}">
+            <!-- Step -->
+            <div class="flex items-center">
+                <!-- Circle -->
+                <div class="flex items-center justify-center w-10 h-10 rounded-full font-semibold transition-colors"
+                    th:classappend="${iterStat.index < currentStep} ? 'bg-primary text-primary-content' : 
+                                     (${iterStat.index == currentStep} ? 'bg-primary text-primary-content ring-4 ring-primary/30' : 
+                                     'bg-base-300 text-base-content/50')">
+                    <span th:if="${iterStat.index < currentStep}">✓</span>
+                    <span th:if="${iterStat.index >= currentStep}" th:text="${iterStat.index + 1}"></span>
+                </div>
+
+                <!-- Label -->
+                <div class="ml-3">
+                    <p class="font-medium"
+                        th:classappend="${iterStat.index <= currentStep} ? '' : 'text-base-content/50'"
+                        th:text="${step.label}">Step</p>
+                    <p th:if="${step.description}" class="text-xs text-base-content/50" th:text="${step.description}">
+                    </p>
+                </div>
+            </div>
+
+            <!-- Connector Line -->
+            <div th:if="${!iterStat.last}" class="flex-1 h-0.5 mx-4"
+                th:classappend="${iterStat.index < currentStep} ? 'bg-primary' : 'bg-base-300'"></div>
+        </th:block>
+    </div>
+
+    <!-- Mobile: Simple Steps -->
+    <div class="lg:hidden mb-6">
+        <div th:replace="~{components/navigation/steps :: steps(${steps}, ${currentStep})}"></div>
+    </div>
+</th:block>
+
+<!-- Steps with Content Panels -->
+<th:block th:fragment="stepsWizard(steps, currentStep)">
+    <div x-data="{ step: [[${currentStep}]] }">
+
+        <!-- Progress Steps -->
+        <div class="mb-8">
+            <ul class="steps steps-horizontal w-full">
+                <template x-for="(s, i) in [[${#strings.replace(steps, '\"', ' &quot;')}]]" :key="i">
+                    <li class="step" :class="i <= step ? 'step-primary' : ''" :data-content="i < step ? '✓' : (i + 1)">
+                        <span x-text="s.label"></span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <!-- Step Content Panels -->
+        <div class="relative">
+            <th:block th:replace="${~{::#panels}}"></th:block>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-8">
+            <button @click="step = Math.max(0, step - 1)" x-show="step > 0" class="btn btn-outline">
+                ← Geri
+            </button>
+            <div x-show="step === 0"></div>
+
+            <button @click="step = step + 1" x-show="step < [[${#lists.size(steps)}]] - 1" class="btn btn-primary">
+                İleri →
+            </button>
+            <button x-show="step === [[${#lists.size(steps)}]] - 1" class="btn btn-primary">
+                Tamamla ✓
+            </button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Progress Bar Steps -->
+<th:block th:fragment="stepsProgress(totalSteps, currentStep, labels)">
+    <div class="mb-8">
+        <!-- Progress Bar -->
+        <div class="flex items-center gap-2 mb-2">
+            <span class="text-sm font-medium" th:text="${currentStep + 1} + '/' + ${totalSteps}"></span>
+            <progress class="progress progress-primary flex-1" th:value="${((currentStep + 1) * 100) / totalSteps}"
+                max="100"></progress>
+        </div>
+
+        <!-- Current Step Label -->
+        <p class="font-semibold" th:if="${labels != null && labels[currentStep] != null}"
+            th:text="${labels[currentStep]}"></p>
+    </div>
+</th:block>

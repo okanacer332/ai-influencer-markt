@@ -1,0 +1,97 @@
+<!-- ============================================
+     EMPTY STATE COMPONENT (D-08)
+     Display when no data is available
+     ============================================ -->
+
+<!-- Default Empty State -->
+<th:block th:fragment="emptyState(icon, title, description, actionLabel, actionHref)">
+    <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+
+        <!-- Icon/Illustration -->
+        <div class="text-6xl mb-4 opacity-50" th:if="${icon != null}" th:utext="${icon}">📭</div>
+        <div class="text-6xl mb-4 opacity-50" th:if="${icon == null}">📭</div>
+
+        <!-- Title -->
+        <h3 class="text-xl font-semibold text-base-content/80 mb-2" th:text="${title}">Veri Bulunamadı</h3>
+
+        <!-- Description -->
+        <p class="text-base-content/60 max-w-md mb-6" th:if="${description != null}" th:text="${description}">
+            Henüz burada gösterilecek bir şey yok.
+        </p>
+
+        <!-- Action Button -->
+        <a th:if="${actionLabel != null && actionHref != null}" th:href="${actionHref}" th:text="${actionLabel}"
+            class="btn btn-primary"></a>
+    </div>
+</th:block>
+
+<!-- No Search Results -->
+<th:block th:fragment="emptyStateSearch(query)">
+    <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div class="text-6xl mb-4">🔍</div>
+        <h3 class="text-xl font-semibold text-base-content/80 mb-2">Sonuç Bulunamadı</h3>
+        <p class="text-base-content/60 max-w-md mb-4">
+            "<span th:text="${query}" class="font-medium"></span>" için sonuç bulunamadı.
+        </p>
+        <div class="text-sm text-base-content/50">
+            <p>Şunları deneyebilirsiniz:</p>
+            <ul class="list-disc list-inside mt-2 text-left">
+                <li>Arama teriminizi kontrol edin</li>
+                <li>Daha genel bir arama yapın</li>
+                <li>Filtreleri temizleyin</li>
+            </ul>
+        </div>
+    </div>
+</th:block>
+
+<!-- Error State -->
+<th:block th:fragment="emptyStateError(message, retryAction)">
+    <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div class="text-6xl mb-4">😞</div>
+        <h3 class="text-xl font-semibold text-error mb-2">Bir Hata Oluştu</h3>
+        <p class="text-base-content/60 max-w-md mb-6" th:text="${message}">
+            Veriler yüklenirken bir sorun oluştu.
+        </p>
+        <button th:if="${retryAction != null}" th:onclick="${retryAction}" class="btn btn-outline btn-error">
+            🔄 Tekrar Dene
+        </button>
+    </div>
+</th:block>
+
+<!-- No Orders -->
+<th:block th:fragment="emptyStateOrders">
+    <div class="flex flex-col items-center justify-center py-16 px-4 text-center bg-base-200/50 rounded-2xl">
+        <div class="text-7xl mb-6">📦</div>
+        <h3 class="text-2xl font-bold mb-2">Henüz Siparişiniz Yok</h3>
+        <p class="text-base-content/60 max-w-md mb-6">
+            Harika AI içerikler üretmek için hemen bir creator keşfedin!
+        </p>
+        <a href="/search" class="btn btn-primary btn-lg gap-2">
+            <span>🔍</span>
+            Creator'ları Keşfet
+        </a>
+    </div>
+</th:block>
+
+<!-- No Gigs (Creator) -->
+<th:block th:fragment="emptyStateGigs">
+    <div class="flex flex-col items-center justify-center py-16 px-4 text-center bg-base-200/50 rounded-2xl">
+        <div class="text-7xl mb-6">🎨</div>
+        <h3 class="text-2xl font-bold mb-2">Henüz Gig Oluşturmadınız</h3>
+        <p class="text-base-content/60 max-w-md mb-6">
+            İlk gig'inizi oluşturun ve markalara hizmet vermeye başlayın!
+        </p>
+        <a href="/creator/new-gig" class="btn btn-primary btn-lg gap-2">
+            <span>➕</span>
+            Yeni Gig Oluştur
+        </a>
+    </div>
+</th:block>
+
+<!-- Loading State (Alternative) -->
+<th:block th:fragment="emptyStateLoading">
+    <div class="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <span class="loading loading-spinner loading-lg text-primary mb-4"></span>
+        <p class="text-base-content/60">Yükleniyor...</p>
+    </div>
+</th:block>

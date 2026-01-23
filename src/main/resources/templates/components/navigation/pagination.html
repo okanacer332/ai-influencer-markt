@@ -1,0 +1,144 @@
+<!-- ============================================
+     PAGINATION COMPONENT (N-03)
+     Page navigation controls
+     ============================================ -->
+
+<!-- Standard Pagination -->
+<th:block th:fragment="pagination(currentPage, totalPages, baseUrl)">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+
+        <!-- Page Info (Mobile) -->
+        <div class="text-sm text-base-content/60 sm:hidden">
+            Sayfa <span th:text="${currentPage}"></span> / <span th:text="${totalPages}"></span>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="join">
+            <!-- First Page -->
+            <a th:href="${baseUrl + '?page=1'}" th:classappend="${currentPage == 1} ? 'btn-disabled' : ''"
+                class="join-item btn btn-sm">«</a>
+
+            <!-- Previous -->
+            <a th:href="${baseUrl + '?page=' + (currentPage - 1)}"
+                th:classappend="${currentPage == 1} ? 'btn-disabled' : ''" class="join-item btn btn-sm">‹</a>
+
+            <!-- Page Numbers -->
+            <th:block th:with="start=${currentPage > 3 ? currentPage - 2 : 1}, 
+                              end=${currentPage + 2 > totalPages ? totalPages : currentPage + 2}">
+
+                <!-- Ellipsis at start -->
+                <span th:if="${start > 1}" class="join-item btn btn-sm btn-disabled">...</span>
+
+                <!-- Page buttons -->
+                <a th:each="page : ${#numbers.sequence(start, end)}" th:href="${baseUrl + '?page=' + page}"
+                    th:text="${page}" class="join-item btn btn-sm"
+                    th:classappend="${page == currentPage} ? 'btn-active' : ''"></a>
+
+                <!-- Ellipsis at end -->
+                <span th:if="${end < totalPages}" class="join-item btn btn-sm btn-disabled">...</span>
+            </th:block>
+
+            <!-- Next -->
+            <a th:href="${baseUrl + '?page=' + (currentPage + 1)}"
+                th:classappend="${currentPage == totalPages} ? 'btn-disabled' : ''" class="join-item btn btn-sm">›</a>
+
+            <!-- Last Page -->
+            <a th:href="${baseUrl + '?page=' + totalPages}"
+                th:classappend="${currentPage == totalPages} ? 'btn-disabled' : ''" class="join-item btn btn-sm">»</a>
+        </div>
+
+        <!-- Page Info (Desktop) -->
+        <div class="hidden sm:block text-sm text-base-content/60">
+            Sayfa <span th:text="${currentPage}"></span> / <span th:text="${totalPages}"></span>
+        </div>
+    </div>
+</th:block>
+
+<!-- Pagination with Item Count -->
+<th:block th:fragment="paginationFull(currentPage, totalPages, totalItems, itemsPerPage, baseUrl)">
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+
+        <!-- Items Info -->
+        <div class="text-sm text-base-content/60">
+            <span th:text="${(currentPage - 1) * itemsPerPage + 1}"></span> -
+            <span th:text="${currentPage * itemsPerPage > totalItems ? totalItems : currentPage * itemsPerPage}"></span>
+            / <span th:text="${totalItems}"></span> sonuç
+        </div>
+
+        <!-- Page Size Selector + Pagination -->
+        <div class="flex items-center gap-4">
+            <!-- Items Per Page -->
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-base-content/60">Göster:</span>
+                <select class="select select-bordered select-sm" onchange="window.location.href=this.value">
+                    <option th:each="size : ${ {10, 25, 50, 100} }" th:value="${baseUrl + '?page=1&size=' + size}"
+                        th:text="${size}" th:selected="${size == itemsPerPage}"></option>
+                </select>
+            </div>
+
+            <!-- Pagination Buttons -->
+            <div class="join">
+                <a th:href="${baseUrl + '?page=' + (currentPage - 1) + '&size=' + itemsPerPage}"
+                    th:classappend="${currentPage == 1} ? 'btn-disabled' : ''" class="join-item btn btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                    </svg>
+                </a>
+
+                <span class="join-item btn btn-sm btn-active">
+                    <span th:text="${currentPage}"></span>
+                </span>
+
+                <a th:href="${baseUrl + '?page=' + (currentPage + 1) + '&size=' + itemsPerPage}"
+                    th:classappend="${currentPage == totalPages} ? 'btn-disabled' : ''" class="join-item btn btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Simple Prev/Next -->
+<th:block th:fragment="paginationSimple(currentPage, totalPages, baseUrl)">
+    <div class="flex justify-center gap-2">
+        <a th:href="${baseUrl + '?page=' + (currentPage - 1)}"
+            th:classappend="${currentPage == 1} ? 'btn-disabled' : ''" class="btn btn-outline gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            Önceki
+        </a>
+        <a th:href="${baseUrl + '?page=' + (currentPage + 1)}"
+            th:classappend="${currentPage == totalPages} ? 'btn-disabled' : ''" class="btn btn-outline gap-2">
+            Sonraki
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+        </a>
+    </div>
+</th:block>
+
+<!-- Load More Button -->
+<th:block th:fragment="loadMore(hasMore)">
+    <div th:if="${hasMore}" class="text-center py-8">
+        <button class="btn btn-outline btn-primary" x-data="{ loading: false }"
+            @click="loading = true; $dispatch('load-more')" :disabled="loading">
+            <span x-show="!loading">Daha Fazla Yükle</span>
+            <span x-show="loading" class="loading loading-spinner loading-sm"></span>
+        </button>
+    </div>
+</th:block>
+
+<!-- Infinite Scroll Trigger -->
+<th:block th:fragment="infiniteScroll">
+    <div x-data="{ loading: false }" x-intersect="if (!loading) { loading = true; $dispatch('load-more'); }"
+        class="py-8 text-center">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+    </div>
+</th:block>

@@ -1,0 +1,140 @@
+<!-- ============================================
+     SKELETON LOADER COMPONENT (D-09)
+     Loading placeholder animations
+     ============================================ -->
+
+<!-- Card Skeleton -->
+<th:block th:fragment="skeletonCard">
+    <div class="card bg-base-200 animate-pulse">
+        <!-- Image placeholder -->
+        <figure class="px-4 pt-4">
+            <div class="h-48 w-full bg-base-300 rounded-xl animate-shimmer"></div>
+        </figure>
+        <div class="card-body">
+            <!-- Title -->
+            <div class="h-6 w-3/4 bg-base-300 rounded animate-shimmer"></div>
+            <!-- Subtitle -->
+            <div class="h-4 w-1/2 bg-base-300 rounded animate-shimmer mt-2"></div>
+            <!-- Text lines -->
+            <div class="space-y-2 mt-4">
+                <div class="h-3 w-full bg-base-300 rounded animate-shimmer"></div>
+                <div class="h-3 w-5/6 bg-base-300 rounded animate-shimmer"></div>
+            </div>
+            <!-- Button -->
+            <div class="card-actions justify-end mt-4">
+                <div class="h-10 w-24 bg-base-300 rounded-btn animate-shimmer"></div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Compact Card Skeleton -->
+<th:block th:fragment="skeletonCardCompact">
+    <div class="card card-side bg-base-200 animate-pulse">
+        <figure class="w-24 h-24 m-4">
+            <div class="h-full w-full bg-base-300 rounded-xl animate-shimmer"></div>
+        </figure>
+        <div class="card-body py-4">
+            <div class="h-5 w-3/4 bg-base-300 rounded animate-shimmer"></div>
+            <div class="h-4 w-1/2 bg-base-300 rounded animate-shimmer"></div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Table Row Skeleton -->
+<th:block th:fragment="skeletonTableRow(columns)">
+    <tr class="animate-pulse">
+        <td th:each="i : ${#numbers.sequence(1, columns)}">
+            <div class="h-4 bg-base-300 rounded animate-shimmer" th:style="${i == 1} ? 'width: 60%' : 'width: 80%'">
+            </div>
+        </td>
+    </tr>
+</th:block>
+
+<!-- Table Skeleton (Multiple Rows) -->
+<th:block th:fragment="skeletonTable(rows, columns)">
+    <div class="overflow-x-auto">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th th:each="i : ${#numbers.sequence(1, columns)}">
+                        <div class="h-4 w-20 bg-base-300 rounded animate-shimmer"></div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="r : ${#numbers.sequence(1, rows)}" class="animate-pulse">
+                    <td th:each="c : ${#numbers.sequence(1, columns)}">
+                        <div class="h-4 bg-base-300 rounded animate-shimmer"
+                            th:style="${c == 1} ? 'width: 70%' : (${c == columns} ? 'width: 50%' : 'width: 80%')"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+
+<!-- Avatar Skeleton -->
+<th:block th:fragment="skeletonAvatar(size)">
+    <div class="avatar placeholder">
+        <div class="rounded-full bg-base-300 animate-shimmer"
+            th:classappend="${size == 'lg'} ? 'w-16 h-16' : (${size == 'sm'} ? 'w-8 h-8' : 'w-12 h-12')"></div>
+    </div>
+</th:block>
+
+<!-- Text Line Skeleton -->
+<th:block th:fragment="skeletonText(lines)">
+    <div class="space-y-2">
+        <div th:each="i : ${#numbers.sequence(1, lines)}" class="h-4 bg-base-300 rounded animate-shimmer"
+            th:style="${i == lines} ? 'width: 70%' : 'width: 100%'"></div>
+    </div>
+</th:block>
+
+<!-- Stats Card Skeleton -->
+<th:block th:fragment="skeletonStats">
+    <div class="stats shadow animate-pulse w-full">
+        <div th:each="i : ${#numbers.sequence(1, 4)}" class="stat">
+            <div class="stat-title">
+                <div class="h-3 w-16 bg-base-300 rounded animate-shimmer"></div>
+            </div>
+            <div class="stat-value">
+                <div class="h-8 w-20 bg-base-300 rounded animate-shimmer mt-1"></div>
+            </div>
+            <div class="stat-desc">
+                <div class="h-3 w-24 bg-base-300 rounded animate-shimmer mt-1"></div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Creator Card Skeleton -->
+<th:block th:fragment="skeletonCreatorCard">
+    <div class="card bg-base-200 animate-pulse">
+        <figure class="px-4 pt-4">
+            <div class="h-64 w-full bg-base-300 rounded-xl animate-shimmer"></div>
+        </figure>
+        <div class="card-body">
+            <div class="flex items-center justify-between">
+                <div class="h-6 w-32 bg-base-300 rounded animate-shimmer"></div>
+                <div class="h-5 w-16 bg-base-300 rounded-full animate-shimmer"></div>
+            </div>
+            <div class="h-4 w-full bg-base-300 rounded animate-shimmer mt-2"></div>
+            <div class="h-4 w-3/4 bg-base-300 rounded animate-shimmer"></div>
+            <div class="flex gap-2 mt-3">
+                <div class="h-5 w-12 bg-base-300 rounded-full animate-shimmer"></div>
+                <div class="h-5 w-16 bg-base-300 rounded-full animate-shimmer"></div>
+            </div>
+            <div class="card-actions justify-end mt-4">
+                <div class="h-9 w-24 bg-base-300 rounded-btn animate-shimmer"></div>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<!-- Grid of Card Skeletons -->
+<th:block th:fragment="skeletonCardGrid(count)">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div th:each="i : ${#numbers.sequence(1, count)}" th:replace="~{components/data/skeleton :: skeletonCard}">
+        </div>
+    </div>
+</th:block>

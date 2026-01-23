@@ -1,0 +1,178 @@
+<!-- ============================================
+     SEARCH INPUT COMPONENT (F-10)
+     Autocomplete search with suggestions
+     ============================================ -->
+
+<!-- Full Search Input -->
+<th:block th:fragment="searchInput(id, placeholder, searchUrl)">
+    <div class="search-input relative" x-data="{
+             query: '',
+             results: [],
+             loading: false,
+             open: false,
+             selected: -1,
+             recentSearches: JSON.parse(localStorage.getItem('recentSearches') || '[]'),
+             
+             async search() {
+                 if (this.query.length < 2) {
+                     this.results = [];
+                     return;
+                 }
+                 this.loading = true;
+                 try {
+                     const res = await fetch(`[[${searchUrl}]]?q=${encodeURIComponent(this.query)}`);
+                     this.results = await res.json();
+                 } catch (e) {
+                     this.results = [];
+                 }
+                 this.loading = false;
+             },
+             
+             selectResult(result) {
+                 this.query = result.title || result.name;
+                 this.addToRecent(this.query);
+                 this.open = false;
+                 // Navigate or emit event
+                 if (result.href) window.location.href = result.href;
+             },
+             
+             addToRecent(term) {
+                 this.recentSearches = [term, ...this.recentSearches.filter(s => s !== term)].slice(0, 5);
+                 localStorage.setItem('recentSearches', JSON.stringify(this.recentSearches));
+             },
+             
+             clearRecent() {
+                 this.recentSearches = [];
+                 localStorage.removeItem('recentSearches');
+             },
+             
+             handleKeydown(e) {
+                 if (!this.open) return;
+                 const items = this.results.length > 0 ? this.results : this.recentSearches;
+                 if (e.key === 'ArrowDown') {
+                     e.preventDefault();
+                     this.selected = Math.min(this.selected + 1, items.length - 1);
+                 } else if (e.key === 'ArrowUp') {
+                     e.preventDefault();
+                     this.selected = Math.max(this.selected - 1, -1);
+                 } else if (e.key === 'Enter' && this.selected >= 0) {
+                     e.preventDefault();
+                     if (this.results.length > 0) {
+                         this.selectResult(this.results[this.selected]);
+                     } else {
+                         this.query = this.recentSearches[this.selected];
+                         this.open = false;
+                         this.$refs.input.form?.submit();
+                     }
+                 } else if (e.key === 'Escape') {
+                     this.open = false;
+                     this.selected = -1;
+                 }
+             }
+         }" @click.away="open = false">
+
+        <!-- Input Field -->
+        <div class="relative">
+            <input type="text" :id="'[[${id}]]'" x-ref="input" x-model="query" @input.debounce.300ms="search()"
+                @focus="open = true" @keydown="handleKeydown($event)"
+                th:placeholder="${placeholder != null} ? ${placeholder} : 'Ara...'"
+                class="input input-bordered w-full pl-10 pr-10" />
+
+            <!-- Search Icon -->
+            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </span>
+
+            <!-- Loading / Clear -->
+            <span class="absolute right-3 top-1/2 -translate-y-1/2">
+                <span x-show="loading" class="loading loading-spinner loading-sm"></span>
+                <button x-show="!loading && query.length > 0" @click="query = ''; results = []; $refs.input.focus()"
+                    type="button" class="btn btn-ghost btn-xs btn-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </span>
+        </div>
+
+        <!-- Dropdown -->
+        <div x-show="open && (results.length > 0 || (query.length === 0 && recentSearches.length > 0))" x-transition
+            class="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-300 rounded-box shadow-xl z-50 overflow-hidden">
+
+            <!-- Recent Searches -->
+            <div x-show="query.length === 0 && recentSearches.length > 0">
+                <div class="flex items-center justify-between px-3 py-2 text-xs text-base-content/50 bg-base-200">
+                    <span>Son Aramalar</span>
+                    <button @click="clearRecent()" class="hover:text-error">Temizle</button>
+                </div>
+                <ul class="menu menu-sm">
+                    <template x-for="(term, index) in recentSearches" :key="term">
+                        <li>
+                            <a @click="query = term; open = false; $refs.input.form?.submit()"
+                                :class="selected === index ? 'active' : ''">
+                                <span class="text-base-content/50">🕐</span>
+                                <span x-text="term"></span>
+                            </a>
+                        </li>
+                    </template>
+                </ul>
+            </div>
+
+            <!-- Search Results -->
+            <ul x-show="results.length > 0" class="menu menu-sm max-h-64 overflow-y-auto">
+                <template x-for="(result, index) in results" :key="result.id || index">
+                    <li>
+                        <a @click="selectResult(result)" :class="selected === index ? 'active' : ''">
+                            <img x-show="result.image" :src="result.image" class="w-8 h-8 rounded-lg object-cover" />
+                            <div>
+                                <p class="font-medium" x-text="result.title || result.name"></p>
+                                <p x-show="result.subtitle" class="text-xs text-base-content/60"
+                                    x-text="result.subtitle"></p>
+                            </div>
+                        </a>
+                    </li>
+                </template>
+            </ul>
+
+        </div>
+    </div>
+</th:block>
+
+<!-- Simple Search (No Autocomplete) -->
+<th:block th:fragment="searchInputSimple(placeholder)">
+    <div class="join w-full">
+        <input type="text" name="q" th:placeholder="${placeholder != null} ? ${placeholder} : 'Ara...'"
+            class="input input-bordered join-item flex-1" />
+        <button type="submit" class="btn btn-primary join-item">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+        </button>
+    </div>
+</th:block>
+
+<!-- Navbar Search -->
+<th:block th:fragment="searchInputNavbar">
+    <div class="form-control" x-data="{ focused: false }">
+        <div class="input-group">
+            <input type="text" name="q" placeholder="Creator, kategori ara..."
+                class="input input-bordered input-sm w-40 lg:w-64 transition-all" @focus="focused = true"
+                @blur="focused = false" :class="focused ? 'w-64 lg:w-80' : ''" />
+            <button class="btn btn-sm btn-square btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</th:block>
