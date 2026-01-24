@@ -12,7 +12,7 @@ const MockData = {
             email: 'aylin@example.com',
             role: 'CREATOR',
             name: 'Aylin',
-            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=aylin',
+            avatar: '/images/influencers/aylin.png',
             status: 'ACTIVE',
             createdAt: '2024-01-15T10:00:00Z'
         },
@@ -21,9 +21,18 @@ const MockData = {
             email: 'nova@example.com',
             role: 'CREATOR',
             name: 'Nova',
-            avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=nova',
+            avatar: '/images/influencers/nova.png',
             status: 'ACTIVE',
             createdAt: '2024-02-20T14:30:00Z'
+        },
+        {
+            id: 'creator_3',
+            email: 'elif@example.com',
+            role: 'CREATOR',
+            name: 'Elif',
+            avatar: '/images/influencers/elif.png',
+            status: 'ACTIVE',
+            createdAt: '2024-03-01T10:00:00Z'
         },
         {
             id: 'brand_1',
@@ -39,7 +48,7 @@ const MockData = {
     // ========== PERSONAS (AI Characters) ==========
     personas: [
         {
-            id: 'persona_1',
+            id: 'aylin',
             creatorId: 'creator_1',
             name: 'Aylin',
             age: 24,
@@ -48,9 +57,9 @@ const MockData = {
             hairColor: 'Kahverengi',
             eyeColor: 'Yeşil',
             style: 'Photorealistic',
-            bio: 'Moda ve yaşam tarzı içerikleri üreten AI influencer. Cafe ortamları ve şehir hayatı temalı çekimler.',
+            bio: 'Moda ve yaşam tarzı içerikleri üreten AI influencer. Cafe ortamları ve şehir hayatı temalı çekimler. Minimalist ve sofistike bir tarzım var.',
             profileImages: [
-                'https://picsum.photos/seed/aylin1/400/500',
+                '/images/influencers/aylin.png',
                 'https://picsum.photos/seed/aylin2/400/500',
                 'https://picsum.photos/seed/aylin3/400/500'
             ],
@@ -61,24 +70,24 @@ const MockData = {
                 'https://picsum.photos/seed/port4/600/800'
             ],
             stats: {
-                completedOrders: 47,
-                avgRating: 4.8,
-                responseTime: '2 saat'
+                completedOrders: 127,
+                avgRating: 4.9,
+                responseTime: '1 saat'
             }
         },
         {
-            id: 'persona_2',
+            id: 'nova',
             creatorId: 'creator_2',
             name: 'Nova',
             age: 22,
             gender: 'Kadın',
-            ethnicity: 'Kore',
-            hairColor: 'Siyah',
-            eyeColor: 'Kahverengi',
-            style: 'Anime',
-            bio: 'Anime tarzında içerikler üreten dijital karakter. Oyun ve teknoloji markaları için ideal.',
+            ethnicity: 'Avrupalı',
+            hairColor: 'Kızıl',
+            eyeColor: 'Yeşil',
+            style: 'Luxury',
+            bio: 'Premium markalar için zarif ve lüks içerik üretimi uzmanı. Yüksek moda ve mücevher çekimleri için ideal yüz.',
             profileImages: [
-                'https://picsum.photos/seed/nova1/400/500',
+                '/images/influencers/nova.png',
                 'https://picsum.photos/seed/nova2/400/500',
                 'https://picsum.photos/seed/nova3/400/500'
             ],
@@ -87,24 +96,24 @@ const MockData = {
                 'https://picsum.photos/seed/nport2/600/800'
             ],
             stats: {
-                completedOrders: 23,
+                completedOrders: 156,
                 avgRating: 4.9,
-                responseTime: '1 saat'
+                responseTime: '30 dakika'
             }
         },
         {
-            id: 'persona_3',
-            creatorId: 'creator_1',
+            id: 'elif',
+            creatorId: 'creator_3',
             name: 'Elif',
-            age: 28,
+            age: 25,
             gender: 'Kadın',
             ethnicity: 'Türk',
             hairColor: 'Sarı',
             eyeColor: 'Mavi',
-            style: 'Photorealistic',
-            bio: 'Lüks marka çekimleri için profesyonel görünüm. Kozmetik ve mücevher markaları için ideal.',
+            style: 'Casual',
+            bio: 'Sıcak ve samimi marka iletişimi için doğal, enerjik karakter. Günlük yaşam, spor ve sağlıklı yaşam ürünleri için mükemmel.',
             profileImages: [
-                'https://picsum.photos/seed/elif1/400/500',
+                '/images/influencers/elif.png',
                 'https://picsum.photos/seed/elif2/400/500',
                 'https://picsum.photos/seed/elif3/400/500'
             ],
@@ -114,9 +123,9 @@ const MockData = {
                 'https://picsum.photos/seed/eport3/600/800'
             ],
             stats: {
-                completedOrders: 89,
-                avgRating: 4.7,
-                responseTime: '4 saat'
+                completedOrders: 98,
+                avgRating: 4.8,
+                responseTime: '2 saat'
             }
         }
     ],
@@ -125,75 +134,61 @@ const MockData = {
     gigs: [
         {
             id: 'gig_1',
-            personaId: 'persona_1',
+            personaId: 'aylin',
             creatorId: 'creator_1',
             title: 'Cafe ortamında ürün fotoğrafı',
-            description: 'Ürününüzle birlikte şık bir cafe ortamında profesyonel fotoğraf çekimi. Instagram ve sosyal medya için optimize edilmiş.',
+            description: 'Ürününüzle birlikte şık bir cafe ortamında profesyonel fotoğraf çekimi.',
             price: 500,
             deliveryDays: 2,
             revisions: 1,
             category: 'Ürün Fotoğrafçılığı',
             tags: ['cafe', 'lifestyle', 'ürün'],
             thumbnail: 'https://picsum.photos/seed/gig1/400/300',
-            images: [
-                'https://picsum.photos/seed/gig1a/600/400',
-                'https://picsum.photos/seed/gig1b/600/400'
-            ],
             status: 'ACTIVE',
             createdAt: '2024-03-01T10:00:00Z'
         },
         {
             id: 'gig_2',
-            personaId: 'persona_1',
+            personaId: 'aylin',
             creatorId: 'creator_1',
-            title: 'Instagram Story paketi (5 adet)',
-            description: '5 adet özelleştirilmiş Instagram story görseli. Markanızın renkleri ve fontlarıyla uyumlu tasarım.',
+            title: 'Instagram Story Paketi',
+            description: '5 adet özelleştirilmiş Instagram story görseli. Marka renklerinizle.',
             price: 1200,
             deliveryDays: 3,
             revisions: 2,
             category: 'Sosyal Medya',
-            tags: ['instagram', 'story', 'paket'],
+            tags: ['instagram', 'story'],
             thumbnail: 'https://picsum.photos/seed/gig2/400/300',
-            images: [
-                'https://picsum.photos/seed/gig2a/600/400'
-            ],
             status: 'ACTIVE',
             createdAt: '2024-03-05T14:00:00Z'
         },
         {
             id: 'gig_3',
-            personaId: 'persona_2',
+            personaId: 'nova',
             creatorId: 'creator_2',
-            title: 'Anime tarzı oyun promosyonu',
-            description: 'Oyununuz için anime stilinde promosyon görseli. Karakter oyununuzun temasına göre uyarlanır.',
-            price: 800,
+            title: 'Lüks Mücevher Çekimi',
+            description: 'Yüksek kaliteli mücevher ve aksesuar çekimleri.',
+            price: 1500,
             deliveryDays: 4,
             revisions: 2,
-            category: 'Oyun & Teknoloji',
-            tags: ['anime', 'gaming', 'promo'],
+            category: 'Lüks Markalar',
+            tags: ['mücevher', 'lüks', 'moda'],
             thumbnail: 'https://picsum.photos/seed/gig3/400/300',
-            images: [
-                'https://picsum.photos/seed/gig3a/600/400',
-                'https://picsum.photos/seed/gig3b/600/400'
-            ],
             status: 'ACTIVE',
             createdAt: '2024-03-10T09:00:00Z'
         },
         {
             id: 'gig_4',
-            personaId: 'persona_3',
-            creatorId: 'creator_1',
-            title: 'Lüks marka ürün çekimi',
-            description: 'Kozmetik, mücevher ve lüks ürünler için profesyonel stüdyo kalitesinde çekim.',
-            price: 1500,
-            deliveryDays: 5,
-            revisions: 3,
-            category: 'Lüks Markalar',
-            tags: ['lüks', 'kozmetik', 'mücevher'],
+            personaId: 'elif',
+            creatorId: 'creator_3',
+            title: 'Spor Giyim Tanıtımı',
+            description: 'Spor giyim ve aktif yaşam ürünleri için dinamik çekimler.',
+            price: 450,
+            deliveryDays: 2,
+            revisions: 1,
+            category: 'Moda',
+            tags: ['spor', 'giyim', 'fitness'],
             thumbnail: 'https://picsum.photos/seed/gig4/400/300',
-            images: [
-                'https://picsum.photos/seed/gig4a/600/400'
-            ],
             status: 'ACTIVE',
             createdAt: '2024-03-15T11:00:00Z'
         }
@@ -206,7 +201,7 @@ const MockData = {
             gigId: 'gig_1',
             brandId: 'brand_1',
             creatorId: 'creator_1',
-            status: 'IN_PROGRESS', // PENDING, IN_PROGRESS, DELIVERED, COMPLETED, DISPUTED
+            status: 'IN_PROGRESS',
             brief: {
                 productImage: 'https://picsum.photos/seed/product1/300/300',
                 scenario: 'Kahve içerken ürünü elinde tutarak rahat bir poz.',
@@ -214,9 +209,7 @@ const MockData = {
             },
             price: 500,
             createdAt: '2024-03-20T10:00:00Z',
-            deliveryDue: '2024-03-22T10:00:00Z',
-            deliveredAt: null,
-            deliveryFile: null
+            deliveryDue: '2024-03-22T10:00:00Z'
         },
         {
             id: 'order_2',
@@ -226,7 +219,7 @@ const MockData = {
             status: 'DELIVERED',
             brief: {
                 productImage: 'https://picsum.photos/seed/product2/300/300',
-                scenario: 'Yeni sezon koleksiyonu tanıtımı, enerji dolu.',
+                scenario: 'Yeni sezon koleksiyonu tanıtımı.',
                 format: 'vertical'
             },
             price: 1200,
@@ -234,59 +227,19 @@ const MockData = {
             deliveryDue: '2024-03-21T14:00:00Z',
             deliveredAt: '2024-03-20T16:00:00Z',
             deliveryFile: 'https://picsum.photos/seed/delivery2/600/800',
-            deliveryNote: 'Story görselleri hazır. Beğenmeniz dileğiyle!'
-        },
-        {
-            id: 'order_3',
-            gigId: 'gig_4',
-            brandId: 'brand_1',
-            creatorId: 'creator_1',
-            status: 'COMPLETED',
-            brief: {
-                productImage: 'https://picsum.photos/seed/product3/300/300',
-                scenario: 'Minimal arka plan, ürün ön planda.',
-                format: 'square'
-            },
-            price: 1500,
-            createdAt: '2024-03-10T09:00:00Z',
-            deliveryDue: '2024-03-15T09:00:00Z',
-            deliveredAt: '2024-03-14T11:00:00Z',
-            completedAt: '2024-03-14T15:00:00Z',
-            deliveryFile: 'https://picsum.photos/seed/delivery3/600/600'
-        }
-    ],
-
-    // ========== PENDING CREATORS (For Admin) ==========
-    pendingCreators: [
-        {
-            id: 'pending_1',
-            email: 'yeni.creator@example.com',
-            name: 'Yeni Creator',
-            submittedAt: '2024-03-22T08:00:00Z',
-            persona: {
-                name: 'Luna',
-                age: 21,
-                style: 'Photorealistic',
-                proofImages: [
-                    'https://picsum.photos/seed/proof1/400/500',
-                    'https://picsum.photos/seed/proof2/400/500',
-                    'https://picsum.photos/seed/proof3/400/500'
-                ]
-            }
+            deliveryNote: 'Storyler hazır!'
         }
     ],
 
     // ========== FILTER OPTIONS ==========
     filterOptions: {
-        genders: ['Kadın', 'Erkek', 'Non-Binary'],
-        hairColors: ['Siyah', 'Kahverengi', 'Sarı', 'Kızıl', 'Beyaz', 'Mavi', 'Pembe'],
-        eyeColors: ['Kahverengi', 'Mavi', 'Yeşil', 'Ela', 'Siyah'],
-        styles: ['Photorealistic', 'Anime', '3D Render', 'Illustration'],
-        categories: ['Ürün Fotoğrafçılığı', 'Sosyal Medya', 'Oyun & Teknoloji', 'Lüks Markalar', 'Moda', 'Yemek']
+        genders: ['Kadın', 'Erkek'],
+        hairColors: ['Siyah', 'Kahverengi', 'Sarı', 'Kızıl'],
+        styles: ['Photorealistic', 'Anime', 'Luxury', 'Casual', 'Business'],
+        categories: ['Ürün Fotoğrafçılığı', 'Sosyal Medya', 'Moda', 'Lüks Markalar']
     },
 
     // ========== HELPER METHODS ==========
-
     getPersonaById(id) {
         return this.personas.find(p => p.id === id);
     },
@@ -296,41 +249,15 @@ const MockData = {
     },
 
     getGigsByCreator(creatorId) {
-        return this.gigs.filter(g => g.creatorId === creatorId);
+        // Find persona for creator first
+        const persona = this.personas.find(p => p.creatorId === creatorId);
+        if (!persona) return [];
+        return this.gigs.filter(g => g.personaId === persona.id);
     },
-
-    getOrdersByBrand(brandId) {
-        return this.orders.filter(o => o.brandId === brandId);
-    },
-
-    getOrdersByCreator(creatorId) {
-        return this.orders.filter(o => o.creatorId === creatorId);
-    },
-
-    filterPersonas(filters) {
-        return this.personas.filter(p => {
-            if (filters.gender && p.gender !== filters.gender) return false;
-            if (filters.hairColor && p.hairColor !== filters.hairColor) return false;
-            if (filters.style && p.style !== filters.style) return false;
-            return true;
-        });
-    },
-
-    searchGigs(query) {
-        const q = query.toLowerCase();
-        return this.gigs.filter(g =>
-            g.title.toLowerCase().includes(q) ||
-            g.description.toLowerCase().includes(q) ||
-            g.tags.some(t => t.toLowerCase().includes(q))
-        );
+    
+    getGigsByPersona(personaId) {
+        return this.gigs.filter(g => g.personaId === personaId);
     }
 };
 
-// Make it globally available
 window.MockData = MockData;
-
-console.log('📦 Mock data loaded:', {
-    personas: MockData.personas.length,
-    gigs: MockData.gigs.length,
-    orders: MockData.orders.length
-});

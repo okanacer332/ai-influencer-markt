@@ -4,200 +4,448 @@
 
 <head>
     <title>AI Influencer Marketplace - Türkiye'nin İlk AI İçerik Platformu</title>
+    <meta name="description"
+        content="Yapay zeka influencer karakterlerinden profesyonel marka içerikleri alın. 150+ doğrulanmış creator, 48 saat teslim garantisi." />
 </head>
 
 <body>
     <main layout:fragment="content">
 
-        <!-- Hero Section -->
-        <section class="bg-gray-50 py-16 md:py-24">
-            <div class="container-custom">
-                <div class="max-w-3xl mx-auto text-center">
-                    <span
-                        class="inline-block bg-primary/10 text-primary text-sm font-medium px-4 py-2 rounded-full mb-6">
-                        🚀 Türkiye'nin İlk AI Influencer Platformu
-                    </span>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-                        AI Influencer<br />
-                        <span class="text-primary">Marketplace</span>
-                    </h1>
-                    <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                        Yapay zeka ile oluşturulmuş sanal influencer karakterlerden
-                        profesyonel içerik satın alın.
-                    </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="/search" class="btn btn-primary btn-lg">
-                            Creator'ları Keşfet
-                        </a>
-                        <a href="/register?role=creator" class="btn btn-outline btn-lg">
-                            Creator Ol
-                        </a>
-                    </div>
-                    <div class="flex flex-wrap justify-center gap-6 mt-10 text-sm text-gray-500">
-                        <span class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            Güvenli Ödeme
-                        </span>
-                        <span class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            48 Saat Teslim
-                        </span>
-                        <span class="flex items-center gap-2">
-                            <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            %100 Memnuniyet
-                        </span>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- HERO SECTION - Premium Impact -->
+        <section class="relative bg-white overflow-hidden">
+            <div class="container-custom py-16 lg:py-24">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
 
-        <!-- Stats Section -->
-        <section class="py-12 border-b border-gray-200">
-            <div class="container-custom">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+                    <!-- Left Content -->
                     <div>
-                        <p class="text-3xl md:text-4xl font-bold text-primary">150+</p>
-                        <p class="text-gray-600 mt-1">Aktif Creator</p>
-                    </div>
-                    <div>
-                        <p class="text-3xl md:text-4xl font-bold text-primary">2,500+</p>
-                        <p class="text-gray-600 mt-1">Tamamlanan Sipariş</p>
-                    </div>
-                    <div>
-                        <p class="text-3xl md:text-4xl font-bold text-primary">48h</p>
-                        <p class="text-gray-600 mt-1">Ortalama Teslim</p>
-                    </div>
-                    <div>
-                        <p class="text-3xl md:text-4xl font-bold text-primary">4.9</p>
-                        <p class="text-gray-600 mt-1">Ortalama Puan</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Featured Creators Section -->
-        <section class="py-16 md:py-20">
-            <div class="container-custom">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Öne Çıkan Creator'lar</h2>
-                    <p class="text-gray-600 max-w-xl mx-auto">
-                        En popüler AI influencer karakterlerimizi keşfedin
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" x-data>
-                    <template x-for="persona in MockData.personas.slice(0, 4)" :key="persona.id">
                         <div
-                            class="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow">
-                            <div class="aspect-[3/4] overflow-hidden">
-                                <img :src="persona.profileImages[0]" :alt="persona.name"
-                                    class="w-full h-full object-cover" />
+                            class="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
+                            <span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>
+                            Türkiye'nin #1 AI Influencer Platformu
+                        </div>
+
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">
+                            AI Influencer ile<br />
+                            <span class="text-primary">Marka Gücünüzü</span><br />
+                            Katlayın
+                        </h1>
+
+                        <p class="text-lg text-gray-600 mb-8 max-w-lg">
+                            Gerçek influencer maliyetlerinin <strong>%90 altında</strong>,
+                            profesyonel AI karakterlerden <strong>48 saat içinde</strong>
+                            marka içeriği alın.
+                        </p>
+
+                        <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                            <a href="/search" class="btn btn-primary btn-lg shadow-lg shadow-primary/25">
+                                Hemen Creator Bul
+                                <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                </svg>
+                            </a>
+                            <a href="/register?role=creator" class="btn btn-outline btn-lg">
+                                Creator Olarak Kazan
+                            </a>
+                        </div>
+
+                        <!-- Trust Indicators -->
+                        <div class="flex items-center gap-6 text-sm text-gray-500">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>SSL Korumalı</span>
                             </div>
-                            <div class="p-4">
-                                <div class="flex items-center gap-2 mb-2">
-                                    <h3 class="font-semibold text-gray-900" x-text="persona.name"></h3>
-                                    <span class="bg-primary/10 text-primary text-xs px-2 py-0.5 rounded"
-                                        x-text="persona.style"></span>
-                                </div>
-                                <p class="text-sm text-gray-500 line-clamp-2 mb-3" x-text="persona.bio"></p>
-                                <div class="flex items-center justify-between text-sm">
-                                    <div class="flex items-center gap-1">
-                                        <span class="text-yellow-500">★</span>
-                                        <span x-text="persona.stats.avgRating">4.9</span>
-                                        <span class="text-gray-400"
-                                            x-text="'(' + persona.stats.completedOrders + ')'"></span>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>%100 Memnuniyet</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                                <span>Para İade Garantisi</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right - AI Influencer Showcase -->
+                    <div class="relative">
+                        <div class="grid grid-cols-2 gap-4">
+                            <!-- Main Featured -->
+                            <div class="col-span-2 relative group">
+                                <img src="/images/influencers/aylin.png" alt="Aylin - AI Influencer"
+                                    class="w-full h-80 object-cover rounded-2xl shadow-2xl" />
+                                <div class="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur rounded-xl p-4">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="font-semibold text-gray-900">Aylin</span>
+                                                <span class="bg-primary text-white text-xs px-2 py-0.5 rounded">⚡ Top
+                                                    Creator</span>
+                                            </div>
+                                            <div class="flex items-center gap-2 text-sm text-gray-500">
+                                                <span class="text-yellow-500">★★★★★</span>
+                                                <span>4.9 (127 yorum)</span>
+                                            </div>
+                                        </div>
+                                        <a href="/creator/aylin" class="btn btn-primary btn-sm">Profili Gör</a>
                                     </div>
-                                    <span class="font-semibold text-primary">₺500'den</span>
+                                </div>
+                            </div>
+
+                            <!-- Secondary -->
+                            <div class="relative group">
+                                <img src="/images/influencers/elif.png" alt="Elif - AI Influencer"
+                                    class="w-full h-48 object-cover rounded-xl shadow-lg" />
+                                <div class="absolute bottom-2 left-2 bg-white/90 rounded-lg px-3 py-1.5">
+                                    <span class="font-medium text-sm">Elif</span>
+                                    <span class="text-yellow-500 text-xs ml-1">★ 4.8</span>
+                                </div>
+                            </div>
+                            <div class="relative group">
+                                <img src="/images/influencers/nova.png" alt="Nova - AI Influencer"
+                                    class="w-full h-48 object-cover rounded-xl shadow-lg" />
+                                <div class="absolute bottom-2 left-2 bg-white/90 rounded-lg px-3 py-1.5">
+                                    <span class="font-medium text-sm">Nova</span>
+                                    <span class="text-yellow-500 text-xs ml-1">★ 4.9</span>
                                 </div>
                             </div>
                         </div>
-                    </template>
-                </div>
 
-                <div class="text-center mt-10">
-                    <a href="/search" class="btn btn-outline btn-primary">
-                        Tüm Creator'ları Gör →
-                    </a>
+                        <!-- Floating Badge -->
+                        <div class="absolute -top-4 -right-4 bg-white rounded-full shadow-xl p-4 hidden lg:block">
+                            <div class="text-center">
+                                <span class="text-2xl font-bold text-primary">150+</span>
+                                <p class="text-xs text-gray-500">Creator</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- How It Works Section -->
-        <section class="py-16 md:py-20 bg-gray-50">
+        <!-- SOCIAL PROOF LOGOS -->
+        <section class="bg-gray-50 py-8 border-y border-gray-200">
+            <div class="container-custom">
+                <p class="text-center text-sm text-gray-500 mb-6">Güvenilir markalar tarafından tercih ediliyoruz</p>
+                <div class="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60">
+                    <span class="text-2xl font-bold text-gray-400">MARKA 1</span>
+                    <span class="text-2xl font-bold text-gray-400">MARKA 2</span>
+                    <span class="text-2xl font-bold text-gray-400">MARKA 3</span>
+                    <span class="text-2xl font-bold text-gray-400">MARKA 4</span>
+                    <span class="text-2xl font-bold text-gray-400">MARKA 5</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- STATS - Impact Numbers -->
+        <section class="py-16 bg-white">
+            <div class="container-custom">
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <p class="text-4xl md:text-5xl font-bold text-primary mb-2">150+</p>
+                        <p class="text-gray-600">Doğrulanmış Creator</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-4xl md:text-5xl font-bold text-primary mb-2">2,500+</p>
+                        <p class="text-gray-600">Başarılı Proje</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-4xl md:text-5xl font-bold text-primary mb-2">48h</p>
+                        <p class="text-gray-600">Ortalama Teslim</p>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-4xl md:text-5xl font-bold text-primary mb-2">%98</p>
+                        <p class="text-gray-600">Memnuniyet Oranı</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- WHY AI INFLUENCERS -->
+        <section class="py-20 bg-gray-50">
             <div class="container-custom">
                 <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Nasıl Çalışır?</h2>
-                    <p class="text-gray-600">3 basit adımda AI içeriğinizi alın</p>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Neden AI Influencer?</h2>
+                    <p class="text-gray-600 max-w-2xl mx-auto">
+                        Gerçek influencer'ların maliyeti ve riskleri olmadan, tamamen kontrol edebildiğiniz marka
+                        yüzleri
+                    </p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <!-- Step 1 -->
-                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                    <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
                         <div
-                            class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                            1
+                            class="w-14 h-14 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            💰
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Creator Seçin</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">%90 Maliyet Tasarrufu</h3>
                         <p class="text-gray-600">
-                            Filtreleri kullanarak markanıza uygun AI influencer karakteri bulun.
+                            Gerçek influencer'lara kıyasla 10 kat daha uygun fiyatlarla aynı kalitede içerik alın.
                         </p>
                     </div>
 
-                    <!-- Step 2 -->
-                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                    <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
                         <div
-                            class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                            2
+                            class="w-14 h-14 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            ⚡
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Brief Gönderin</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">48 Saat Teslim</h3>
                         <p class="text-gray-600">
-                            Ürün görseli ve senaryo detaylarını paylaşın, güvenli ödeme yapın.
+                            Beklemeye son! Siparişiniz ortalama 48 saat içinde teslim edilir, acil dönemlerde ekspres
+                            seçenek.
                         </p>
                     </div>
 
-                    <!-- Step 3 -->
-                    <div class="bg-white rounded-xl p-6 border border-gray-200">
+                    <div class="bg-white rounded-xl p-8 shadow-sm border border-gray-100">
                         <div
-                            class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                            3
+                            class="w-14 h-14 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-6">
+                            🎯
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-900 mb-2">İçeriği Alın</h3>
+                        <h3 class="text-xl font-semibold text-gray-900 mb-3">%100 Kontrol</h3>
                         <p class="text-gray-600">
-                            Creator işi tamamlasın, onaylayın ve orijinal dosyalarınızı indirin.
+                            Skandal riski yok, istediğiniz zaman içerik kullanımı, sınırsız revizyon hakkı.
                         </p>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- CTA Section -->
-        <section class="py-16 md:py-20 bg-primary">
-            <div class="container-custom text-center">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">Hemen Başlayın</h2>
-                <p class="text-white/80 mb-8 max-w-xl mx-auto">
-                    AI influencer içerik üretiminin geleceğine katılın.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="/register?role=brand" class="btn btn-lg bg-white text-primary hover:bg-gray-100 border-0">
-                        Marka Olarak Başla
-                    </a>
-                    <a href="/register?role=creator"
-                        class="btn btn-lg btn-outline text-white border-white hover:bg-white hover:text-primary">
-                        Creator Olarak Başla
+        <!-- FEATURED CREATORS -->
+        <section class="py-20 bg-white">
+            <div class="container-custom">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Öne Çıkan Creator'lar</h2>
+                        <p class="text-gray-600">En çok tercih edilen AI karakterlerimiz</p>
+                    </div>
+                    <a href="/search" class="btn btn-outline btn-primary mt-4 md:mt-0">
+                        Tümünü Gör →
                     </a>
                 </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Creator 1 -->
+                    <a href="/creator/aylin" class="group">
+                        <div
+                            class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+                            <div class="aspect-[3/4] overflow-hidden">
+                                <img src="/images/influencers/aylin.png" alt="Aylin"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            </div>
+                            <div class="p-5">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="font-semibold text-lg text-gray-900">Aylin</h3>
+                                    <span
+                                        class="bg-primary/10 text-primary text-xs font-medium px-2.5 py-1 rounded-full">Minimal</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-4">Sofistike ve modern marka içerikleri için ideal
+                                    profesyonel görünüm.</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <span class="text-yellow-500">★★★★★</span>
+                                        <span class="text-gray-500">4.9 (127)</span>
+                                    </div>
+                                    <span class="font-bold text-primary">₺500'den başlayan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Creator 2 -->
+                    <a href="/creator/elif" class="group">
+                        <div
+                            class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+                            <div class="aspect-[3/4] overflow-hidden">
+                                <img src="/images/influencers/elif.png" alt="Elif"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            </div>
+                            <div class="p-5">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="font-semibold text-lg text-gray-900">Elif</h3>
+                                    <span
+                                        class="bg-secondary/10 text-secondary text-xs font-medium px-2.5 py-1 rounded-full">Casual</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-4">Sıcak ve samimi marka iletişimi için doğal,
+                                    enerjik karakter.</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <span class="text-yellow-500">★★★★★</span>
+                                        <span class="text-gray-500">4.8 (98)</span>
+                                    </div>
+                                    <span class="font-bold text-primary">₺450'den başlayan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Creator 3 -->
+                    <a href="/creator/nova" class="group">
+                        <div
+                            class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all">
+                            <div class="aspect-[3/4] overflow-hidden">
+                                <img src="/images/influencers/nova.png" alt="Nova"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            </div>
+                            <div class="p-5">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h3 class="font-semibold text-lg text-gray-900">Nova</h3>
+                                    <span
+                                        class="bg-accent/10 text-accent text-xs font-medium px-2.5 py-1 rounded-full">Luxury</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mb-4">Premium markalar için zarif ve lüks içerik üretimi
+                                    uzmanı.</p>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-2 text-sm">
+                                        <span class="text-yellow-500">★★★★★</span>
+                                        <span class="text-gray-500">4.9 (156)</span>
+                                    </div>
+                                    <span class="font-bold text-primary">₺600'den başlayan</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="py-20 bg-gray-900 text-white">
+            <div class="container-custom">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Nasıl Çalışır?</h2>
+                    <p class="text-gray-400 max-w-xl mx-auto">3 basit adımda profesyonel içeriğinizi alın</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                            1</div>
+                        <h3 class="text-xl font-semibold mb-3">Creator Seçin</h3>
+                        <p class="text-gray-400">Markanıza uygun AI karakteri filtrelere göre bulun ve profilini
+                            inceleyin.</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                            2</div>
+                        <h3 class="text-xl font-semibold mb-3">Brief Gönderin</h3>
+                        <p class="text-gray-400">Ürün görselinizi ve senaryo detaylarınızı yükleyin, güvenli ödeme
+                            yapın.</p>
+                    </div>
+
+                    <div class="text-center">
+                        <div
+                            class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                            3</div>
+                        <h3 class="text-xl font-semibold mb-3">İçeriğinizi Alın</h3>
+                        <p class="text-gray-400">48 saat içinde teslimat, onay sonrası orijinal dosyaları indirin.</p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <a href="/search" class="btn btn-primary btn-lg">
+                        Hemen Başla - Ücretsiz Kayıt
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- TESTIMONIALS -->
+        <section class="py-20 bg-white">
+            <div class="container-custom">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Müşterilerimiz Ne Diyor?</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-gray-50 rounded-2xl p-6">
+                        <div class="flex items-center gap-1 text-yellow-500 mb-4">★★★★★</div>
+                        <p class="text-gray-700 mb-6">
+                            "AI influencer içerikleri ile Instagram etkileşimimiz %300 arttı. Maliyetimiz ise eskisinin
+                            onda biri!"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center font-bold">
+                                AY</div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Ahmet Yılmaz</p>
+                                <p class="text-sm text-gray-500">E-ticaret Yöneticisi, ModaShop</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-6">
+                        <div class="flex items-center gap-1 text-yellow-500 mb-4">★★★★★</div>
+                        <p class="text-gray-700 mb-6">
+                            "Kampanyalarda hız çok önemli. 2 gün içinde profesyonel içerik alabilmek işimizi inanılmaz
+                            kolaylaştırdı."
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-12 h-12 bg-secondary text-white rounded-full flex items-center justify-center font-bold">
+                                MK</div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Merve Kaya</p>
+                                <p class="text-sm text-gray-500">Dijital Pazarlama Müdürü</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-6">
+                        <div class="flex items-center gap-1 text-yellow-500 mb-4">★★★★★</div>
+                        <p class="text-gray-700 mb-6">
+                            "Gerçek influencer'larla yaşadığımız sorunlar artık yok. Tutarlı, güvenilir ve uygun
+                            fiyatlı!"
+                        </p>
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center font-bold">
+                                CB</div>
+                            <div>
+                                <p class="font-semibold text-gray-900">Can Başaran</p>
+                                <p class="text-sm text-gray-500">Startup Kurucusu, TechVibe</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA - Final Push -->
+        <section class="py-20 bg-primary">
+            <div class="container-custom text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                    Markanızı Büyütmeye Hazır mısınız?
+                </h2>
+                <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+                    Şimdi ücretsiz kayıt olun, ilk siparişinize özel <strong>%20 indirim</strong> kazanın.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="/register?role=brand" class="btn btn-lg bg-white text-primary hover:bg-gray-100">
+                        🏢 Marka Olarak Başla
+                    </a>
+                    <a href="/register?role=creator"
+                        class="btn btn-lg btn-outline border-white text-white hover:bg-white hover:text-primary">
+                        🎨 Creator Olarak Kazan
+                    </a>
+                </div>
+                <p class="text-white/60 text-sm mt-6">
+                    Kredi kartı gerekmez • Anında başlayın
+                </p>
             </div>
         </section>
 
