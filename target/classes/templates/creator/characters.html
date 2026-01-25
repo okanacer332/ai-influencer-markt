@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>Karakterlerim</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="charactersPage()">
+
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Karakterlerim</h1>
+                <p class="text-gray-500 mt-1">AI karakterlerini yönet, yenilerini ekle</p>
+            </div>
+            <a href="/creator/characters/new" class="btn btn-primary">
+                <i class="ph ph-plus mr-1"></i> Yeni Karakter Oluştur
+            </a>
+        </div>
+
+        <!-- Characters Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="char in characters" :key="char.id">
+                <a :href="'/creator/characters/' + char.id"
+                    class="dash-card p-5 block hover:border-primary transition-colors">
+                    <div class="flex items-start gap-4">
+                        <!-- Avatar -->
+                        <img :src="char.avatar" :alt="char.name"
+                            class="w-20 h-20 rounded-xl object-cover flex-shrink-0" />
+
+                        <!-- Info -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <h3 class="font-semibold text-gray-900 text-lg" x-text="char.name">Karakter</h3>
+                                <span class="text-xs px-2 py-0.5 rounded-full"
+                                    :class="char.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
+                                    x-text="char.status === 'active' ? 'Aktif' : 'Onay Bekliyor'"></span>
+                            </div>
+                            <p class="text-sm text-gray-500 mb-2" x-text="char.style">Stil</p>
+
+                            <!-- Platform Icons -->
+                            <div class="flex items-center gap-2">
+                                <span x-show="char.platforms.instagram"
+                                    class="text-sm bg-pink-100 px-2 py-0.5 rounded flex items-center gap-1"
+                                    title="Instagram"><i class="ph ph-instagram-logo"></i> Instagram</span>
+                                <span x-show="char.platforms.tiktok"
+                                    class="text-sm bg-gray-100 px-2 py-0.5 rounded flex items-center gap-1"
+                                    title="TikTok"><i class="ph ph-tiktok-logo"></i> TikTok</span>
+                                <span x-show="char.platforms.twitter"
+                                    class="text-sm bg-blue-100 px-2 py-0.5 rounded flex items-center gap-1"
+                                    title="Twitter"><i class="ph ph-x-logo"></i> Twitter</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="flex items-center gap-6 mt-4 pt-4 border-t border-gray-100">
+                        <div>
+                            <p class="text-2xl font-bold text-gray-900" x-text="char.orders">0</p>
+                            <p class="text-xs text-gray-500">Sipariş</p>
+                        </div>
+                        <div>
+                            <p class="text-2xl font-bold text-primary"
+                                x-text="'₺' + char.earnings.toLocaleString('tr-TR')">₺0</p>
+                            <p class="text-xs text-gray-500">Kazanç</p>
+                        </div>
+                        <div class="ml-auto text-primary text-sm font-medium">
+                            Düzenle <i class="ph ph-arrow-right ml-1"></i>
+                        </div>
+                    </div>
+                </a>
+            </template>
+
+            <!-- Add New Card -->
+            <a href="/creator/characters/new"
+                class="dash-card border-2 border-dashed border-gray-300 p-8 flex flex-col items-center justify-center hover:border-primary hover:bg-primary/5 transition-colors min-h-[200px]">
+                <span class="text-5xl text-gray-400"><i class="ph ph-plus"></i></span>
+                <span class="text-gray-500 mt-3 font-medium">Yeni Karakter Ekle</span>
+                <span class="text-sm text-gray-400 mt-1">Farklı markalar için farklı karakterler</span>
+            </a>
+        </div>
+
+        <script>
+            function charactersPage() {
+                return {
+                    characters: [
+                        {
+                            id: 'aylin',
+                            name: 'Aylin',
+                            avatar: '/images/influencers/aylin.png',
+                            style: 'Photorealistic • Minimal',
+                            status: 'active',
+                            platforms: { instagram: true, tiktok: true, twitter: false },
+                            orders: 47,
+                            earnings: 12500
+                        },
+                        {
+                            id: 'nova',
+                            name: 'Nova',
+                            avatar: '/images/influencers/nova.png',
+                            style: 'Luxury • Premium',
+                            status: 'active',
+                            platforms: { instagram: true, tiktok: false, twitter: true },
+                            orders: 32,
+                            earnings: 18200
+                        },
+                        {
+                            id: 'elif',
+                            name: 'Elif',
+                            avatar: '/images/influencers/elif.png',
+                            style: 'Casual • Enerjik',
+                            status: 'pending',
+                            platforms: { instagram: true, tiktok: true, twitter: true },
+                            orders: 0,
+                            earnings: 0
+                        }
+                    ]
+                }
+            }
+        </script>
+
+    </div>
+</body>
+
+</html>

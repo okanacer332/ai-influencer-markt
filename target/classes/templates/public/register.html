@@ -3,7 +3,7 @@
     layout:decorate="~{layout/base}">
 
 <head>
-    <title>Kayıt Ol</title>
+    <title>Olric - Kayıt Ol</title>
 </head>
 
 <body>
@@ -15,9 +15,11 @@
 
                     <!-- Header -->
                     <div class="text-center mb-6">
-                        <div class="text-5xl mb-4">🚀</div>
+                        <div class="flex justify-center mb-4">
+                            <img src="/images/olric-logo.png" alt="Olric" class="w-16 h-16">
+                        </div>
                         <h1 class="text-2xl font-bold">Hesap Oluşturun</h1>
-                        <p class="text-base-content/60 mt-2">AI Influencer Marketplace'e katılın</p>
+                        <p class="text-base-content/60 mt-2">Olric'e bugün katılın</p>
                     </div>
 
                     <!-- Register Form -->
@@ -35,7 +37,7 @@
                                     <div
                                         class="card bg-base-100 border-2 border-base-300 peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
                                         <div class="card-body items-center text-center py-4">
-                                            <span class="text-3xl mb-2">🏢</span>
+                                            <i class="ph ph-buildings text-3xl mb-2"></i>
                                             <span class="font-semibold">Marka</span>
                                             <span class="text-xs text-base-content/60">İçerik satın al</span>
                                         </div>
@@ -49,7 +51,7 @@
                                     <div
                                         class="card bg-base-100 border-2 border-base-300 peer-checked:border-secondary peer-checked:bg-secondary/10 transition-all">
                                         <div class="card-body items-center text-center py-4">
-                                            <span class="text-3xl mb-2">🎨</span>
+                                            <i class="ph ph-paint-brush-broad text-3xl mb-2"></i>
                                             <span class="font-semibold">Creator</span>
                                             <span class="text-xs text-base-content/60">İçerik üret & kazan</span>
                                         </div>
@@ -66,9 +68,8 @@
                             <div class="relative">
                                 <input type="text" x-model="name" placeholder="Adınız Soyadınız"
                                     class="input input-bordered w-full pl-10" required />
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
-                                    👤
-                                </span>
+                                <i
+                                    class="ph ph-user absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50 text-xl"></i>
                             </div>
                         </div>
 
@@ -80,9 +81,8 @@
                             <div class="relative">
                                 <input type="email" x-model="email" placeholder="ornek@email.com"
                                     class="input input-bordered w-full pl-10" required />
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
-                                    📧
-                                </span>
+                                <i
+                                    class="ph ph-envelope-simple absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50 text-xl"></i>
                             </div>
                         </div>
 
@@ -95,13 +95,11 @@
                                 <input :type="showPassword ? 'text' : 'password'" x-model="password"
                                     placeholder="Minimum 8 karakter" class="input input-bordered w-full pl-10 pr-10"
                                     minlength="8" required />
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
-                                    🔒
-                                </span>
+                                <i
+                                    class="ph ph-lock absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50 text-xl"></i>
                                 <button type="button" @click="showPassword = !showPassword"
                                     class="absolute right-3 top-1/2 -translate-y-1/2 text-base-content/50 hover:text-base-content">
-                                    <span x-show="!showPassword">👁️</span>
-                                    <span x-show="showPassword">🙈</span>
+                                    <i class="ph text-xl" :class="showPassword ? 'ph-eye-slash' : 'ph-eye'"></i>
                                 </button>
                             </div>
                             <!-- Password Strength -->
@@ -129,9 +127,8 @@
                                     placeholder="Şifrenizi tekrar girin" class="input input-bordered w-full pl-10"
                                     :class="{ 'input-error': confirmPassword && password !== confirmPassword }"
                                     required />
-                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50">
-                                    🔐
-                                </span>
+                                <i
+                                    class="ph ph-lock-key absolute left-3 top-1/2 -translate-y-1/2 text-base-content/50 text-xl"></i>
                             </div>
                             <label class="label" x-show="confirmPassword && password !== confirmPassword">
                                 <span class="label-text-alt text-error">Şifreler eşleşmiyor</span>
@@ -152,11 +149,7 @@
 
                         <!-- Creator Info -->
                         <div x-show="role === 'CREATOR'" x-cloak class="alert alert-warning mb-4">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
+                            <i class="ph ph-warning-circle text-2xl"></i>
                             <div class="text-sm">
                                 <p class="font-semibold">Creator Onay Süreci</p>
                                 <p>Kayıt sonrası AI karakterinizin 3 farklı açıdan görselini yüklemeniz gerekecek. Admin

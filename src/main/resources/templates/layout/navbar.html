@@ -8,8 +8,8 @@
         <!-- Left: Logo -->
         <div class="navbar-start">
             <a href="/" class="flex items-center gap-2 text-xl font-bold">
-                <span class="text-2xl">🤖</span>
-                <span class="hidden sm:inline text-gradient">AI Influencer</span>
+                <img src="/images/olric-logo.png" alt="Olric" class="w-8 h-8">
+                <span class="hidden sm:inline text-gradient">Olric</span>
             </a>
         </div>
 
@@ -19,11 +19,7 @@
                 <input type="text" placeholder="Creator veya hizmet ara..."
                     class="input input-bordered join-item w-80 focus:outline-none focus:border-primary" />
                 <a href="/search" class="btn btn-primary join-item">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+                    <i class="ph ph-magnifying-glass text-xl"></i>
                 </a>
             </div>
         </div>
@@ -33,22 +29,14 @@
 
             <!-- Browse Button (Desktop) -->
             <a href="/search" class="btn btn-ghost gap-2 hidden md:flex">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
+                <i class="ph ph-compass text-xl"></i>
                 <span>Keşfet</span>
             </a>
 
             <!-- Theme Toggle -->
             <div class="dropdown dropdown-end">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                    </svg>
+                    <i class="ph ph-moon text-xl"></i>
                 </label>
                 <ul tabindex="0"
                     class="dropdown-content z-[100] menu p-2 shadow-xl bg-base-100 rounded-box w-52 mt-2 border border-base-200">
@@ -130,11 +118,7 @@
             <!-- Mobile Menu Button -->
             <div class="dropdown dropdown-end lg:hidden">
                 <label tabindex="0" class="btn btn-ghost btn-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h7" />
-                    </svg>
+                    <i class="ph ph-list text-xl"></i>
                 </label>
                 <ul tabindex="0"
                     class="dropdown-content z-[100] menu p-2 shadow-xl bg-base-100 rounded-box w-56 mt-2 border border-base-200">
@@ -143,7 +127,9 @@
                         <div class="join w-full">
                             <input type="text" placeholder="Ara..."
                                 class="input input-bordered input-sm join-item w-full" />
-                            <a href="/search" class="btn btn-primary btn-sm join-item">🔍</a>
+                            <a href="/search" class="btn btn-primary btn-sm join-item">
+                                <i class="ph ph-magnifying-glass"></i>
+                            </a>
                         </div>
                     </li>
                     <div class="divider my-1"></div>

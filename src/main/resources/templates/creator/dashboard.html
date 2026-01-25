@@ -24,63 +24,146 @@
 
         <!-- Stats Cards -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-            <!-- Total Earnings -->
             <div class="dash-card p-5">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-gray-500 text-sm">Toplam Kazanç</span>
-                    <span
-                        class="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center">💰</span>
+                    <span class="w-10 h-10 bg-primary/10 text-primary rounded-lg flex items-center justify-center"><i
+                            class="ph ph-wallet text-xl"></i></span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900" x-text="'₺' + stats.totalEarnings.toLocaleString('tr-TR')">
                     ₺0</p>
-                <p class="text-sm text-green-600 mt-1">↗ Bu ay %23 artış</p>
+                <p class="text-sm text-green-600 mt-1 flex items-center gap-1"><i class="ph ph-trend-up"></i> Bu ay %23
+                    artış</p>
             </div>
 
-            <!-- Active Orders -->
             <div class="dash-card p-5">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-gray-500 text-sm">Aktif Siparişler</span>
-                    <span
-                        class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center">📦</span>
+                    <span class="w-10 h-10 bg-blue-50 text-blue-600 rounded-lg flex items-center justify-center"><i
+                            class="ph ph-package text-xl"></i></span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900" x-text="stats.activeOrders">0</p>
                 <p class="text-sm text-gray-500 mt-1">Teslim bekleyen</p>
             </div>
 
-            <!-- Completed -->
             <div class="dash-card p-5">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-gray-500 text-sm">Tamamlanan</span>
-                    <span
-                        class="w-10 h-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center">✅</span>
+                    <span class="w-10 h-10 bg-green-50 text-green-600 rounded-lg flex items-center justify-center"><i
+                            class="ph ph-check-circle text-xl"></i></span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900" x-text="stats.completedOrders">0</p>
                 <p class="text-sm text-gray-500 mt-1">Toplam sipariş</p>
             </div>
 
-            <!-- Rating -->
             <div class="dash-card p-5">
                 <div class="flex items-center justify-between mb-3">
                     <span class="text-gray-500 text-sm">Puan</span>
-                    <span
-                        class="w-10 h-10 bg-yellow-50 text-yellow-600 rounded-lg flex items-center justify-center">⭐</span>
+                    <span class="w-10 h-10 bg-yellow-50 text-yellow-600 rounded-lg flex items-center justify-center"><i
+                            class="ph ph-star text-xl"></i></span>
                 </div>
                 <p class="text-2xl font-bold text-gray-900" x-text="stats.avgRating">0</p>
                 <p class="text-sm text-gray-500 mt-1">5 üzerinden</p>
             </div>
         </div>
 
-        <!-- Characters Section -->
-        <div class="mb-8" th:replace="~{components/business/character-card :: charactersOverview}"></div>
+        <!-- Characters Quick View -->
+        <div class="dash-card p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="font-semibold text-gray-900 text-lg">Karakterlerim</h2>
+                    <p class="text-sm text-gray-500">AI karakterlerini yönet</p>
+                </div>
+                <a href="/creator/characters"
+                    class="text-primary text-sm hover:underline font-medium flex items-center gap-1">Tümünü Gör <i
+                        class="ph ph-arrow-right"></i></a>
+            </div>
 
-        <!-- Social Accounts Section -->
-        <div class="mb-8" th:replace="~{components/business/social-connect :: socialAccountsOverview}"></div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <template x-for="char in characters.slice(0, 2)" :key="char.id">
+                    <a :href="'/creator/characters/' + char.id"
+                        class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-primary transition-colors">
+                        <img :src="char.avatar" :alt="char.name" class="w-14 h-14 rounded-xl object-cover" />
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-semibold text-gray-900" x-text="char.name">Karakter</h3>
+                            <p class="text-sm text-gray-500" x-text="char.style">Stil</p>
+                            <div class="flex gap-1 mt-1">
+                                <span x-show="char.platforms.instagram" class="text-xs">📷</span>
+                                <span x-show="char.platforms.tiktok" class="text-xs">🎵</span>
+                                <span x-show="char.platforms.twitter" class="text-xs">𝕏</span>
+                            </div>
+                        </div>
+                        <i class="ph ph-arrow-right text-primary text-lg"></i>
+                    </a>
+                </template>
+
+                <a href="/creator/characters/new"
+                    class="flex items-center justify-center gap-3 p-4 border-2 border-dashed border-gray-300 rounded-xl hover:border-primary hover:bg-primary/5 transition-colors">
+                    <i class="ph ph-plus text-2xl text-gray-400"></i>
+                    <span class="text-gray-500 font-medium">Yeni Karakter</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Social Accounts Quick View -->
+        <div class="dash-card p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h2 class="font-semibold text-gray-900 text-lg">Bağlı Hesaplar</h2>
+                    <p class="text-sm text-gray-500">Platformlarını bağla, istatistiklerini göster</p>
+                </div>
+                <a href="/creator/social"
+                    class="text-primary text-sm hover:underline font-medium flex items-center gap-1">Yönet <i
+                        class="ph ph-arrow-right"></i></a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <a href="/creator/social"
+                    class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-pink-300 transition-colors">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg flex items-center justify-center text-white">
+                        <i class="ph ph-instagram-logo text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-900">Instagram</p>
+                        <p class="text-sm text-green-600">125K takipçi</p>
+                    </div>
+                    <i class="ph ph-check-circle text-green-500 text-lg"></i>
+                </a>
+
+                <a href="/creator/social"
+                    class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-gray-900 transition-colors">
+                    <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white">
+                        <i class="ph ph-tiktok-logo text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-900">TikTok</p>
+                        <p class="text-sm text-green-600">89K takipçi</p>
+                    </div>
+                    <i class="ph ph-check-circle text-green-500 text-lg"></i>
+                </a>
+
+                <a href="/creator/social"
+                    class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl hover:border-gray-400 transition-colors">
+                    <div class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+                        <i class="ph ph-x-logo text-lg"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-900">Twitter</p>
+                        <p class="text-sm text-gray-400">Bağlı değil</p>
+                    </div>
+                    <span class="text-primary text-sm font-medium">Bağla</span>
+                </a>
+            </div>
+        </div>
 
         <!-- Active Orders Table -->
         <div class="dash-card">
             <div class="flex justify-between items-center p-5 border-b border-gray-200">
                 <h2 class="font-semibold text-gray-900">Aktif Siparişler</h2>
-                <a href="/creator/orders" class="text-primary text-sm hover:underline">Tümünü Gör →</a>
+                <a href="/creator/orders"
+                    class="text-primary text-sm hover:underline font-medium flex items-center gap-1">Tümünü Gör <i
+                        class="ph ph-arrow-right"></i></a>
             </div>
 
             <div class="overflow-x-auto">
@@ -125,10 +208,10 @@
                                 </td>
                                 <td class="px-5 py-4 text-sm text-gray-600" x-text="order.dueDate">Tarih</td>
                                 <td class="px-5 py-4">
-                                    <button class="btn btn-primary btn-sm" x-show="order.status === 'in_progress'"
-                                        @click="openDeliveryModal(order)">
+                                    <a :href="'/creator/orders/' + order.id + '/deliver'" class="btn btn-primary btn-sm"
+                                        x-show="order.status === 'in_progress'">
                                         Teslim Et
-                                    </button>
+                                    </a>
                                     <span x-show="order.status === 'delivered'" class="text-green-600 text-sm">✓ Teslim
                                         Edildi</span>
                                     <span x-show="order.status === 'pending'" class="text-yellow-600 text-sm">Onay
@@ -139,44 +222,9 @@
                     </tbody>
                 </table>
 
-                <!-- Empty State -->
                 <div x-show="activeOrders.length === 0" class="text-center py-12">
                     <div class="text-4xl mb-3">📭</div>
                     <p class="text-gray-500">Aktif sipariş bulunmuyor</p>
-                    <p class="text-sm text-gray-400 mt-1">Yeni siparişler geldiğinde burada göreceksiniz</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delivery Modal -->
-        <div class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" x-show="deliveryModal.open"
-            x-cloak>
-            <div class="bg-white rounded-2xl w-full max-w-md" @click.outside="deliveryModal.open = false">
-                <div class="p-6 border-b border-gray-200">
-                    <h3 class="font-bold text-lg">📤 Sipariş Teslimi</h3>
-                </div>
-
-                <div class="p-6 space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Teslim Görseli</label>
-                        <div
-                            class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-primary cursor-pointer">
-                            <span class="text-3xl">📷</span>
-                            <p class="text-sm text-gray-500 mt-2">Filigranlı önizleme yükle</p>
-                        </div>
-                        <p class="text-xs text-yellow-600 mt-2">⚠️ Güvenlik için filigranlı görsel yükleyin</p>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Teslim Notu</label>
-                        <textarea x-model="deliveryModal.note" rows="3" class="textarea textarea-bordered w-full"
-                            placeholder="Marka için notunuz..."></textarea>
-                    </div>
-                </div>
-
-                <div class="flex gap-3 p-6 border-t border-gray-200">
-                    <button class="btn btn-ghost flex-1" @click="deliveryModal.open = false">İptal</button>
-                    <button class="btn btn-primary flex-1" @click="submitDelivery()">Teslim Et</button>
                 </div>
             </div>
         </div>
@@ -191,6 +239,22 @@
                         completedOrders: 79,
                         avgRating: 4.9
                     },
+                    characters: [
+                        {
+                            id: 'aylin',
+                            name: 'Aylin',
+                            avatar: '/images/influencers/aylin.png',
+                            style: 'Photorealistic',
+                            platforms: { instagram: true, tiktok: true, twitter: false }
+                        },
+                        {
+                            id: 'nova',
+                            name: 'Nova',
+                            avatar: '/images/influencers/nova.png',
+                            style: 'Luxury',
+                            platforms: { instagram: true, tiktok: false, twitter: true }
+                        }
+                    ],
                     activeOrders: [
                         {
                             id: 'order_1',
@@ -213,24 +277,8 @@
                             brandName: 'Fashion Brand',
                             status: 'pending',
                             dueDate: '28 Ocak 2026'
-                        },
-                        {
-                            id: 'order_3',
-                            title: 'TikTok Video',
-                            price: 800,
-                            productImage: 'https://picsum.photos/seed/prod3/100/100',
-                            characterName: 'Aylin',
-                            characterAvatar: '/images/influencers/aylin.png',
-                            brandName: 'Tech Startup',
-                            status: 'delivered',
-                            dueDate: '24 Ocak 2026'
                         }
                     ],
-                    deliveryModal: {
-                        open: false,
-                        orderId: null,
-                        note: ''
-                    },
 
                     getStatusText(status) {
                         const texts = {
@@ -239,21 +287,6 @@
                             'delivered': 'Teslim Edildi'
                         };
                         return texts[status] || status;
-                    },
-
-                    openDeliveryModal(order) {
-                        this.deliveryModal.orderId = order.id;
-                        this.deliveryModal.note = '';
-                        this.deliveryModal.open = true;
-                    },
-
-                    submitDelivery() {
-                        const order = this.activeOrders.find(o => o.id === this.deliveryModal.orderId);
-                        if (order) {
-                            order.status = 'delivered';
-                        }
-                        this.deliveryModal.open = false;
-                        Alpine.store('notify').success('Sipariş başarıyla teslim edildi!');
                     }
                 }
             }

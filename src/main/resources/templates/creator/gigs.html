@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>İlanlarım</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="gigsPage()">
+
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">İlanlarım</h1>
+                <p class="text-gray-500 mt-1">Hizmetlerini yönet ve yenilerini ekle</p>
+            </div>
+            <a href="/creator/gigs/new" class="btn btn-primary">
+                + Yeni İlan Oluştur
+            </a>
+        </div>
+
+        <!-- Stats Summary -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="dash-card p-4">
+                <p class="text-sm text-gray-500">Toplam İlan</p>
+                <p class="text-2xl font-bold text-gray-900" x-text="gigs.length">0</p>
+            </div>
+            <div class="dash-card p-4">
+                <p class="text-sm text-gray-500">Aktif</p>
+                <p class="text-2xl font-bold text-green-600" x-text="gigs.filter(g => g.status === 'active').length">0
+                </p>
+            </div>
+            <div class="dash-card p-4">
+                <p class="text-sm text-gray-500">Onay Bekliyor</p>
+                <p class="text-2xl font-bold text-yellow-600" x-text="gigs.filter(g => g.status === 'pending').length">0
+                </p>
+            </div>
+            <div class="dash-card p-4">
+                <p class="text-sm text-gray-500">Pasif</p>
+                <p class="text-2xl font-bold text-gray-400" x-text="gigs.filter(g => g.status === 'paused').length">0
+                </p>
+            </div>
+        </div>
+
+        <!-- Gigs Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <template x-for="gig in gigs" :key="gig.id">
+                <div class="dash-card overflow-hidden">
+                    <!-- Thumbnail -->
+                    <div class="aspect-video relative overflow-hidden bg-gray-100">
+                        <img :src="gig.thumbnail" :alt="gig.title" class="w-full h-full object-cover" />
+                        <div class="absolute top-3 right-3">
+                            <span class="text-xs px-2 py-1 rounded-full font-medium" :class="{
+                                      'bg-green-500 text-white': gig.status === 'active',
+                                      'bg-yellow-500 text-white': gig.status === 'pending',
+                                      'bg-gray-500 text-white': gig.status === 'paused'
+                                  }" x-text="getStatusText(gig.status)">Durum</span>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-5">
+                        <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2" x-text="gig.title">İlan Başlığı</h3>
+
+                        <div class="flex items-center gap-2 mb-3">
+                            <img :src="gig.characterAvatar" class="w-6 h-6 rounded-full object-cover" />
+                            <span class="text-sm text-gray-500" x-text="gig.characterName">Karakter</span>
+                            <span class="text-gray-300">•</span>
+                            <span class="text-sm text-gray-500" x-text="gig.platform">Platform</span>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+                            <div>
+                                <p class="text-lg font-bold text-primary" x-text="'₺' + gig.price">₺0</p>
+                            </div>
+                            <div class="flex items-center gap-3 text-sm text-gray-500">
+                                <span x-text="gig.orders + ' sipariş'">0 sipariş</span>
+                                <span>★ <span x-text="gig.rating">0</span></span>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="flex gap-2 mt-4">
+                            <a :href="'/creator/gigs/' + gig.id + '/edit'" class="btn btn-outline btn-sm flex-1">
+                                Düzenle
+                            </a>
+                            <button @click="toggleStatus(gig)" class="btn btn-ghost btn-sm"
+                                x-text="gig.status === 'active' ? 'Duraklat' : 'Aktifleştir'">
+                                Duraklat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Add New Card -->
+            <a href="/creator/gigs/new"
+                class="dash-card border-2 border-dashed border-gray-300 flex flex-col items-center justify-center min-h-[300px] hover:border-primary hover:bg-primary/5 transition-colors">
+                <span class="text-5xl text-gray-400">+</span>
+                <span class="text-gray-500 mt-3 font-medium">Yeni İlan Oluştur</span>
+                <span class="text-sm text-gray-400 mt-1">Hizmetlerini tanıt, sipariş al</span>
+            </a>
+        </div>
+
+        <script>
+            function gigsPage() {
+                return {
+                    gigs: [
+                        {
+                            id: 'gig_1',
+                            title: 'Instagram Ürün Fotoğrafı - Profesyonel',
+                            thumbnail: 'https://picsum.photos/seed/gig1/400/300',
+                            characterName: 'Aylin',
+                            characterAvatar: '/images/influencers/aylin.png',
+                            platform: '📷 Instagram',
+                            price: 500,
+                            orders: 47,
+                            rating: 4.9,
+                            status: 'active'
+                        },
+                        {
+                            id: 'gig_2',
+                            title: 'TikTok Trend Video - 15-30sn',
+                            thumbnail: 'https://picsum.photos/seed/gig2/400/300',
+                            characterName: 'Aylin',
+                            characterAvatar: '/images/influencers/aylin.png',
+                            platform: '🎵 TikTok',
+                            price: 800,
+                            orders: 23,
+                            rating: 4.8,
+                            status: 'active'
+                        },
+                        {
+                            id: 'gig_3',
+                            title: 'Premium Marka Yüzü Paketi',
+                            thumbnail: 'https://picsum.photos/seed/gig3/400/300',
+                            characterName: 'Nova',
+                            characterAvatar: '/images/influencers/nova.png',
+                            platform: '📷 Instagram',
+                            price: 2500,
+                            orders: 12,
+                            rating: 5.0,
+                            status: 'active'
+                        },
+                        {
+                            id: 'gig_4',
+                            title: 'Twitter Thread Kampanyası',
+                            thumbnail: 'https://picsum.photos/seed/gig4/400/300',
+                            characterName: 'Nova',
+                            characterAvatar: '/images/influencers/nova.png',
+                            platform: '𝕏 Twitter',
+                            price: 600,
+                            orders: 0,
+                            rating: 0,
+                            status: 'pending'
+                        }
+                    ],
+
+                    getStatusText(status) {
+                        const texts = {
+                            'active': 'Aktif',
+                            'pending': 'Onay Bekliyor',
+                            'paused': 'Duraklatıldı'
+                        };
+                        return texts[status] || status;
+                    },
+
+                    toggleStatus(gig) {
+                        if (gig.status === 'active') {
+                            gig.status = 'paused';
+                            Alpine.store('notify').success('İlan duraklatıldı');
+                        } else if (gig.status === 'paused') {
+                            gig.status = 'active';
+                            Alpine.store('notify').success('İlan aktifleştirildi');
+                        }
+                    }
+                }
+            }
+        </script>
+
+    </div>
+</body>
+
+</html>

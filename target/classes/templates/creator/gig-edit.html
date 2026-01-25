@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>İlan Düzenle</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="gigEditPage()">
+
+        <div class="container mx-auto px-4 py-8 max-w-3xl">
+
+            <!-- Breadcrumb -->
+            <nav
+                class="flex items-center text-sm text-gray-500 mb-8 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm">
+                <a href="/creator/dashboard" class="hover:text-primary transition-colors flex items-center gap-1">
+                    <i class="ph ph-house"></i>
+                </a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <a href="/creator/gigs" class="hover:text-primary transition-colors">İlanlarım</a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <span class="text-gray-900 font-medium">İlan Düzenle</span>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="mb-8 text-center">
+                <h1 class="text-2xl font-bold text-gray-900">İlan Düzenle</h1>
+                <p class="text-gray-500 mt-1">İlan bilgilerini güncelle</p>
+            </div>
+
+            <!-- Form -->
+            <form @submit.prevent="submitForm" class="space-y-6">
+
+                <!-- Thumbnail -->
+                <div class="dash-card p-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">İlan Görseli</label>
+                    <div class="flex items-start gap-6">
+                        <div class="w-40 h-28 bg-gray-100 rounded-xl overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                            @click="document.getElementById('thumbnail-input').click()">
+                            <img :src="form.thumbnail" class="w-full h-full object-cover" x-show="form.thumbnail" />
+                        </div>
+                        <input type="file" id="thumbnail-input" class="hidden" accept="image/*"
+                            @change="handleThumbnailUpload" />
+                        <div>
+                            <p class="text-sm text-gray-600 mb-2">İlana dikkat çekecek bir görsel</p>
+                            <button type="button" @click="document.getElementById('thumbnail-input').click()"
+                                class="btn btn-outline btn-sm">
+                                <i class="ph ph-upload-simple mr-1"></i> Değiştir
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Basic Info -->
+                <div class="dash-card p-6 space-y-4">
+                    <h2 class="font-semibold text-gray-900">Temel Bilgiler</h2>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">İlan Başlığı *</label>
+                        <input type="text" x-model="form.title" required class="input input-bordered w-full"
+                            placeholder="Örn: Instagram Ürün Fotoğrafı" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Açıklama *</label>
+                        <textarea x-model="form.description" rows="4" required class="textarea textarea-bordered w-full"
+                            placeholder="İlanınızı detaylı açıklayın..."></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Karakter *</label>
+                            <select x-model="form.characterId" class="select select-bordered w-full" required>
+                                <option value="">Seçin</option>
+                                <template x-for="char in characters" :key="char.id">
+                                    <option :value="char.id" x-text="char.name"></option>
+                                </template>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Platform *</label>
+                            <select x-model="form.platform" class="select select-bordered w-full" required>
+                                <option value="">Seçin</option>
+                                <option value="instagram">Instagram</option>
+                                <option value="tiktok">TikTok</option>
+                                <option value="twitter">Twitter / X</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing -->
+                <div class="dash-card p-6 space-y-4">
+                    <h2 class="font-semibold text-gray-900">Fiyatlandırma</h2>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Fiyat (₺) *</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">₺</span>
+                            <input type="number" x-model="form.price" min="100" step="50" required
+                                class="input input-bordered w-full pl-10" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Teslim Süresi (gün) *</label>
+                        <input type="number" x-model="form.deliveryDays" min="1" max="30" required
+                            class="input input-bordered w-40" />
+                    </div>
+                </div>
+
+                <!-- Status -->
+                <div class="dash-card p-6">
+                    <h2 class="font-semibold text-gray-900 mb-4">Durum</h2>
+                    <div class="flex gap-4">
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="status" value="active" x-model="form.status"
+                                class="radio radio-primary" />
+                            <span>Aktif</span>
+                        </label>
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="radio" name="status" value="paused" x-model="form.status" class="radio" />
+                            <span>Duraklatılmış</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-4">
+                    <a href="/creator/gigs" class="btn btn-ghost">
+                        <i class="ph ph-arrow-left mr-1"></i> İptal
+                    </a>
+                    <button type="submit" class="btn btn-primary flex-1">
+                        <i class="ph ph-floppy-disk mr-1"></i> Kaydet
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function gigEditPage() {
+                return {
+                    characters: [
+                        { id: 'aylin', name: 'Aylin' },
+                        { id: 'nova', name: 'Nova' }
+                    ],
+                    form: {
+                        title: 'Instagram Ürün Fotoğrafı - Profesyonel',
+                        description: 'Ürününüz için profesyonel AI influencer fotoğrafı. Yüksek kalite, hızlı teslimat.',
+                        thumbnail: 'https://picsum.photos/seed/gig1/400/300',
+                        characterId: 'aylin',
+                        platform: 'instagram',
+                        price: 500,
+                        deliveryDays: 3,
+                        status: 'active'
+                    },
+
+                    handleThumbnailUpload(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            this.form.thumbnail = URL.createObjectURL(file);
+                        }
+                    },
+
+                    submitForm() {
+                        Alpine.store('notify').success('İlan başarıyla güncellendi!');
+                        setTimeout(() => {
+                            window.location.href = '/creator/gigs';
+                        }, 1500);
+                    }
+                }
+            }
+        </script>
+
+    </div>
+    </div>
+</body>
+
+</html>

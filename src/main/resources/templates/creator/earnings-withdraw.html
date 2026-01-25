@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>Para Çek</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="withdrawPage()">
+
+        <div class="container mx-auto px-4 py-8 max-w-xl">
+
+            <!-- Breadcrumb -->
+            <nav
+                class="flex items-center text-sm text-gray-500 mb-8 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm">
+                <a href="/creator/dashboard" class="hover:text-primary transition-colors flex items-center gap-1">
+                    <i class="ph ph-house"></i>
+                </a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <a href="/creator/earnings" class="hover:text-primary transition-colors">Kazançlarım</a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <span class="text-gray-900 font-medium">Para Çek</span>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-gray-900">Para Çekme</h1>
+                <p class="text-gray-500 mt-1">Kazançlarınızı banka hesabınıza aktarın</p>
+            </div>
+
+            <!-- Available Balance Card -->
+            <div class="dash-card p-6 mb-6 bg-gradient-to-br from-primary to-primary-focus text-white">
+                <p class="text-white/80 text-sm mb-1">Çekilebilir Bakiye</p>
+                <p class="text-4xl font-bold" x-text="'₺' + availableBalance.toLocaleString('tr-TR')">₺0</p>
+            </div>
+
+            <!-- Withdraw Form -->
+            <form @submit.prevent="submitWithdraw" class="dash-card p-6 space-y-6">
+
+                <!-- Amount -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Çekilecek Tutar *</label>
+                    <div class="relative">
+                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">₺</span>
+                        <input type="number" x-model="form.amount" min="100" :max="availableBalance" step="50"
+                            class="input input-bordered w-full pl-10" placeholder="0" />
+                    </div>
+                    <div class="flex gap-2 mt-2">
+                        <button type="button" @click="form.amount = 500" class="btn btn-xs btn-outline">₺500</button>
+                        <button type="button" @click="form.amount = 1000" class="btn btn-xs btn-outline">₺1.000</button>
+                        <button type="button" @click="form.amount = availableBalance"
+                            class="btn btn-xs btn-outline">Tümü</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Minimum çekim: ₺100</p>
+                </div>
+
+                <!-- Bank Account -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Banka Hesabı *</label>
+                    <div class="space-y-2">
+                        <template x-for="account in bankAccounts" :key="account.id">
+                            <label
+                                class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-primary transition-colors"
+                                :class="form.bankAccountId === account.id && 'border-primary bg-primary/5'">
+                                <input type="radio" name="bank" :value="account.id" x-model="form.bankAccountId"
+                                    class="radio radio-primary" />
+                                <div class="flex-1">
+                                    <p class="font-medium text-gray-900" x-text="account.bankName">Banka</p>
+                                    <p class="text-sm text-gray-500" x-text="account.iban">IBAN</p>
+                                </div>
+                            </label>
+                        </template>
+                    </div>
+                    <a href="/creator/settings/bank" class="text-primary text-sm hover:underline mt-3 inline-block">
+                        + Yeni hesap ekle
+                    </a>
+                </div>
+
+                <!-- Summary -->
+                <div class="bg-gray-50 rounded-xl p-4 space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">Çekilecek Tutar</span>
+                        <span class="text-gray-900" x-text="'₺' + (form.amount || 0).toLocaleString('tr-TR')">₺0</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">İşlem Ücreti</span>
+                        <span class="text-gray-900">₺0</span>
+                    </div>
+                    <div class="flex justify-between font-semibold pt-2 border-t border-gray-200">
+                        <span class="text-gray-900">Alacağınız Tutar</span>
+                        <span class="text-primary" x-text="'₺' + (form.amount || 0).toLocaleString('tr-TR')">₺0</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-4 pt-4">
+                    <a href="/creator/earnings" class="btn btn-ghost">← İptal</a>
+                    <button type="submit" class="btn btn-primary flex-1"
+                        :disabled="!form.amount || form.amount < 100 || !form.bankAccountId">
+                        Para Çek
+                    </button>
+                </div>
+            </form>
+
+            <!-- Info -->
+            <div class="mt-6 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
+                <span class="text-xl">ℹ️</span>
+                <div class="text-sm text-blue-700">
+                    <p>Para çekme işlemleri 1-3 iş günü içinde hesabınıza yansır.</p>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            function withdrawPage() {
+                return {
+                    availableBalance: 8500,
+                    bankAccounts: [
+                        { id: 'bank_1', bankName: 'Ziraat Bankası', iban: 'TR00 0001 0000 **** **** 4521' },
+                        { id: 'bank_2', bankName: 'Garanti BBVA', iban: 'TR00 0062 0000 **** **** 8734' }
+                    ],
+                    form: {
+                        amount: null,
+                        bankAccountId: 'bank_1'
+                    },
+
+                    submitWithdraw() {
+                        if (!this.form.amount || this.form.amount < 100) {
+                            Alpine.store('notify').error('Minimum çekim tutarı ₺100');
+                            return;
+                        }
+                        if (this.form.amount > this.availableBalance) {
+                            Alpine.store('notify').error('Yetersiz bakiye');
+                            return;
+                        }
+
+                        Alpine.store('notify').success('Para çekme talebi oluşturuldu!');
+                        setTimeout(() => {
+                            window.location.href = '/creator/earnings';
+                        }, 1500);
+                    }
+                }
+            }
+        </script>
+
+    </div>
+    </div>
+</body>
+
+</html>

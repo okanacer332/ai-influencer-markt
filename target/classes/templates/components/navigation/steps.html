@@ -99,7 +99,7 @@
             <div x-show="step === 0"></div>
 
             <button @click="step = step + 1" x-show="step < [[${#lists.size(steps)}]] - 1" class="btn btn-primary">
-                İleri →
+                İleri <i class="ph ph-caret-right ml-1"></i>
             </button>
             <button x-show="step === [[${#lists.size(steps)}]] - 1" class="btn btn-primary">
                 Tamamla ✓

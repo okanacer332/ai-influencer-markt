@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>Siparişlerim</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="ordersPage()">
+
+        <!-- Page Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">Siparişlerim</h1>
+                <p class="text-gray-500 mt-1">Tüm siparişlerini takip et</p>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex gap-2 mb-6 overflow-x-auto pb-2">
+            <button @click="filter = 'all'"
+                class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors"
+                :class="filter === 'all' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+                Tümü <span class="ml-1 opacity-70" x-text="'(' + orders.length + ')'"></span>
+            </button>
+            <button @click="filter = 'pending'"
+                class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors"
+                :class="filter === 'pending' ? 'bg-yellow-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+                Beklemede <span class="ml-1 opacity-70"
+                    x-text="'(' + orders.filter(o => o.status === 'pending').length + ')'"></span>
+            </button>
+            <button @click="filter = 'in_progress'"
+                class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors"
+                :class="filter === 'in_progress' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+                Devam Eden <span class="ml-1 opacity-70"
+                    x-text="'(' + orders.filter(o => o.status === 'in_progress').length + ')'"></span>
+            </button>
+            <button @click="filter = 'delivered'"
+                class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors"
+                :class="filter === 'delivered' ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+                Teslim Edildi <span class="ml-1 opacity-70"
+                    x-text="'(' + orders.filter(o => o.status === 'delivered').length + ')'"></span>
+            </button>
+            <button @click="filter = 'completed'"
+                class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors"
+                :class="filter === 'completed' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'">
+                Tamamlandı <span class="ml-1 opacity-70"
+                    x-text="'(' + orders.filter(o => o.status === 'completed').length + ')'"></span>
+            </button>
+        </div>
+
+        <!-- Orders List -->
+        <div class="space-y-4">
+            <template x-for="order in filteredOrders" :key="order.id">
+                <div class="dash-card p-5">
+                    <div class="flex flex-col lg:flex-row lg:items-center gap-4">
+                        <!-- Order Info -->
+                        <div class="flex items-start gap-4 flex-1">
+                            <img :src="order.productImage" class="w-16 h-16 rounded-lg object-cover flex-shrink-0" />
+                            <div class="flex-1 min-w-0">
+                                <div class="flex items-center gap-2 flex-wrap">
+                                    <h3 class="font-semibold text-gray-900" x-text="order.title">Sipariş</h3>
+                                    <span class="text-xs px-2 py-0.5 rounded-full" :class="{
+                                              'bg-yellow-100 text-yellow-800': order.status === 'pending',
+                                              'bg-blue-100 text-blue-800': order.status === 'in_progress',
+                                              'bg-green-100 text-green-800': order.status === 'delivered',
+                                              'bg-gray-100 text-gray-800': order.status === 'completed'
+                                          }" x-text="getStatusText(order.status)">Durum</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    <span x-text="order.brandName">Marka</span> •
+                                    <span x-text="order.characterName">Karakter</span>
+                                </p>
+                                <p class="text-xs text-gray-400 mt-1">
+                                    Sipariş: <span x-text="order.orderDate">Tarih</span> •
+                                    Teslim: <span x-text="order.dueDate">Tarih</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Price & Action -->
+                        <div class="flex items-center gap-4 lg:gap-6">
+                            <div class="text-right">
+                                <p class="text-xl font-bold text-primary" x-text="'₺' + order.price">₺0</p>
+                                <p class="text-xs text-gray-400">Kazanç</p>
+                            </div>
+
+                            <template x-if="order.status === 'in_progress'">
+                                <a :href="'/creator/orders/' + order.id + '/deliver'" class="btn btn-primary">
+                                    Teslim Et
+                                </a>
+                            </template>
+                            <template x-if="order.status === 'pending'">
+                                <span class="text-yellow-600 text-sm font-medium">⏳ Onay Bekleniyor</span>
+                            </template>
+                            <template x-if="order.status === 'delivered'">
+                                <span class="text-green-600 text-sm font-medium">✓ Teslim Edildi</span>
+                            </template>
+                            <template x-if="order.status === 'completed'">
+                                <span class="text-gray-600 text-sm font-medium">✓ Tamamlandı</span>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Empty State -->
+            <div x-show="filteredOrders.length === 0" class="dash-card p-12 text-center">
+                <div class="text-5xl mb-4">📭</div>
+                <p class="text-gray-500 font-medium">Bu kategoride sipariş bulunamadı</p>
+                <p class="text-sm text-gray-400 mt-1">Yeni siparişler geldiğinde burada göreceksiniz</p>
+            </div>
+        </div>
+
+        <script>
+            function ordersPage() {
+                return {
+                    filter: 'all',
+                    orders: [
+                        {
+                            id: 'order_1',
+                            title: 'Cafe Ürün Fotoğrafı',
+                            price: 500,
+                            productImage: 'https://picsum.photos/seed/ord1/200/200',
+                            characterName: 'Aylin',
+                            brandName: 'Coffee House',
+                            status: 'in_progress',
+                            orderDate: '22 Ocak 2026',
+                            dueDate: '26 Ocak 2026'
+                        },
+                        {
+                            id: 'order_2',
+                            title: 'Instagram Story Paketi',
+                            price: 1200,
+                            productImage: 'https://picsum.photos/seed/ord2/200/200',
+                            characterName: 'Nova',
+                            brandName: 'Fashion Brand',
+                            status: 'pending',
+                            orderDate: '24 Ocak 2026',
+                            dueDate: '28 Ocak 2026'
+                        },
+                        {
+                            id: 'order_3',
+                            title: 'TikTok Video',
+                            price: 800,
+                            productImage: 'https://picsum.photos/seed/ord3/200/200',
+                            characterName: 'Aylin',
+                            brandName: 'Tech Startup',
+                            status: 'delivered',
+                            orderDate: '18 Ocak 2026',
+                            dueDate: '24 Ocak 2026'
+                        },
+                        {
+                            id: 'order_4',
+                            title: 'Ürün Tanıtım Fotoğrafı',
+                            price: 650,
+                            productImage: 'https://picsum.photos/seed/ord4/200/200',
+                            characterName: 'Nova',
+                            brandName: 'Beauty Co',
+                            status: 'completed',
+                            orderDate: '10 Ocak 2026',
+                            dueDate: '15 Ocak 2026'
+                        },
+                        {
+                            id: 'order_5',
+                            title: 'Marka Yüzü Kampanyası',
+                            price: 2500,
+                            productImage: 'https://picsum.photos/seed/ord5/200/200',
+                            characterName: 'Aylin',
+                            brandName: 'Luxury Brand',
+                            status: 'completed',
+                            orderDate: '5 Ocak 2026',
+                            dueDate: '12 Ocak 2026'
+                        }
+                    ],
+
+                    get filteredOrders() {
+                        if (this.filter === 'all') return this.orders;
+                        return this.orders.filter(o => o.status === this.filter);
+                    },
+
+                    getStatusText(status) {
+                        const texts = {
+                            'pending': 'Beklemede',
+                            'in_progress': 'Devam Ediyor',
+                            'delivered': 'Teslim Edildi',
+                            'completed': 'Tamamlandı'
+                        };
+                        return texts[status] || status;
+                    }
+                }
+            }
+        </script>
+
+    </div>
+</body>
+
+</html>

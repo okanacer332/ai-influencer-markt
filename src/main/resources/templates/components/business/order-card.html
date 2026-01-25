@@ -85,7 +85,8 @@
             <p class="text-sm text-base-content/60" th:text="'₺' + ${order.amount}">₺500</p>
         </div>
         <div th:replace="~{components/business/status-badge :: statusBadgeSmall(${order.status})}"></div>
-        <a th:href="'/order/' + ${order.id}" class="btn btn-ghost btn-sm btn-square">→</a>
+        <a th:href="'/order/' + ${order.id}" class="btn btn-ghost btn-sm btn-square"><i
+                class="ph ph-caret-right"></i></a>
     </div>
 </th:block>
 

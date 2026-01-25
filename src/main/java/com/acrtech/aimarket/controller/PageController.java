@@ -92,7 +92,7 @@ public class PageController {
     @GetMapping("/creator/gigs")
     public String creatorGigs(Model model) {
         model.addAttribute("pageTitle", "İlanlarım");
-        return "creator/my-gigs";
+        return "creator/gigs";
     }
     
     @GetMapping("/creator/gigs/new")
@@ -101,10 +101,67 @@ public class PageController {
         return "creator/new-gig";
     }
     
+    @GetMapping("/creator/gigs/{id}/edit")
+    public String creatorEditGig(@PathVariable String id, Model model) {
+        model.addAttribute("pageTitle", "İlan Düzenle");
+        model.addAttribute("gigId", id);
+        return "creator/gig-edit";
+    }
+    
     @GetMapping("/creator/orders")
     public String creatorOrders(Model model) {
         model.addAttribute("pageTitle", "Siparişler");
         return "creator/orders";
+    }
+    
+    @GetMapping("/creator/characters")
+    public String creatorCharacters(Model model) {
+        model.addAttribute("pageTitle", "Karakterlerim");
+        return "creator/characters";
+    }
+    
+    @GetMapping("/creator/characters/new")
+    public String creatorCharactersNew(Model model) {
+        model.addAttribute("pageTitle", "Yeni Karakter");
+        return "creator/characters-new";
+    }
+    
+    @GetMapping("/creator/characters/{id}")
+    public String creatorCharacterEdit(@PathVariable String id, Model model) {
+        model.addAttribute("pageTitle", "Karakter Düzenle");
+        model.addAttribute("characterId", id);
+        return "creator/characters-new";  // Re-use form for edit
+    }
+    
+    @GetMapping("/creator/social")
+    public String creatorSocial(Model model) {
+        model.addAttribute("pageTitle", "Sosyal Hesaplarım");
+        return "creator/social";
+    }
+    
+    @GetMapping("/creator/orders/{id}/deliver")
+    public String creatorOrderDeliver(@PathVariable String id, Model model) {
+        model.addAttribute("pageTitle", "Sipariş Teslimi");
+        model.addAttribute("orderId", id);
+        return "creator/order-deliver";
+    }
+    
+    @GetMapping("/creator/earnings")
+    public String creatorEarnings(Model model) {
+        model.addAttribute("pageTitle", "Kazançlarım");
+        return "creator/earnings";
+    }
+    
+    @GetMapping("/creator/earnings/withdraw")
+    public String creatorEarningsWithdraw(Model model) {
+        model.addAttribute("pageTitle", "Para Çek");
+        return "creator/earnings-withdraw";
+    }
+
+    @GetMapping("/creator/settings")
+    public String creatorSettings(Model model) {
+        model.addAttribute("pageTitle", "Ayarlar");
+        return "creator/settings";
     }
     
     // ========== ADMIN PAGES ==========

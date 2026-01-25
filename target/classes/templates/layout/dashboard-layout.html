@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle} + ' | Creator Dashboard'">Creator Dashboard</title>
+    <title th:text="${pageTitle} + ' | Olric | AI Influencer Markt'">Olric | AI Influencer Markt</title>
 
     <!-- DaisyUI + Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -14,6 +14,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons (Free Icon Library) -->
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" />
 
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -90,19 +93,76 @@
             border-color: #8B1538;
             box-shadow: 0 4px 12px rgba(139, 21, 56, 0.08);
         }
+
+        /* Toast Animation */
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-up {
+            animation: slide-up 0.3s ease-out;
+        }
+
+        /* Loading Pulse */
+        @keyframes pulse-logo {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .animate-pulse-logo {
+            animation: pulse-logo 2s infinite ease-in-out;
+        }
     </style>
 </head>
 
-<body class="min-h-screen bg-gray-50" data-theme="light" x-data x-init="$store.auth.init()">
+<body class="min-h-screen bg-gray-50" data-theme="light" x-data="{ loading: true }"
+    x-init="setTimeout(() => loading = false, 800); $store.auth.init()">
 
-    <!-- Toast Notifications -->
-    <div class="toast toast-top toast-end z-[9999]" x-show="$store.notify.messages.length > 0">
+    <!-- Loading Screen -->
+    <div x-show="loading"
+        class="fixed inset-0 z-[100] bg-white flex items-center justify-center transition-opacity duration-500"
+        x-transition:leave="ease-in duration-500" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+        <div class="flex flex-col items-center gap-4">
+            <img src="/images/olric-logo.png" class="w-16 h-16 animate-pulse-logo" alt="Loading...">
+            <div class="h-1 w-32 bg-gray-100 rounded-full overflow-hidden">
+                <div class="h-full bg-primary animate-[upload_1.5s_ease-in-out_infinite]" style="width: 50%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications (Bottom Right, Theme Colors) -->
+    <div class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3" x-show="$store.notify.messages.length > 0">
         <template x-for="msg in $store.notify.messages" :key="msg.id">
-            <div class="alert shadow-lg" :class="{
-                'alert-success': msg.type === 'success',
-                'alert-error': msg.type === 'error'
-            }">
-                <span x-text="msg.message"></span>
+            <div class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-white min-w-[280px] animate-slide-up"
+                :class="{
+                     'bg-primary': msg.type === 'success',
+                     'bg-red-600': msg.type === 'error',
+                     'bg-blue-600': msg.type === 'info'
+                 }">
+                <i class="text-xl" :class="{
+                    'ph ph-check-circle': msg.type === 'success',
+                    'ph ph-x-circle': msg.type === 'error',
+                    'ph ph-info': msg.type === 'info'
+                }"></i>
+                <span class="flex-1" x-text="msg.message"></span>
             </div>
         </template>
     </div>
@@ -112,35 +172,41 @@
         <!-- SIDEBAR -->
         <aside class="hidden lg:flex lg:flex-col w-64 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40">
             <!-- Logo -->
-            <div class="flex items-center gap-2 px-6 h-16 border-b border-gray-200">
-                <span class="text-2xl">🤖</span>
-                <span class="font-bold text-primary">AI Influencer</span>
-            </div>
+            <a href="/" class="flex items-center gap-3 px-6 h-16 border-b border-gray-200">
+                <img src="/images/olric-logo.png" alt="Olric" class="w-8 h-8 rounded-lg object-contain" />
+                <span class="font-bold text-xl text-primary">Olric | AI Influencer Markt</span>
+            </a>
 
             <!-- Navigation -->
-            <nav class="flex-1 px-4 py-6 space-y-1">
-                <a href="/creator/dashboard" class="sidebar-link active">
-                    <span>📊</span>
+            <nav class="flex-1 px-4 py-6 space-y-1" x-data="{ currentPath: window.location.pathname }">
+                <a href="/creator/dashboard" class="sidebar-link"
+                    :class="currentPath === '/creator/dashboard' && 'active'">
+                    <i class="ph ph-chart-pie-slice text-xl"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="/creator/characters" class="sidebar-link">
-                    <span>🎭</span>
+                <a href="/creator/characters" class="sidebar-link"
+                    :class="currentPath.startsWith('/creator/characters') && 'active'">
+                    <i class="ph ph-user-circle text-xl"></i>
                     <span>Karakterlerim</span>
                 </a>
-                <a href="/creator/social" class="sidebar-link">
-                    <span>🔗</span>
+                <a href="/creator/social" class="sidebar-link"
+                    :class="currentPath.startsWith('/creator/social') && 'active'">
+                    <i class="ph ph-link text-xl"></i>
                     <span>Sosyal Hesaplar</span>
                 </a>
-                <a href="/creator/orders" class="sidebar-link">
-                    <span>📦</span>
+                <a href="/creator/orders" class="sidebar-link"
+                    :class="currentPath.startsWith('/creator/orders') && 'active'">
+                    <i class="ph ph-package text-xl"></i>
                     <span>Siparişler</span>
                 </a>
-                <a href="/creator/gigs" class="sidebar-link">
-                    <span>📋</span>
+                <a href="/creator/gigs" class="sidebar-link"
+                    :class="currentPath.startsWith('/creator/gigs') && 'active'">
+                    <i class="ph ph-clipboard-text text-xl"></i>
                     <span>İlanlarım</span>
                 </a>
-                <a href="/creator/earnings" class="sidebar-link">
-                    <span>💰</span>
+                <a href="/creator/earnings" class="sidebar-link"
+                    :class="currentPath.startsWith('/creator/earnings') && 'active'">
+                    <i class="ph ph-wallet text-xl"></i>
                     <span>Kazançlarım</span>
                 </a>
             </nav>
@@ -155,12 +221,18 @@
                             Creator</p>
                         <p class="text-xs text-gray-500">Creator Hesabı</p>
                     </div>
-                    <a href="/logout" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                        </svg>
-                    </a>
+                    <div class="dropdown dropdown-top dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-circle btn-sm">
+                            <i class="ph ph-gear text-xl text-gray-500"></i>
+                        </label>
+                        <ul tabindex="0"
+                            class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mb-2">
+                            <li><a href="/creator/settings"><i class="ph ph-user-gear"></i> Ayarlar</a></li>
+                            <div class="divider my-1"></div>
+                            <li><a href="/logout" class="text-error hover:bg-error/10"><i class="ph ph-sign-out"></i>
+                                    Çıkış Yap</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </aside>
@@ -183,11 +255,8 @@
                 <!-- Right Actions -->
                 <div class="flex items-center gap-3">
                     <button class="btn btn-ghost btn-circle">
-                        <span class="text-xl">🔔</span>
+                        <i class="ph ph-bell text-xl text-gray-600"></i>
                     </button>
-                    <a href="/" class="btn btn-ghost btn-sm text-gray-600">
-                        ← Siteye Dön
-                    </a>
                 </div>
             </header>
 
@@ -203,33 +272,39 @@
                 onclick="document.getElementById('mobile-sidebar').classList.add('hidden')"></div>
             <aside class="absolute left-0 top-0 bottom-0 w-64 bg-white">
                 <div class="flex items-center justify-between px-6 h-16 border-b border-gray-200">
-                    <div class="flex items-center gap-2">
-                        <span class="text-2xl">🤖</span>
-                        <span class="font-bold text-primary">AI Influencer</span>
-                    </div>
+                    <a href="/" class="flex items-center gap-3">
+                        <img src="/images/olric-logo.png" alt="Olric" class="w-8 h-8 rounded-lg object-contain" />
+                        <span class="font-bold text-xl text-primary">Olric | AI Influencer Markt</span>
+                    </a>
                     <button onclick="document.getElementById('mobile-sidebar').classList.add('hidden')"
                         class="btn btn-ghost btn-sm btn-square">
-                        ✕
+                        <i class="ph ph-x text-lg"></i>
                     </button>
                 </div>
-                <nav class="px-4 py-6 space-y-1">
-                    <a href="/creator/dashboard" class="sidebar-link active">
-                        <span>📊</span> <span>Dashboard</span>
+                <nav class="px-4 py-6 space-y-1" x-data="{ currentPath: window.location.pathname }">
+                    <a href="/creator/dashboard" class="sidebar-link"
+                        :class="currentPath === '/creator/dashboard' && 'active'">
+                        <i class="ph ph-chart-pie-slice text-xl"></i> <span>Dashboard</span>
                     </a>
-                    <a href="/creator/characters" class="sidebar-link">
-                        <span>🎭</span> <span>Karakterlerim</span>
+                    <a href="/creator/characters" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/characters') && 'active'">
+                        <i class="ph ph-user-circle text-xl"></i> <span>Karakterlerim</span>
                     </a>
-                    <a href="/creator/social" class="sidebar-link">
-                        <span>🔗</span> <span>Sosyal Hesaplar</span>
+                    <a href="/creator/social" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/social') && 'active'">
+                        <i class="ph ph-link text-xl"></i> <span>Sosyal Hesaplar</span>
                     </a>
-                    <a href="/creator/orders" class="sidebar-link">
-                        <span>📦</span> <span>Siparişler</span>
+                    <a href="/creator/orders" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/orders') && 'active'">
+                        <i class="ph ph-package text-xl"></i> <span>Siparişler</span>
                     </a>
-                    <a href="/creator/gigs" class="sidebar-link">
-                        <span>📋</span> <span>İlanlarım</span>
+                    <a href="/creator/gigs" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/gigs') && 'active'">
+                        <i class="ph ph-clipboard-text text-xl"></i> <span>İlanlarım</span>
                     </a>
-                    <a href="/creator/earnings" class="sidebar-link">
-                        <span>💰</span> <span>Kazançlarım</span>
+                    <a href="/creator/earnings" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/earnings') && 'active'">
+                        <i class="ph ph-wallet text-xl"></i> <span>Kazançlarım</span>
                     </a>
                 </nav>
             </aside>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>Sipariş Teslimi</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="deliverOrderPage()">
+
+        <div class="container mx-auto px-4 py-8 max-w-3xl">
+
+            <!-- Breadcrumb -->
+            <nav
+                class="flex items-center text-sm text-gray-500 mb-8 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm">
+                <a href="/creator/dashboard" class="hover:text-primary transition-colors flex items-center gap-1">
+                    <i class="ph ph-house"></i>
+                </a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <a href="/creator/orders" class="hover:text-primary transition-colors">Siparişlerim</a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <span class="text-gray-900 font-medium">Sipariş Teslimi</span>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2"><i class="ph ph-upload-simple"></i>
+                    Sipariş Teslimi</h1>
+                <p class="text-gray-500 mt-1">İçeriğinizi teslim edin, ödemenizi alın</p>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="dash-card p-5 mb-6">
+                <h2 class="font-medium text-gray-500 text-sm mb-4">SİPARİŞ ÖZETİ</h2>
+                <div class="flex items-start gap-4">
+                    <img :src="order.productImage" class="w-20 h-20 rounded-lg object-cover" />
+                    <div class="flex-1">
+                        <h3 class="font-semibold text-gray-900" x-text="order.title">Sipariş</h3>
+                        <p class="text-sm text-gray-500 mt-1">Marka: <span x-text="order.brandName">Brand</span></p>
+                        <p class="text-sm text-gray-500">Karakter: <span x-text="order.characterName">Karakter</span>
+                        </p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-2xl font-bold text-primary" x-text="'₺' + order.price">₺0</p>
+                        <p class="text-xs text-gray-400">Kazancınız</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Form -->
+            <form @submit.prevent="submitDelivery" class="dash-card p-6 space-y-6">
+
+                <!-- Preview Image Upload -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-3">Önizleme Görseli *</label>
+                    <div class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-primary cursor-pointer transition-colors"
+                        @click="document.getElementById('preview-input').click()"
+                        :class="form.previewImage && 'border-primary bg-primary/5'">
+                        <template x-if="!form.previewImage">
+                            <div>
+                                <i class="ph ph-camera text-4xl text-gray-400 mb-2"></i>
+                                <p class="text-gray-600 mt-2 font-medium">Tıklayın veya sürükleyin</p>
+                                <p class="text-sm text-gray-400 mt-1">PNG, JPG (max 10MB)</p>
+                            </div>
+                        </template>
+                        <template x-if="form.previewImage">
+                            <div class="flex items-center justify-center gap-4">
+                                <img :src="form.previewImage" class="h-32 rounded-lg object-cover" />
+                                <div class="text-left">
+                                    <p class="text-green-600 font-medium flex items-center gap-1"><i
+                                            class="ph ph-check-circle"></i> Görsel yüklendi</p>
+                                    <p class="text-sm text-gray-500 mt-1">Değiştirmek için tıklayın</p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <input type="file" id="preview-input" class="hidden" accept="image/*"
+                        @change="handlePreviewUpload" />
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-3 flex items-start gap-2">
+                        <i class="ph ph-warning text-yellow-600 text-lg"></i>
+                        <p class="text-sm text-yellow-800">
+                            <strong>Güvenlik:</strong> Bu görsel markaya önizleme olarak gösterilecek.
+                            Lütfen filigran ekleyin veya düşük çözünürlüklü versiyon yükleyin.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Delivery Note -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Teslim Notu</label>
+                    <textarea x-model="form.note" rows="4" class="textarea textarea-bordered w-full"
+                        placeholder="Marka için notunuz... (teslim detayları, kullanım önerileri vb.)"></textarea>
+                </div>
+
+                <!-- Original Files Info -->
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600">
+                        <strong>Not:</strong> Orijinal dosyalar (filigransız, yüksek çözünürlük) marka ödemeyi
+                        onayladıktan sonra otomatik olarak paylaşılacaktır.
+                    </p>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-4 pt-4 border-t border-gray-200">
+                    <a href="/creator/orders" class="btn btn-ghost">← İptal</a>
+                    <button type="submit" class="btn btn-primary flex-1" :disabled="!form.previewImage">
+                        Teslim Et
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function deliverOrderPage() {
+                return {
+                    order: {
+                        id: 'order_1',
+                        title: 'Cafe Ürün Fotoğrafı',
+                        price: 500,
+                        productImage: 'https://picsum.photos/seed/prod1/200/200',
+                        characterName: 'Aylin',
+                        brandName: 'Coffee House',
+                        dueDate: '26 Ocak 2026'
+                    },
+                    form: {
+                        previewImage: null,
+                        note: ''
+                    },
+
+                    handlePreviewUpload(e) {
+                        const file = e.target.files[0];
+                        if (file) {
+                            this.form.previewImage = URL.createObjectURL(file);
+                        }
+                    },
+
+                    submitDelivery() {
+                        if (!this.form.previewImage) {
+                            Alpine.store('notify').error('Lütfen önizleme görseli yükleyin');
+                            return;
+                        }
+
+                        Alpine.store('notify').success('Sipariş başarıyla teslim edildi!');
+
+                        setTimeout(() => {
+                            window.location.href = '/creator/orders';
+                        }, 1500);
+                    }
+                }
+            }
+        </script>
+
+    </div>
+    </div>
+</body>
+
+</html>

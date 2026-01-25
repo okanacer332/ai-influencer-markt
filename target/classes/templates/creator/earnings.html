@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>Kazançlarım</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="earningsPage()">
+
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Kazançlarım</h1>
+            <p class="text-gray-500 mt-1">Gelir takibi ve ödeme geçmişi</p>
+        </div>
+
+        <!-- Main Stats -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Available Balance -->
+            <div class="dash-card p-6 bg-gradient-to-br from-primary to-primary-focus text-white">
+                <p class="text-white/80 text-sm mb-2">Çekilebilir Bakiye</p>
+                <p class="text-4xl font-bold" x-text="'₺' + stats.availableBalance.toLocaleString('tr-TR')">₺0</p>
+                <a href="/creator/earnings/withdraw" class="btn btn-sm bg-white text-primary hover:bg-gray-100 mt-4">
+                    Para Çek
+                </a>
+            </div>
+
+            <!-- Pending -->
+            <div class="dash-card p-6">
+                <p class="text-gray-500 text-sm mb-2">Bekleyen Ödemeler</p>
+                <p class="text-3xl font-bold text-yellow-600"
+                    x-text="'₺' + stats.pendingBalance.toLocaleString('tr-TR')">₺0</p>
+                <p class="text-xs text-gray-400 mt-2">Onay bekleyen siparişlerden</p>
+            </div>
+
+            <!-- Total Earnings -->
+            <div class="dash-card p-6">
+                <p class="text-gray-500 text-sm mb-2">Toplam Kazanç</p>
+                <p class="text-3xl font-bold text-gray-900" x-text="'₺' + stats.totalEarnings.toLocaleString('tr-TR')">
+                    ₺0</p>
+                <p class="text-xs text-gray-400 mt-2">Tüm zamanlar</p>
+            </div>
+        </div>
+
+        <!-- Monthly Stats -->
+        <div class="dash-card p-6 mb-8">
+            <h2 class="font-semibold text-gray-900 mb-6">Bu Ay</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div>
+                    <p class="text-sm text-gray-500">Kazanç</p>
+                    <p class="text-2xl font-bold text-primary"
+                        x-text="'₺' + stats.monthlyEarnings.toLocaleString('tr-TR')">₺0</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Tamamlanan Sipariş</p>
+                    <p class="text-2xl font-bold text-gray-900" x-text="stats.monthlyOrders">0</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Ortalama Sipariş</p>
+                    <p class="text-2xl font-bold text-gray-900" x-text="'₺' + stats.avgOrderValue">₺0</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Büyüme</p>
+                    <p class="text-2xl font-bold text-green-600">↑ %23</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions -->
+        <div class="dash-card">
+            <div class="flex items-center justify-between p-5 border-b border-gray-200">
+                <h2 class="font-semibold text-gray-900">Ödeme Geçmişi</h2>
+                <select class="select select-bordered select-sm">
+                    <option>Son 30 gün</option>
+                    <option>Son 3 ay</option>
+                    <option>Bu yıl</option>
+                </select>
+            </div>
+
+            <div class="divide-y divide-gray-100">
+                <template x-for="tx in transactions" :key="tx.id">
+                    <div class="flex items-center gap-4 p-5 hover:bg-gray-50">
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                            :class="tx.type === 'earning' ? 'bg-green-100 text-green-600' : 'bg-blue-100 text-blue-600'">
+                            <i class="text-xl" :class="tx.type === 'earning' ? 'ph ph-money' : 'ph ph-bank'"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-gray-900" x-text="tx.title">İşlem</p>
+                            <p class="text-sm text-gray-500" x-text="tx.description">Açıklama</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-bold" :class="tx.type === 'earning' ? 'text-green-600' : 'text-blue-600'"
+                                x-text="(tx.type === 'earning' ? '+' : '-') + '₺' + tx.amount">₺0</p>
+                            <p class="text-xs text-gray-400" x-text="tx.date">Tarih</p>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Empty State -->
+            <div x-show="transactions.length === 0" class="p-12 text-center">
+                <div class="text-5xl mb-4 text-gray-300"><i class="ph ph-money-wavy"></i></div>
+                <p class="text-gray-500">Henüz işlem geçmişi yok</p>
+            </div>
+        </div>
+
+        <!-- Payout Info -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-5 flex items-start gap-4">
+            <i class="ph ph-info text-2xl text-blue-600"></i>
+            <div>
+                <p class="font-medium text-blue-900">Ödeme Bilgisi</p>
+                <p class="text-sm text-blue-700 mt-1">
+                    Ödemeler her hafta Cuma günü otomatik olarak banka hesabınıza aktarılır.
+                    Minimum çekim tutarı ₺100'dir.
+                </p>
+            </div>
+        </div>
+
+        <script>
+            function earningsPage() {
+                return {
+                    stats: {
+                        availableBalance: 8500,
+                        pendingBalance: 2200,
+                        totalEarnings: 30700,
+                        monthlyEarnings: 5200,
+                        monthlyOrders: 8,
+                        avgOrderValue: 650
+                    },
+                    transactions: [
+                        {
+                            id: 'tx_1',
+                            type: 'earning',
+                            title: 'Sipariş Tamamlandı',
+                            description: 'Coffee House - Ürün Fotoğrafı',
+                            amount: 500,
+                            date: '24 Ocak 2026'
+                        },
+                        {
+                            id: 'tx_2',
+                            type: 'earning',
+                            title: 'Sipariş Tamamlandı',
+                            description: 'Fashion Brand - Story Paketi',
+                            amount: 1200,
+                            date: '22 Ocak 2026'
+                        },
+                        {
+                            id: 'tx_3',
+                            type: 'withdrawal',
+                            title: 'Para Çekme',
+                            description: 'Ziraat Bankası ****4521',
+                            amount: 5000,
+                            date: '17 Ocak 2026'
+                        },
+                        {
+                            id: 'tx_4',
+                            type: 'earning',
+                            title: 'Sipariş Tamamlandı',
+                            description: 'Beauty Co - Marka Yüzü',
+                            amount: 2500,
+                            date: '15 Ocak 2026'
+                        },
+                        {
+                            id: 'tx_5',
+                            type: 'earning',
+                            title: 'Sipariş Tamamlandı',
+                            description: 'Tech Startup - TikTok Video',
+                            amount: 800,
+                            date: '12 Ocak 2026'
+                        }
+                    ]
+                }
+            }
+        </script>
+
+    </div>
+</body>
+
+</html>

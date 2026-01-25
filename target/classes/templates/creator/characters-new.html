@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<head>
+    <title>Yeni Karakter Oluştur</title>
+</head>
+
+<body>
+    <div layout:fragment="content" x-data="newCharacterPage()">
+
+        <div class="container mx-auto px-4 py-8 max-w-3xl">
+            <!-- Breadcrumb -->
+            <nav
+                class="flex items-center text-sm text-gray-500 mb-8 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm">
+                <a href="/creator/dashboard" class="hover:text-primary transition-colors flex items-center gap-1">
+                    <i class="ph ph-house"></i>
+                </a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <a href="/creator/characters" class="hover:text-primary transition-colors">Karakterlerim</a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <span class="text-gray-900 font-medium">Yeni Karakter</span>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="mb-8 text-center">
+                <div
+                    class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/5 text-primary mb-4">
+                    <i class="ph ph-magic-wand text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-900">Yeni AI Karakter Oluştur</h1>
+                <p class="text-gray-500 mt-2 text-lg">Markalar için benzersiz bir influencer karakteri yaratın</p>
+            </div>
+
+            <!-- Form -->
+            <form @submit.prevent="submitForm" class="space-y-6">
+                <div class="dash-card p-6 space-y-6">
+
+                    <!-- Avatar Upload -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Karakter Görseli</label>
+                        <div class="flex items-start gap-6">
+                            <div class="w-32 h-32 bg-gray-100 rounded-2xl flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors overflow-hidden"
+                                @click="document.getElementById('avatar-input').click()">
+                                <template x-if="!form.avatarPreview">
+                                    <div class="text-center">
+                                        <span class="text-4xl text-gray-400">📷</span>
+                                        <p class="text-xs text-gray-400 mt-1">Yükle</p>
+                                    </div>
+                                </template>
+                                <template x-if="form.avatarPreview">
+                                    <img :src="form.avatarPreview" class="w-full h-full object-cover" />
+                                </template>
+                            </div>
+                            <input type="file" id="avatar-input" class="hidden" accept="image/*"
+                                @change="handleAvatarUpload" />
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-600 mb-2">AI karakterinin profil görseli</p>
+                                <ul class="text-xs text-gray-400 space-y-1">
+                                    <li>• Yüksek kaliteli görsel önerilir</li>
+                                    <li>• Minimum 400x400 piksel</li>
+                                    <li>• JPG, PNG formatları</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Karakter İsmi *</label>
+                        <input type="text" x-model="form.name" required class="input input-bordered w-full"
+                            placeholder="Örn: Luna, Maya, Selin..." />
+                        <p class="text-xs text-gray-400 mt-1">Bu isim profilinde ve kartlarında görünecek</p>
+                    </div>
+
+                    <!-- Style -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Karakter Stili *</label>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                            <template x-for="style in styleOptions" :key="style.id">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="style" :value="style.id" x-model="form.style"
+                                        class="hidden peer" />
+                                    <div
+                                        class="border-2 border-gray-200 rounded-xl p-4 text-center transition-all peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300">
+                                        <span class="text-2xl" x-text="style.icon">✨</span>
+                                        <p class="font-medium text-gray-900 mt-1" x-text="style.name">Stil</p>
+                                        <p class="text-xs text-gray-500" x-text="style.desc">Açıklama</p>
+                                    </div>
+                                </label>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Karakter Açıklaması</label>
+                        <textarea x-model="form.bio" rows="3" class="textarea textarea-bordered w-full"
+                            placeholder="Bu karakter hangi tür markalar ve içerikler için uygun?"></textarea>
+                        <p class="text-xs text-gray-400 mt-1">Markalar bu açıklamayı okuyarak sizi tercih edecek</p>
+                    </div>
+
+                    <!-- Active Platforms -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-3">Aktif Platformlar</label>
+                        <p class="text-xs text-gray-500 mb-3">Bu karakter hangi platformlarda içerik üretecek?</p>
+                        <div class="space-y-3">
+                            <label
+                                class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-primary transition-colors"
+                                :class="form.platforms.instagram && 'border-primary bg-primary/5'">
+                                <input type="checkbox" x-model="form.platforms.instagram"
+                                    class="checkbox checkbox-primary" />
+                                <div
+                                    class="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg flex items-center justify-center text-white">
+                                    📷
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">Instagram</p>
+                                    <p class="text-sm text-gray-500">Fotoğraf, Story, Reels</p>
+                                </div>
+                            </label>
+
+                            <label
+                                class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-primary transition-colors"
+                                :class="form.platforms.tiktok && 'border-primary bg-primary/5'">
+                                <input type="checkbox" x-model="form.platforms.tiktok"
+                                    class="checkbox checkbox-primary" />
+                                <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white">
+                                    🎵
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">TikTok</p>
+                                    <p class="text-sm text-gray-500">Kısa videolar, Trendler</p>
+                                </div>
+                            </label>
+
+                            <label
+                                class="flex items-center gap-4 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-primary transition-colors"
+                                :class="form.platforms.twitter && 'border-primary bg-primary/5'">
+                                <input type="checkbox" x-model="form.platforms.twitter"
+                                    class="checkbox checkbox-primary" />
+                                <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white">
+                                    𝕏
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-900">Twitter / X</p>
+                                    <p class="text-sm text-gray-500">Tweet, Thread, Görsel</p>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Başlangıç Fiyatı</label>
+                        <div class="flex items-center gap-2">
+                            <span class="text-gray-500">₺</span>
+                            <input type="number" x-model="form.basePrice" min="100" step="50"
+                                class="input input-bordered w-40" placeholder="500" />
+                            <span class="text-sm text-gray-500">ve üzeri</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Actions -->
+                <div class="flex gap-4 mt-6">
+                    <a href="/creator/characters" class="btn btn-ghost">← İptal</a>
+                    <button type="submit" class="btn btn-primary flex-1" :disabled="!isFormValid">
+                        Karakter Oluştur
+                    </button>
+                </div>
+            </form>
+
+            <script>
+                function newCharacterPage() {
+                    return {
+                        form: {
+                            name: '',
+                            style: '',
+                            bio: '',
+                            avatarPreview: null,
+                            platforms: { instagram: false, tiktok: false, twitter: false },
+                            basePrice: 500
+                        },
+                        styleOptions: [
+                            { id: 'photorealistic', name: 'Photorealistic', icon: '📸', desc: 'Gerçekçi, doğal' },
+                            { id: 'luxury', name: 'Luxury', icon: '💎', desc: 'Premium, zarif' },
+                            { id: 'casual', name: 'Casual', icon: '😊', desc: 'Samimi, günlük' },
+                            { id: 'minimal', name: 'Minimal', icon: '✨', desc: 'Sade, şık' },
+                            { id: 'edgy', name: 'Edgy', icon: '🔥', desc: 'Cesur, farklı' },
+                            { id: 'cute', name: 'Cute', icon: '🌸', desc: 'Tatlı, sevimli' }
+                        ],
+
+                        get isFormValid() {
+                            return this.form.name.length >= 2 &&
+                                this.form.style &&
+                                (this.form.platforms.instagram || this.form.platforms.tiktok || this.form.platforms.twitter);
+                        },
+
+                        handleAvatarUpload(e) {
+                            const file = e.target.files[0];
+                            if (file) {
+                                this.form.avatarPreview = URL.createObjectURL(file);
+                            }
+                        },
+
+                        submitForm() {
+                            if (!this.isFormValid) return;
+
+                            // In real app, this would POST to backend
+                            Alpine.store('notify').success('Karakter oluşturuldu! Admin onayı bekleniyor.');
+
+                            // Redirect to characters list
+                            setTimeout(() => {
+                                window.location.href = '/creator/characters';
+                            }, 1500);
+                        }
+                    }
+                }
+            </script>
+
+        </div> <!-- End Container -->
+
+    </div>
+</body>
+
+</html>

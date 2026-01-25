@@ -5,11 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle} + ' | AI Influencer Marketplace'">AI Influencer Marketplace</title>
+    <title th:text="${pageTitle} + ' | Olric | AI Influencer Markt'">Olric | AI Influencer Markt</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <link rel="icon" type="image/png" href="/images/olric-logo.png">
 
     <!-- DaisyUI + Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
@@ -19,6 +18,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
 
     <!-- Alpine.js -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -137,10 +139,53 @@
         .bg-warm-gradient {
             background: linear-gradient(180deg, #FAF8F5 0%, #FFF 50%, #FAF8F5 100%);
         }
+
+        /* Toast Animation */
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading Pulse */
+        @keyframes pulse-logo {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        .animate-pulse-logo {
+            animation: pulse-logo 2s infinite ease-in-out;
+        }
     </style>
 </head>
 
-<body class="min-h-screen bg-cream flex flex-col" data-theme="light">
+<body class="min-h-screen bg-cream flex flex-col" data-theme="light" x-data="{ loading: true }"
+    x-init="setTimeout(() => loading = false, 800); $store.theme.init(); $store.auth.init()">
+
+    <!-- Loading Screen -->
+    <div x-show="loading"
+        class="fixed inset-0 z-[100] bg-white flex items-center justify-center transition-opacity duration-500"
+        x-transition:leave="ease-in duration-500" x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0">
+        <div class="flex flex-col items-center gap-4">
+            <img src="/images/olric-logo.png" class="w-16 h-16 animate-pulse-logo" alt="Loading...">
+        </div>
+    </div>
 
     <!-- Cursor Glow Effect (Mouse Following) -->
     <div id="cursor-glow" class="cursor-glow hidden md:block"></div>
@@ -174,15 +219,21 @@
     </script>
 
     <!-- Toast Notifications -->
-    <div class="toast toast-top toast-end z-[9999]" x-data x-show="$store.notify.messages.length > 0">
+    <!-- Toast Notifications (Bottom Right, Theme Colors) -->
+    <div class="fixed bottom-6 right-6 z-[9999] flex flex-col gap-3" x-show="$store.notify.messages.length > 0" x-cloak>
         <template x-for="msg in $store.notify.messages" :key="msg.id">
-            <div class="alert shadow-lg" :class="{
-                'alert-success': msg.type === 'success',
-                'alert-error': msg.type === 'error', 
-                'alert-warning': msg.type === 'warning',
-                'alert-info': msg.type === 'info'
-            }">
-                <span x-text="msg.message"></span>
+            <div class="flex items-center gap-3 px-5 py-3 rounded-xl shadow-lg text-white min-w-[280px] animate-slide-up"
+                :class="{
+                     'bg-primary': msg.type === 'success',
+                     'bg-red-600': msg.type === 'error',
+                     'bg-blue-600': msg.type === 'info'
+                 }">
+                <i class="text-xl" :class="{
+                    'ph ph-check-circle': msg.type === 'success',
+                    'ph ph-x-circle': msg.type === 'error',
+                    'ph ph-info': msg.type === 'info'
+                }"></i>
+                <span class="flex-1" x-text="msg.message"></span>
             </div>
         </template>
     </div>
@@ -194,8 +245,8 @@
 
                 <!-- Logo -->
                 <a href="/" class="flex items-center gap-2 font-bold text-lg">
-                    <span class="text-2xl">🤖</span>
-                    <span class="text-primary hidden sm:inline">AI Influencer</span>
+                    <img src="/images/olric-logo.png" alt="Olric" class="w-8 h-8">
+                    <span class="text-primary hidden sm:inline text-xl">Olric | AI Influencer Markt</span>
                 </a>
 
                 <!-- Desktop Nav -->
@@ -248,11 +299,11 @@
                 <!-- Brand -->
                 <div class="sm:col-span-2 lg:col-span-1">
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="text-2xl">🤖</span>
-                        <span class="text-white font-bold">AI Influencer</span>
+                        <img src="/images/olric-logo.png" alt="Olric Logo" class="w-8 h-8 filter brightness-0 invert">
+                        <span class="text-white font-bold text-xl">Olric | AI Influencer Markt</span>
                     </div>
                     <p class="text-sm text-gray-400">
-                        Türkiye'nin ilk AI influencer içerik platformu.
+                        Türkiye'nin ilk ve tek pazar yeri. AI creator'lardan profesyonel içerikler alın.
                     </p>
                 </div>
 
@@ -289,10 +340,8 @@
             </div>
 
             <!-- Bottom -->
-            <div
-                class="border-t border-gray-800 mt-8 pt-8 text-sm text-gray-500 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <p>© 2024 ACR Tech. Tüm hakları saklıdır.</p>
-                <p>🇹🇷 Türkiye'de yapıldı</p>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-sm text-gray-500 text-center">
+                <p>© 2026 Olric. Tüm hakları saklıdır.</p>
             </div>
         </div>
     </footer>
