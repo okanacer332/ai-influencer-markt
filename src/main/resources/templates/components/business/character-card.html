@@ -1,0 +1,227 @@
+<!-- ============================================
+     CHARACTER CARD COMPONENT (B-16)
+     AI Character/Persona management for creators
+     ============================================ -->
+
+<!-- Characters Grid (for Dashboard) -->
+<th:block th:fragment="charactersOverview">
+    <div class="dash-card p-6" x-data="characterManager()">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="font-semibold text-gray-900 text-lg">Karakterlerim</h2>
+                <p class="text-sm text-gray-500">AI karakterlerini yönet, yenilerini ekle</p>
+            </div>
+            <button @click="showCreateModal = true" class="btn btn-primary btn-sm">
+                + Yeni Karakter
+            </button>
+        </div>
+
+        <!-- Characters Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <template x-for="char in characters" :key="char.id">
+                <div
+                    class="border border-gray-200 rounded-xl p-4 hover:border-primary hover:shadow-md transition-all group">
+                    <div class="flex items-start gap-4">
+                        <!-- Avatar -->
+                        <img :src="char.avatar" :alt="char.name"
+                            class="w-16 h-16 rounded-xl object-cover flex-shrink-0" />
+
+                        <!-- Info -->
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2">
+                                <h3 class="font-semibold text-gray-900 truncate" x-text="char.name">Karakter</h3>
+                                <span class="text-xs px-2 py-0.5 rounded-full"
+                                    :class="char.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'"
+                                    x-text="char.status === 'active' ? 'Aktif' : 'Onay Bekliyor'"></span>
+                            </div>
+                            <p class="text-sm text-gray-500 mt-0.5" x-text="char.style">Stil</p>
+
+                            <!-- Platform Icons -->
+                            <div class="flex items-center gap-2 mt-2">
+                                <span x-show="char.platforms.instagram" class="text-sm" title="Instagram">📷</span>
+                                <span x-show="char.platforms.tiktok" class="text-sm" title="TikTok">🎵</span>
+                                <span x-show="char.platforms.twitter" class="text-sm" title="Twitter">𝕏</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div class="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100 text-sm">
+                        <div>
+                            <span class="text-gray-500">Siparişler</span>
+                            <span class="font-semibold text-gray-900 ml-1" x-text="char.orders">0</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-500">Kazanç</span>
+                            <span class="font-semibold text-primary ml-1" x-text="'₺' + char.earnings">₺0</span>
+                        </div>
+                        <div class="ml-auto">
+                            <a :href="'/creator/characters/' + char.id"
+                                class="text-primary text-sm hover:underline">Düzenle →</a>
+                        </div>
+                    </div>
+                </div>
+            </template>
+
+            <!-- Add New Card -->
+            <button @click="showCreateModal = true"
+                class="border-2 border-dashed border-gray-300 rounded-xl p-8 flex flex-col items-center justify-center hover:border-primary hover:bg-primary/5 transition-colors group">
+                <span class="text-4xl text-gray-400 group-hover:text-primary">+</span>
+                <span class="text-gray-500 mt-2 group-hover:text-primary">Yeni Karakter Ekle</span>
+            </button>
+        </div>
+
+        <!-- Create Modal -->
+        <div x-show="showCreateModal" x-cloak
+            class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl w-full max-w-lg" @click.outside="showCreateModal = false">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h3 class="font-bold text-lg">Yeni AI Karakter Oluştur</h3>
+                    <button @click="showCreateModal = false" class="btn btn-ghost btn-sm btn-square">✕</button>
+                </div>
+
+                <div class="p-6 space-y-4">
+                    <!-- Avatar Upload -->
+                    <div class="text-center">
+                        <div
+                            class="w-24 h-24 mx-auto bg-gray-100 rounded-2xl flex items-center justify-center mb-3 cursor-pointer hover:bg-gray-200">
+                            <span class="text-3xl">📷</span>
+                        </div>
+                        <p class="text-sm text-gray-500">Karakter görselini yükle</p>
+                    </div>
+
+                    <!-- Name -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Karakter İsmi</label>
+                        <input type="text" x-model="newCharacter.name" class="input input-bordered w-full"
+                            placeholder="Örn: Luna" />
+                    </div>
+
+                    <!-- Style -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Stil</label>
+                        <select x-model="newCharacter.style" class="select select-bordered w-full">
+                            <option value="">Stil seçin</option>
+                            <option value="Photorealistic">Photorealistic</option>
+                            <option value="Luxury">Luxury</option>
+                            <option value="Casual">Casual</option>
+                            <option value="Minimal">Minimal</option>
+                            <option value="Edgy">Edgy</option>
+                        </select>
+                    </div>
+
+                    <!-- Bio -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kısa Açıklama</label>
+                        <textarea x-model="newCharacter.bio" rows="2" class="textarea textarea-bordered w-full"
+                            placeholder="Bu karakter hangi tür markalar için uygun?"></textarea>
+                    </div>
+
+                    <!-- Platforms -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Aktif Platformlar</label>
+                        <div class="flex gap-3">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" x-model="newCharacter.platforms.instagram"
+                                    class="checkbox checkbox-primary checkbox-sm" />
+                                <span class="text-sm">📷 Instagram</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" x-model="newCharacter.platforms.tiktok"
+                                    class="checkbox checkbox-primary checkbox-sm" />
+                                <span class="text-sm">🎵 TikTok</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" x-model="newCharacter.platforms.twitter"
+                                    class="checkbox checkbox-primary checkbox-sm" />
+                                <span class="text-sm">𝕏 Twitter</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3 p-6 border-t border-gray-200">
+                    <button @click="showCreateModal = false" class="btn btn-ghost flex-1">İptal</button>
+                    <button @click="createCharacter()" class="btn btn-primary flex-1">Karakter Oluştur</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function characterManager() {
+            return {
+                showCreateModal: false,
+                characters: [
+                    {
+                        id: 'aylin',
+                        name: 'Aylin',
+                        avatar: '/images/influencers/aylin.png',
+                        style: 'Photorealistic',
+                        status: 'active',
+                        platforms: { instagram: true, tiktok: true, twitter: false },
+                        orders: 47,
+                        earnings: 12500
+                    },
+                    {
+                        id: 'nova',
+                        name: 'Nova',
+                        avatar: '/images/influencers/nova.png',
+                        style: 'Luxury',
+                        status: 'active',
+                        platforms: { instagram: true, tiktok: false, twitter: true },
+                        orders: 32,
+                        earnings: 18200
+                    }
+                ],
+                newCharacter: {
+                    name: '',
+                    style: '',
+                    bio: '',
+                    platforms: { instagram: false, tiktok: false, twitter: false }
+                },
+
+                createCharacter() {
+                    if (!this.newCharacter.name || !this.newCharacter.style) {
+                        Alpine.store('notify').error('Lütfen isim ve stil seçin');
+                        return;
+                    }
+
+                    const newChar = {
+                        id: 'char_' + Date.now(),
+                        name: this.newCharacter.name,
+                        avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + this.newCharacter.name,
+                        style: this.newCharacter.style,
+                        status: 'pending',
+                        platforms: { ...this.newCharacter.platforms },
+                        orders: 0,
+                        earnings: 0
+                    };
+
+                    this.characters.push(newChar);
+                    this.showCreateModal = false;
+                    this.newCharacter = { name: '', style: '', bio: '', platforms: { instagram: false, tiktok: false, twitter: false } };
+                    Alpine.store('notify').success('Karakter oluşturuldu! Admin onayı bekleniyor.');
+                }
+            }
+        }
+    </script>
+</th:block>
+
+<!-- Single Character Detail Card -->
+<th:block th:fragment="characterCard(character)">
+    <div class="dash-card p-4" th:with="char=${character}">
+        <div class="flex items-start gap-4">
+            <img th:src="${char.avatar}" th:alt="${char.name}" class="w-16 h-16 rounded-xl object-cover" />
+            <div class="flex-1">
+                <div class="flex items-center gap-2">
+                    <h3 class="font-semibold text-gray-900" th:text="${char.name}">Name</h3>
+                    <span class="badge badge-sm"
+                        th:classappend="${char.status == 'active'} ? 'badge-success' : 'badge-warning'"
+                        th:text="${char.status == 'active'} ? 'Aktif' : 'Bekliyor'">Status</span>
+                </div>
+                <p class="text-sm text-gray-500" th:text="${char.style}">Style</p>
+            </div>
+        </div>
+    </div>
+</th:block>

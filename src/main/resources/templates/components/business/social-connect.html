@@ -1,0 +1,311 @@
+<!-- ============================================
+     SOCIAL CONNECT COMPONENT (B-15)
+     Platform connection cards for Instagram, TikTok, Twitter
+     ============================================ -->
+
+<!-- Social Accounts Overview -->
+<th:block th:fragment="socialAccountsOverview">
+    <div class="dash-card p-6">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h2 class="font-semibold text-gray-900 text-lg">Bağlı Hesaplar</h2>
+                <p class="text-sm text-gray-500">Platformlarını bağla, gerçek istatistiklerini göster</p>
+            </div>
+            <a href="/creator/social" class="text-primary text-sm hover:underline">Tümünü Yönet →</a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" x-data="socialAccounts()">
+            <!-- Instagram -->
+            <div class="border border-gray-200 rounded-xl p-4 hover:border-pink-300 transition-colors">
+                <div class="flex items-center gap-3 mb-3">
+                    <div
+                        class="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-lg flex items-center justify-center text-white text-lg">
+                        📷
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-900">Instagram</p>
+                        <p class="text-xs" :class="accounts.instagram.connected ? 'text-green-600' : 'text-gray-400'"
+                            x-text="accounts.instagram.connected ? 'Bağlı' : 'Bağlı değil'">Bağlı değil</p>
+                    </div>
+                </div>
+
+                <template x-if="accounts.instagram.connected">
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span class="text-gray-500">Takipçi</span>
+                            <span class="font-semibold text-gray-900" x-text="accounts.instagram.followers">0</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">Etkileşim</span>
+                            <span class="font-semibold text-gray-900" x-text="accounts.instagram.engagement">0%</span>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="!accounts.instagram.connected">
+                    <button @click="connectPlatform('instagram')"
+                        class="w-full mt-2 btn btn-sm bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 hover:opacity-90">
+                        Bağla
+                    </button>
+                </template>
+            </div>
+
+            <!-- TikTok -->
+            <div class="border border-gray-200 rounded-xl p-4 hover:border-gray-900 transition-colors">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white text-lg">
+                        🎵
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-900">TikTok</p>
+                        <p class="text-xs" :class="accounts.tiktok.connected ? 'text-green-600' : 'text-gray-400'"
+                            x-text="accounts.tiktok.connected ? 'Bağlı' : 'Bağlı değil'">Bağlı değil</p>
+                    </div>
+                </div>
+
+                <template x-if="accounts.tiktok.connected">
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span class="text-gray-500">Takipçi</span>
+                            <span class="font-semibold text-gray-900" x-text="accounts.tiktok.followers">0</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">Görüntüleme</span>
+                            <span class="font-semibold text-gray-900" x-text="accounts.tiktok.views">0</span>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="!accounts.tiktok.connected">
+                    <button @click="connectPlatform('tiktok')"
+                        class="w-full mt-2 btn btn-sm bg-black text-white border-0 hover:bg-gray-800">
+                        Bağla
+                    </button>
+                </template>
+            </div>
+
+            <!-- Twitter -->
+            <div class="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition-colors">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white text-lg">
+                        𝕏
+                    </div>
+                    <div class="flex-1">
+                        <p class="font-medium text-gray-900">Twitter / X</p>
+                        <p class="text-xs" :class="accounts.twitter.connected ? 'text-green-600' : 'text-gray-400'"
+                            x-text="accounts.twitter.connected ? 'Bağlı' : 'Bağlı değil'">Bağlı değil</p>
+                    </div>
+                </div>
+
+                <template x-if="accounts.twitter.connected">
+                    <div>
+                        <div class="flex items-center justify-between text-sm mb-2">
+                            <span class="text-gray-500">Takipçi</span>
+                            <span class="font-semibold text-gray-900" x-text="accounts.twitter.followers">0</span>
+                        </div>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">İzlenim</span>
+                            <span class="font-semibold text-gray-900" x-text="accounts.twitter.impressions">0</span>
+                        </div>
+                    </div>
+                </template>
+
+                <template x-if="!accounts.twitter.connected">
+                    <button @click="connectPlatform('twitter')"
+                        class="w-full mt-2 btn btn-sm bg-black text-white border-0 hover:bg-gray-800">
+                        Bağla
+                    </button>
+                </template>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function socialAccounts() {
+            return {
+                accounts: {
+                    instagram: {
+                        connected: true,
+                        username: '@aylin.ai',
+                        followers: '125K',
+                        engagement: '4.2%'
+                    },
+                    tiktok: {
+                        connected: true,
+                        username: '@aylin_ai',
+                        followers: '89K',
+                        views: '2.1M'
+                    },
+                    twitter: {
+                        connected: false,
+                        username: null,
+                        followers: '0',
+                        impressions: '0'
+                    }
+                },
+
+                connectPlatform(platform) {
+                    // In real app, this would trigger OAuth flow
+                    Alpine.store('notify').info(`${platform} bağlantısı başlatılıyor...`);
+
+                    // Simulate connection
+                    setTimeout(() => {
+                        this.accounts[platform].connected = true;
+                        this.accounts[platform].followers = '10K';
+                        Alpine.store('notify').success(`${platform} başarıyla bağlandı!`);
+                    }, 1500);
+                },
+
+                disconnectPlatform(platform) {
+                    this.accounts[platform].connected = false;
+                    this.accounts[platform].followers = '0';
+                    Alpine.store('notify').success(`${platform} bağlantısı kaldırıldı.`);
+                }
+            }
+        }
+    </script>
+</th:block>
+
+<!-- Full Social Management Page Content -->
+<th:block th:fragment="socialManagementFull">
+    <div x-data="socialAccounts()">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-2xl font-bold text-gray-900">Sosyal Hesaplarım</h1>
+            <p class="text-gray-500 mt-1">Platformlarını bağla, profilinde gerçek istatistiklerini göster</p>
+        </div>
+
+        <!-- Platform Cards -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Instagram Full Card -->
+            <div class="dash-card p-6">
+                <div class="flex items-center gap-4 mb-6">
+                    <div
+                        class="w-14 h-14 bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 rounded-xl flex items-center justify-center text-white text-2xl">
+                        📷
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 text-lg">Instagram</h3>
+                        <p class="text-sm" :class="accounts.instagram.connected ? 'text-green-600' : 'text-gray-400'"
+                            x-text="accounts.instagram.connected ? accounts.instagram.username : 'Bağlı değil'"></p>
+                    </div>
+                </div>
+
+                <template x-if="accounts.instagram.connected">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-gray-900" x-text="accounts.instagram.followers">0</p>
+                                <p class="text-xs text-gray-500">Takipçi</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-gray-900" x-text="accounts.instagram.engagement">0%
+                                </p>
+                                <p class="text-xs text-gray-500">Etkileşim</p>
+                            </div>
+                        </div>
+                        <button @click="disconnectPlatform('instagram')"
+                            class="w-full btn btn-outline btn-error btn-sm">
+                            Bağlantıyı Kaldır
+                        </button>
+                    </div>
+                </template>
+
+                <template x-if="!accounts.instagram.connected">
+                    <button @click="connectPlatform('instagram')"
+                        class="w-full btn bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0">
+                        Instagram Bağla
+                    </button>
+                </template>
+            </div>
+
+            <!-- TikTok Full Card -->
+            <div class="dash-card p-6">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-black rounded-xl flex items-center justify-center text-white text-2xl">
+                        🎵
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 text-lg">TikTok</h3>
+                        <p class="text-sm" :class="accounts.tiktok.connected ? 'text-green-600' : 'text-gray-400'"
+                            x-text="accounts.tiktok.connected ? accounts.tiktok.username : 'Bağlı değil'"></p>
+                    </div>
+                </div>
+
+                <template x-if="accounts.tiktok.connected">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-gray-900" x-text="accounts.tiktok.followers">0</p>
+                                <p class="text-xs text-gray-500">Takipçi</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-gray-900" x-text="accounts.tiktok.views">0</p>
+                                <p class="text-xs text-gray-500">Görüntüleme</p>
+                            </div>
+                        </div>
+                        <button @click="disconnectPlatform('tiktok')" class="w-full btn btn-outline btn-error btn-sm">
+                            Bağlantıyı Kaldır
+                        </button>
+                    </div>
+                </template>
+
+                <template x-if="!accounts.tiktok.connected">
+                    <button @click="connectPlatform('tiktok')" class="w-full btn bg-black text-white border-0">
+                        TikTok Bağla
+                    </button>
+                </template>
+            </div>
+
+            <!-- Twitter Full Card -->
+            <div class="dash-card p-6">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-black rounded-xl flex items-center justify-center text-white text-2xl">
+                        𝕏
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 text-lg">Twitter / X</h3>
+                        <p class="text-sm" :class="accounts.twitter.connected ? 'text-green-600' : 'text-gray-400'"
+                            x-text="accounts.twitter.connected ? accounts.twitter.username : 'Bağlı değil'"></p>
+                    </div>
+                </div>
+
+                <template x-if="accounts.twitter.connected">
+                    <div class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-gray-900" x-text="accounts.twitter.followers">0</p>
+                                <p class="text-xs text-gray-500">Takipçi</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-lg p-3 text-center">
+                                <p class="text-2xl font-bold text-gray-900" x-text="accounts.twitter.impressions">0</p>
+                                <p class="text-xs text-gray-500">İzlenim</p>
+                            </div>
+                        </div>
+                        <button @click="disconnectPlatform('twitter')" class="w-full btn btn-outline btn-error btn-sm">
+                            Bağlantıyı Kaldır
+                        </button>
+                    </div>
+                </template>
+
+                <template x-if="!accounts.twitter.connected">
+                    <button @click="connectPlatform('twitter')" class="w-full btn bg-black text-white border-0">
+                        Twitter Bağla
+                    </button>
+                </template>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="mt-8 bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
+            <span class="text-xl">ℹ️</span>
+            <div>
+                <p class="font-medium text-blue-900">Platform verileri neden önemli?</p>
+                <p class="text-sm text-blue-700 mt-1">
+                    Bağladığınız hesapların gerçek istatistikleri profilinizde gösterilir.
+                    Bu, markaların size güvenmesini ve daha fazla sipariş almanızı sağlar.
+                </p>
+            </div>
+        </div>
+    </div>
+</th:block>

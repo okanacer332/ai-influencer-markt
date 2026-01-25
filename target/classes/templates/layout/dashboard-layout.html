@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle} + ' | Creator Dashboard'">Creator Dashboard</title>
+
+    <!-- DaisyUI + Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.14/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Alpine.js -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- App Scripts -->
+    <script th:src="@{/js/mock-data.js}"></script>
+    <script th:src="@{/js/app.js}"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#8B1538',
+                        'primary-focus': '#6B0F2A',
+                        'primary-light': '#A91D45',
+                        secondary: '#1A1A2E',
+                        accent: '#C9A227',
+                        cream: '#FAF8F5',
+                        charcoal: '#2D2D3A',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        /* Sidebar */
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            color: #6B7280;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-link:hover {
+            background: #F3F4F6;
+            color: #1F2937;
+        }
+
+        .sidebar-link.active {
+            background: #8B1538;
+            color: white;
+        }
+
+        .sidebar-link.active:hover {
+            background: #6B0F2A;
+        }
+
+        /* Dashboard Card */
+        .dash-card {
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .dash-card:hover {
+            border-color: #8B1538;
+            box-shadow: 0 4px 12px rgba(139, 21, 56, 0.08);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen bg-gray-50" data-theme="light" x-data x-init="$store.auth.init()">
+
+    <!-- Toast Notifications -->
+    <div class="toast toast-top toast-end z-[9999]" x-show="$store.notify.messages.length > 0">
+        <template x-for="msg in $store.notify.messages" :key="msg.id">
+            <div class="alert shadow-lg" :class="{
+                'alert-success': msg.type === 'success',
+                'alert-error': msg.type === 'error'
+            }">
+                <span x-text="msg.message"></span>
+            </div>
+        </template>
+    </div>
+
+    <div class="flex min-h-screen">
+
+        <!-- SIDEBAR -->
+        <aside class="hidden lg:flex lg:flex-col w-64 bg-white border-r border-gray-200 fixed inset-y-0 left-0 z-40">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 px-6 h-16 border-b border-gray-200">
+                <span class="text-2xl">🤖</span>
+                <span class="font-bold text-primary">AI Influencer</span>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-1">
+                <a href="/creator/dashboard" class="sidebar-link active">
+                    <span>📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/creator/characters" class="sidebar-link">
+                    <span>🎭</span>
+                    <span>Karakterlerim</span>
+                </a>
+                <a href="/creator/social" class="sidebar-link">
+                    <span>🔗</span>
+                    <span>Sosyal Hesaplar</span>
+                </a>
+                <a href="/creator/orders" class="sidebar-link">
+                    <span>📦</span>
+                    <span>Siparişler</span>
+                </a>
+                <a href="/creator/gigs" class="sidebar-link">
+                    <span>📋</span>
+                    <span>İlanlarım</span>
+                </a>
+                <a href="/creator/earnings" class="sidebar-link">
+                    <span>💰</span>
+                    <span>Kazançlarım</span>
+                </a>
+            </nav>
+
+            <!-- User Section -->
+            <div class="p-4 border-t border-gray-200">
+                <div class="flex items-center gap-3 px-2">
+                    <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold"
+                        x-text="($store.auth.user?.name || 'C')[0]">C</div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-medium text-gray-900 truncate" x-text="$store.auth.user?.name || 'Creator'">
+                            Creator</p>
+                        <p class="text-xs text-gray-500">Creator Hesabı</p>
+                    </div>
+                    <a href="/logout" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="flex-1 lg:ml-64">
+            <!-- Top Bar (Mobile + Desktop) -->
+            <header class="sticky top-0 z-30 bg-white border-b border-gray-200 h-16 flex items-center px-4 lg:px-8">
+                <!-- Mobile Menu Button -->
+                <button class="lg:hidden mr-4 btn btn-ghost btn-square"
+                    onclick="document.getElementById('mobile-sidebar').classList.toggle('hidden')">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+
+                <div class="flex-1"></div>
+
+                <!-- Right Actions -->
+                <div class="flex items-center gap-3">
+                    <button class="btn btn-ghost btn-circle">
+                        <span class="text-xl">🔔</span>
+                    </button>
+                    <a href="/" class="btn btn-ghost btn-sm text-gray-600">
+                        ← Siteye Dön
+                    </a>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="p-4 lg:p-8" layout:fragment="content">
+                <!-- Page content will be inserted here -->
+            </div>
+        </main>
+
+        <!-- Mobile Sidebar Overlay -->
+        <div id="mobile-sidebar" class="hidden lg:hidden fixed inset-0 z-50">
+            <div class="absolute inset-0 bg-black/50"
+                onclick="document.getElementById('mobile-sidebar').classList.add('hidden')"></div>
+            <aside class="absolute left-0 top-0 bottom-0 w-64 bg-white">
+                <div class="flex items-center justify-between px-6 h-16 border-b border-gray-200">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">🤖</span>
+                        <span class="font-bold text-primary">AI Influencer</span>
+                    </div>
+                    <button onclick="document.getElementById('mobile-sidebar').classList.add('hidden')"
+                        class="btn btn-ghost btn-sm btn-square">
+                        ✕
+                    </button>
+                </div>
+                <nav class="px-4 py-6 space-y-1">
+                    <a href="/creator/dashboard" class="sidebar-link active">
+                        <span>📊</span> <span>Dashboard</span>
+                    </a>
+                    <a href="/creator/characters" class="sidebar-link">
+                        <span>🎭</span> <span>Karakterlerim</span>
+                    </a>
+                    <a href="/creator/social" class="sidebar-link">
+                        <span>🔗</span> <span>Sosyal Hesaplar</span>
+                    </a>
+                    <a href="/creator/orders" class="sidebar-link">
+                        <span>📦</span> <span>Siparişler</span>
+                    </a>
+                    <a href="/creator/gigs" class="sidebar-link">
+                        <span>📋</span> <span>İlanlarım</span>
+                    </a>
+                    <a href="/creator/earnings" class="sidebar-link">
+                        <span>💰</span> <span>Kazançlarım</span>
+                    </a>
+                </nav>
+            </aside>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
