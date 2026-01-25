@@ -25,6 +25,13 @@ public class PageController {
         model.addAttribute("pageTitle", "Keşfet");
         return "public/search";
     }
+
+    @GetMapping("/brand/search")
+    public String brandSearch(Model model) {
+        model.addAttribute("pageTitle", "Keşfet");
+        model.addAttribute("userRole", "BRAND");
+        return "brand/search";
+    }
     
     @GetMapping("/creator/{id}")
     public String creatorProfile(@PathVariable String id, Model model) {
@@ -59,13 +66,29 @@ public class PageController {
     @GetMapping("/brand/dashboard")
     public String brandDashboard(Model model) {
         model.addAttribute("pageTitle", "Dashboard");
+        model.addAttribute("userRole", "BRAND");
         return "brand/dashboard";
     }
     
     @GetMapping("/brand/orders")
     public String brandOrders(Model model) {
         model.addAttribute("pageTitle", "Siparişlerim");
+        model.addAttribute("userRole", "BRAND");
         return "brand/orders";
+    }
+
+    @GetMapping("/brand/saved")
+    public String brandSaved(Model model) {
+        model.addAttribute("pageTitle", "Favorilerim");
+        model.addAttribute("userRole", "BRAND");
+        return "brand/saved";
+    }
+
+    @GetMapping("/brand/settings")
+    public String brandSettings(Model model) {
+        model.addAttribute("pageTitle", "Ayarlar");
+        model.addAttribute("userRole", "BRAND");
+        return "brand/settings";
     }
     
     @GetMapping("/brand/checkout/{gigId}")
@@ -80,6 +103,7 @@ public class PageController {
     @GetMapping("/creator/dashboard")
     public String creatorDashboard(Model model) {
         model.addAttribute("pageTitle", "Dashboard");
+        model.addAttribute("userRole", "CREATOR");
         return "creator/dashboard";
     }
     

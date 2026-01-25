@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layout/dashboard-layout}">
+
+<body>
+    <div layout:fragment="content" x-data="brandOrdersPage()">
+
+        <div class="container mx-auto px-4 py-8 max-w-5xl">
+
+            <!-- Breadcrumb -->
+            <nav
+                class="flex items-center text-sm text-gray-500 mb-8 bg-white px-4 py-3 rounded-xl border border-gray-100 shadow-sm">
+                <a href="/brand/dashboard" class="hover:text-primary transition-colors flex items-center gap-1">
+                    <i class="ph ph-house"></i>
+                </a>
+                <i class="ph ph-caret-right mx-2 text-xs text-gray-400"></i>
+                <span class="text-gray-900 font-medium">Siparişlerim</span>
+            </nav>
+
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">Siparişlerim</h1>
+                    <p class="text-gray-500 mt-1">Tüm satın alımlarınızı yönetin</p>
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div class="space-y-4">
+                <template x-for="order in orders" :key="order.id">
+                    <div class="dash-card p-6 flex flex-col md:flex-row items-center gap-6">
+                        <!-- Thumbnail -->
+                        <div class="w-full md:w-32 h-24 rounded-lg bg-gray-100 overflow-hidden flex-shrink-0">
+                            <img :src="order.gigThumbnail" class="w-full h-full object-cover">
+                        </div>
+
+                        <!-- Info -->
+                        <div class="flex-1 text-center md:text-left">
+                            <h3 class="font-bold text-gray-900 text-lg" x-text="order.gigTitle">Gig Title</h3>
+                            <p class="text-sm text-gray-500 mt-1" x-text="'Creator: ' + order.creatorName">Creator Name
+                            </p>
+                            <div class="flex items-center gap-4 mt-3 justify-center md:justify-start">
+                                <span class="badge badge-sm" :class="{
+                                        'badge-warning': order.status === 'IN_PROGRESS',
+                                        'badge-success': order.status === 'DELIVERED',
+                                        'badge-ghost': order.status === 'PENDING'
+                                    }" x-text="formatStatus(order.status)">Status</span>
+                                <span class="text-sm text-gray-500"
+                                    x-text="'Teslimat: ' + formatDate(order.deliveryDue)">Date</span>
+                            </div>
+                        </div>
+
+                        <!-- Price & Action -->
+                        <div class="flex flex-col items-center md:items-end gap-3 min-w-[120px]">
+                            <span class="text-xl font-bold text-gray-900" x-text="'₺' + order.price">Price</span>
+                            <button class="btn btn-primary btn-sm w-full">Detaylar</button>
+                        </div>
+                    </div>
+                </template>
+
+                <div x-show="orders.length === 0" class="text-center py-12">
+                    <div
+                        class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-4">
+                        <i class="ph ph-shopping-bag-open text-3xl"></i>
+                    </div>
+                    <h3 class="text-lg font-medium text-gray-900">Henüz siparişiniz yok</h3>
+                    <p class="text-gray-500 mt-2">Markanız için en iyi yapay zeka içeriklerini keşfetmeye başlayın.</p>
+                    <a href="/search" class="btn btn-primary mt-4">Creator Keşfet</a>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('brandOrdersPage', () => ({
+                    orders: [],
+
+                    init() {
+                        const brandId = 'brand_1';
+                        this.orders = MockData.orders
+                            .filter(o => o.brandId === brandId)
+                            .map(o => {
+                                const gig = MockData.getGigById(o.gigId);
+                                const creator = MockData.users.find(u => u.id === o.creatorId);
+                                return {
+                                    ...o,
+                                    gigTitle: gig ? gig.title : 'Unknown Service',
+                                    gigThumbnail: gig ? gig.thumbnail : '',
+                                    creatorName: creator ? creator.name : 'Unknown Creator'
+                                };
+                            });
+                    },
+
+                    formatStatus(status) {
+                        const map = {
+                            'PENDING': 'Bekliyor',
+                            'IN_PROGRESS': 'Devam Ediyor',
+                            'DELIVERED': 'Tamamlandı',
+                            'CANCELLED': 'İptal'
+                        };
+                        return map[status] || status;
+                    },
+
+                    formatDate(dateString) {
+                        if (!dateString) return '-';
+                        return new Date(dateString).toLocaleDateString('tr-TR', { day: 'numeric', month: 'short' });
+                    }
+                }))
+            });
+        </script>
+    </div>
+</body>
+
+</html>

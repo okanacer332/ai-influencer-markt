@@ -36,10 +36,10 @@ const MockData = {
         },
         {
             id: 'brand_1',
-            email: 'brand@company.com',
+            email: 'brand@coca-cola.com',
             role: 'BRAND',
-            name: 'Tech Brand',
-            avatar: 'https://api.dicebear.com/7.x/identicon/svg?seed=techbrand',
+            name: 'Coca-Cola TR',
+            avatar: 'https://logo.clearbit.com/coca-cola.com',
             status: 'ACTIVE',
             createdAt: '2024-01-10T09:00:00Z'
         }
@@ -92,13 +92,63 @@ const MockData = {
                 'https://picsum.photos/seed/nova3/400/500'
             ],
             portfolioImages: [
-                'https://picsum.photos/seed/nport1/600/800',
+                '/images/generated/nova_coca_cola_1769351158051.png',
                 'https://picsum.photos/seed/nport2/600/800'
             ],
             stats: {
                 completedOrders: 156,
+                avgRating: 5.0,
+                responseTime: '15 dakika'
+            }
+        },
+        {
+            id: 'loa',
+            creatorId: 'creator_4',
+            name: 'Loa',
+            age: 23,
+            gender: 'Kadın',
+            ethnicity: 'Asyalı-Amerikalı',
+            hairColor: 'Siyah',
+            eyeColor: 'Kahve',
+            style: 'Tech & Lifestyle',
+            bio: 'Teknoloji tutkunu ve modern yaşam tarzı ikonu. Apple, Samsung gibi markalarla çalışma deneyimi.',
+            profileImages: [
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=loa',
+                '/images/generated/loa_apple_macbook_1769351172814.png'
+            ],
+            portfolioImages: [
+                '/images/generated/loa_apple_macbook_1769351172814.png',
+                'https://picsum.photos/seed/lport2/600/800'
+            ],
+            stats: {
+                completedOrders: 210,
                 avgRating: 4.9,
-                responseTime: '30 dakika'
+                responseTime: '1 saat'
+            }
+        },
+        {
+            id: 'maya',
+            creatorId: 'creator_5',
+            name: 'Maya',
+            age: 20,
+            gender: 'Kadın',
+            ethnicity: 'Latin',
+            hairColor: 'Sarı',
+            eyeColor: 'Mavi',
+            style: 'Streetwear',
+            bio: 'Sokak modası ve enerji içeceği markalarının aranan yüzü. Pepsi Max kampanyasının yıldızı.',
+            profileImages: [
+                'https://api.dicebear.com/7.x/avataaars/svg?seed=maya',
+                '/images/generated/maya_pepsi_max_1769351187525.png'
+            ],
+            portfolioImages: [
+                '/images/generated/maya_pepsi_max_1769351187525.png',
+                'https://picsum.photos/seed/mport2/600/800'
+            ],
+            stats: {
+                completedOrders: 85,
+                avgRating: 4.8,
+                responseTime: '3 saat'
             }
         },
         {

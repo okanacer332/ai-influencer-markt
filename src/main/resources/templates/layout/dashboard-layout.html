@@ -179,36 +179,69 @@
 
             <!-- Navigation -->
             <nav class="flex-1 px-4 py-6 space-y-1" x-data="{ currentPath: window.location.pathname }">
-                <a href="/creator/dashboard" class="sidebar-link"
-                    :class="currentPath === '/creator/dashboard' && 'active'">
-                    <i class="ph ph-chart-pie-slice text-xl"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="/creator/characters" class="sidebar-link"
-                    :class="currentPath.startsWith('/creator/characters') && 'active'">
-                    <i class="ph ph-user-circle text-xl"></i>
-                    <span>Karakterlerim</span>
-                </a>
-                <a href="/creator/social" class="sidebar-link"
-                    :class="currentPath.startsWith('/creator/social') && 'active'">
-                    <i class="ph ph-link text-xl"></i>
-                    <span>Sosyal Hesaplar</span>
-                </a>
-                <a href="/creator/orders" class="sidebar-link"
-                    :class="currentPath.startsWith('/creator/orders') && 'active'">
-                    <i class="ph ph-package text-xl"></i>
-                    <span>Siparişler</span>
-                </a>
-                <a href="/creator/gigs" class="sidebar-link"
-                    :class="currentPath.startsWith('/creator/gigs') && 'active'">
-                    <i class="ph ph-clipboard-text text-xl"></i>
-                    <span>İlanlarım</span>
-                </a>
-                <a href="/creator/earnings" class="sidebar-link"
-                    :class="currentPath.startsWith('/creator/earnings') && 'active'">
-                    <i class="ph ph-wallet text-xl"></i>
-                    <span>Kazançlarım</span>
-                </a>
+
+                <!-- CREATOR MENU -->
+                <div th:if="${userRole == 'CREATOR' or userRole == null}">
+                    <a href="/creator/dashboard" class="sidebar-link"
+                        :class="currentPath === '/creator/dashboard' && 'active'">
+                        <i class="ph ph-chart-pie-slice text-xl"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/creator/characters" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/characters') && 'active'">
+                        <i class="ph ph-user-circle text-xl"></i>
+                        <span>Karakterlerim</span>
+                    </a>
+                    <a href="/creator/social" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/social') && 'active'">
+                        <i class="ph ph-link text-xl"></i>
+                        <span>Sosyal Hesaplar</span>
+                    </a>
+                    <a href="/creator/orders" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/orders') && 'active'">
+                        <i class="ph ph-package text-xl"></i>
+                        <span>Siparişler</span>
+                    </a>
+                    <a href="/creator/gigs" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/gigs') && 'active'">
+                        <i class="ph ph-clipboard-text text-xl"></i>
+                        <span>İlanlarım</span>
+                    </a>
+                    <a href="/creator/earnings" class="sidebar-link"
+                        :class="currentPath.startsWith('/creator/earnings') && 'active'">
+                        <i class="ph ph-wallet text-xl"></i>
+                        <span>Kazançlarım</span>
+                    </a>
+                </div>
+
+                <!-- BRAND MENU -->
+                <div th:if="${userRole == 'BRAND'}">
+                    <a href="/brand/dashboard" class="sidebar-link"
+                        :class="currentPath === '/brand/dashboard' && 'active'">
+                        <i class="ph ph-chart-pie-slice text-xl"></i>
+                        <span>Panel</span>
+                    </a>
+                    <a href="/brand/search" class="sidebar-link" :class="currentPath === '/brand/search' && 'active'">
+                        <i class="ph ph-magnifying-glass text-xl"></i>
+                        <span>Keşfet</span>
+                    </a>
+                    <a href="/brand/orders" class="sidebar-link"
+                        :class="currentPath.startsWith('/brand/orders') && 'active'">
+                        <i class="ph ph-package text-xl"></i>
+                        <span>Siparişlerim</span>
+                    </a>
+                    <a href="/brand/saved" class="sidebar-link"
+                        :class="currentPath.startsWith('/brand/saved') && 'active'">
+                        <i class="ph ph-heart text-xl"></i>
+                        <span>Favoriler</span>
+                    </a>
+                    <a href="/brand/settings" class="sidebar-link"
+                        :class="currentPath.startsWith('/brand/settings') && 'active'">
+                        <i class="ph ph-gear text-xl"></i>
+                        <span>Ayarlar</span>
+                    </a>
+                </div>
+
             </nav>
 
             <!-- User Section -->
@@ -217,9 +250,10 @@
                     <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold"
                         x-text="($store.auth.user?.name || 'C')[0]">C</div>
                     <div class="flex-1 min-w-0">
-                        <p class="font-medium text-gray-900 truncate" x-text="$store.auth.user?.name || 'Creator'">
-                            Creator</p>
-                        <p class="text-xs text-gray-500">Creator Hesabı</p>
+                        <p class="font-medium text-gray-900 truncate" x-text="$store.auth.user?.name || 'Kullanıcı'">
+                            Kullanıcı</p>
+                        <p class="text-xs text-gray-500"
+                            x-text="$store.auth.user?.role === 'BRAND' ? 'Marka Hesabı' : 'Creator Hesabı'">Hesap</p>
                     </div>
                     <div class="dropdown dropdown-top dropdown-end">
                         <label tabindex="0" class="btn btn-ghost btn-circle btn-sm">
@@ -227,7 +261,11 @@
                         </label>
                         <ul tabindex="0"
                             class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mb-2">
-                            <li><a href="/creator/settings"><i class="ph ph-user-gear"></i> Ayarlar</a></li>
+                            <li>
+                                <a th:href="${userRole == 'BRAND'} ? '/brand/settings' : '/creator/settings'">
+                                    <i class="ph ph-user-gear"></i> Ayarlar
+                                </a>
+                            </li>
                             <div class="divider my-1"></div>
                             <li><a href="/logout" class="text-error hover:bg-error/10"><i class="ph ph-sign-out"></i>
                                     Çıkış Yap</a></li>
