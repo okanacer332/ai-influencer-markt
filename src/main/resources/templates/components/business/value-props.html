@@ -1,0 +1,172 @@
+<!-- ============================================
+     VALUE PROPOSITION COMPONENT (B-12)
+     Collabstr-style feature highlights and how it works
+     ============================================ -->
+
+<!-- Feature Cards (4-Column like Collabstr) -->
+<th:block th:fragment="featureCards">
+    <section class="py-16 bg-gray-50">
+        <div class="container-custom">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Feature 1 -->
+                <div class="bg-white rounded-2xl p-6 border border-gray-100">
+                    <div
+                        class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        💰
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Ön Ödeme Yok</h3>
+                    <p class="text-sm text-gray-500">
+                        Aramak ücretsiz. Abonelik veya gizli ücret yok.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="bg-white rounded-2xl p-6 border border-gray-100">
+                    <div
+                        class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        ✅
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Doğrulanmış Creator'lar</h3>
+                    <p class="text-sm text-gray-500">
+                        Her creator kalite kontrolünden geçer.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="bg-white rounded-2xl p-6 border border-gray-100">
+                    <div
+                        class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        💬
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Anlık Mesajlaşma</h3>
+                    <p class="text-sm text-gray-500">
+                        Creator'larla anında iletişime geçin.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="bg-white rounded-2xl p-6 border border-gray-100">
+                    <div
+                        class="w-12 h-12 bg-orange-100 text-orange-600 rounded-xl flex items-center justify-center text-2xl mb-4">
+                        🔒
+                    </div>
+                    <h3 class="font-semibold text-gray-900 mb-2">Güvenli Ödeme</h3>
+                    <p class="text-sm text-gray-500">
+                        Paranız iş teslim edilene kadar güvende.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<!-- How It Works Section -->
+<th:block th:fragment="howItWorks">
+    <section class="py-20 bg-gray-900 text-white">
+        <div class="container-custom">
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Nasıl Çalışır?</h2>
+                <p class="text-gray-400 max-w-xl mx-auto">3 basit adımda profesyonel AI içeriğinizi alın</p>
+            </div>
+
+            <!-- Steps -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+                <!-- Step 1 -->
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                        1
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Creator Seçin</h3>
+                    <p class="text-gray-400">
+                        Markanıza uygun AI karakteri filtrelere göre bulun ve profilini inceleyin.
+                    </p>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                        2
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">Sipariş Oluşturun</h3>
+                    <p class="text-gray-400">
+                        Ürün görselinizi ve senaryo detaylarınızı paylaşın, güvenli ödeme yapın.
+                    </p>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="text-center">
+                    <div
+                        class="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                        3
+                    </div>
+                    <h3 class="text-xl font-semibold mb-3">İçeriğinizi Alın</h3>
+                    <p class="text-gray-400">
+                        48 saat içinde teslimat, onay sonrası orijinal dosyaları indirin.
+                    </p>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="text-center mt-12">
+                <a href="/search" class="btn btn-primary btn-lg">
+                    Hemen Başla - Ücretsiz
+                </a>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<!-- Stats Section -->
+<th:block th:fragment="statsSection">
+    <section class="py-16 bg-white">
+        <div class="container-custom">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <p class="text-4xl md:text-5xl font-bold text-primary mb-2">150+</p>
+                    <p class="text-gray-600">Doğrulanmış Creator</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl md:text-5xl font-bold text-primary mb-2">2,500+</p>
+                    <p class="text-gray-600">Başarılı Proje</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl md:text-5xl font-bold text-primary mb-2">48h</p>
+                    <p class="text-gray-600">Ortalama Teslim</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-4xl md:text-5xl font-bold text-primary mb-2">%98</p>
+                    <p class="text-gray-600">Memnuniyet Oranı</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<!-- CTA Section (Final Push) -->
+<th:block th:fragment="ctaSection">
+    <section class="py-20 bg-primary">
+        <div class="container-custom text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                Markanızı Büyütmeye Hazır mısınız?
+            </h2>
+            <p class="text-white/80 text-lg mb-8 max-w-2xl mx-auto">
+                Şimdi ücretsiz kayıt olun, ilk siparişinize özel <strong>%20 indirim</strong> kazanın.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/register?role=brand" class="btn btn-lg bg-white text-primary hover:bg-gray-100">
+                    🏢 Marka Olarak Başla
+                </a>
+                <a href="/register?role=creator"
+                    class="btn btn-lg btn-outline border-white text-white hover:bg-white hover:text-primary">
+                    🎨 Creator Olarak Kazan
+                </a>
+            </div>
+            <p class="text-white/60 text-sm mt-6">
+                Kredi kartı gerekmez • Anında başlayın
+            </p>
+        </div>
+    </section>
+</th:block>

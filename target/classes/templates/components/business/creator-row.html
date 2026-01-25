@@ -1,0 +1,111 @@
+<!-- ============================================
+     CREATOR ROW COMPONENT (B-10)
+     Collabstr-style horizontal creator section
+     for platform-based listings (Featured, Instagram, TikTok)
+     ============================================ -->
+
+<!-- Platform Section with Horizontal Scroll (Collabstr Homepage Style) -->
+<th:block th:fragment="creatorSection(title, subtitle, creators, viewAllLink)">
+    <section class="py-12 bg-white">
+        <div class="container-custom">
+            <!-- Section Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-2xl md:text-3xl font-bold text-gray-900" th:text="${title}">Section Title</h2>
+                    <p class="text-gray-500 mt-1" th:text="${subtitle}">Section subtitle</p>
+                </div>
+                <a th:href="${viewAllLink}" class="text-primary font-medium hover:underline flex items-center gap-1">
+                    Tümünü Gör
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                </a>
+            </div>
+
+            <!-- Horizontal Scroll Cards -->
+            <div class="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide -mx-4 px-4">
+                <div th:each="creator : ${creators}" class="flex-shrink-0 w-72 snap-start"
+                    th:replace="~{components/business/creator-row :: creatorCardLanding(${creator})}">
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+<!-- Single Creator Card for Landing Page (Collabstr Style) -->
+<th:block th:fragment="creatorCardLanding(creator)">
+    <a th:href="'/creator/' + ${creator.id}" class="group block">
+        <div
+            class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300">
+            <!-- Image Container -->
+            <div class="aspect-[3/4] relative overflow-hidden">
+                <img th:src="${creator.profileImage}" th:alt="${creator.name}"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy" />
+
+                <!-- Top Badges (Collabstr Style) -->
+                <div class="absolute top-3 left-3 flex flex-wrap gap-2">
+                    <!-- Top Creator Badge -->
+                    <span th:if="${creator.featured}"
+                        class="inline-flex items-center gap-1 bg-gray-900 text-white text-xs font-medium px-2.5 py-1 rounded-lg">
+                        ⭐ Top Creator
+                    </span>
+                    <!-- Responds Fast Badge -->
+                    <span th:if="${creator.responseTime != null and creator.responseTime < 2}"
+                        class="inline-flex items-center gap-1 bg-green-500 text-white text-xs font-medium px-2.5 py-1 rounded-lg">
+                        ⚡ Hızlı Yanıt
+                    </span>
+                </div>
+
+                <!-- Platform Icon + Follower Count (Bottom Left) -->
+                <div class="absolute bottom-3 left-3">
+                    <div
+                        class="inline-flex items-center gap-1.5 bg-black/70 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg backdrop-blur-sm">
+                        <span th:switch="${creator.platform}">
+                            <span th:case="'instagram'">📷</span>
+                            <span th:case="'tiktok'">🎵</span>
+                            <span th:case="'youtube'">▶️</span>
+                            <span th:case="*">🤖</span>
+                        </span>
+                        <span th:if="${creator.followers != null}" th:text="${creator.followers}">100K</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-4">
+                <!-- Name + Rating Row -->
+                <div class="flex items-center justify-between mb-1">
+                    <div class="flex items-center gap-2">
+                        <h3 class="font-semibold text-gray-900" th:text="${creator.name}">Creator Name</h3>
+                        <span th:if="${creator.verified}" class="text-primary text-sm">✓</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-sm">
+                        <span class="text-yellow-500">★</span>
+                        <span class="font-medium" th:text="${creator.rating}">5.0</span>
+                    </div>
+                </div>
+
+                <!-- Category/Niche -->
+                <p class="text-sm text-gray-500 mb-3 line-clamp-1" th:text="${creator.bio}">
+                    Fashion, Lifestyle Creator
+                </p>
+
+                <!-- Location + Price Row -->
+                <div class="flex items-center justify-between">
+                    <span class="text-xs text-gray-400" th:text="${creator.location ?: 'Türkiye'}">Istanbul, TR</span>
+                    <span class="font-bold text-primary" th:text="'₺' + ${creator.startingPrice}">₺500</span>
+                </div>
+            </div>
+        </div>
+    </a>
+</th:block>
+
+<!-- Grid Layout (For "See All" pages) -->
+<th:block th:fragment="creatorGridLanding(creators)">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div th:each="creator : ${creators}"
+            th:replace="~{components/business/creator-row :: creatorCardLanding(${creator})}">
+        </div>
+    </div>
+</th:block>
