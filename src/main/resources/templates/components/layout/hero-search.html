@@ -3,19 +3,21 @@
      Collabstr-inspired search-focused hero section
      ============================================ -->
 
-<!-- Main Hero with Search Bar (Collabstr Style) -->
+<!-- Main Hero with Search Bar (Premium Burgundy Style) -->
 <th:block th:fragment="heroSearch">
-    <section class="relative bg-white overflow-hidden">
-        <div class="container-custom py-12 lg:py-20">
+    <section class="relative bg-warm-gradient overflow-hidden">
+        <div class="container-custom py-16 lg:py-24">
             <!-- Main Headline -->
-            <div class="text-center max-w-4xl mx-auto mb-10">
-                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
-                    <span class="bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">AI Influencer</span> 
-                    ile Markanızı Büyütün
+            <div class="text-center max-w-4xl mx-auto mb-12">
+                <p class="text-accent font-semibold tracking-wide uppercase text-sm mb-4">Türkiye'nin İlk AI Influencer
+                    Platformu</p>
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-charcoal leading-tight mb-6">
+                    Markanızın Yeni Yüzü,
+                    <span class="text-primary">AI Influencer</span>
                 </h1>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Profesyonel AI karakterlerden Instagram, TikTok ve YouTube içerikleri alın. 
-                    Gerçek influencer maliyetinin %90 altında.
+                    Profesyonel AI karakterlerden Instagram, TikTok ve Twitter içerikleri alın.
+                    <span class="font-semibold text-primary">Gerçek influencer maliyetinin %90 altında.</span>
                 </p>
             </div>
 
@@ -25,31 +27,31 @@
                     <div class="flex flex-col md:flex-row gap-2">
                         <!-- Platform Select -->
                         <div class="flex-1 md:flex-none md:w-48">
-                            <select name="platform" 
-                                    class="select w-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-primary/20 rounded-xl h-14">
+                            <select name="platform"
+                                class="select w-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-primary/20 rounded-xl h-14">
                                 <option value="">Tüm Platformlar</option>
                                 <option value="instagram">📷 Instagram</option>
                                 <option value="tiktok">🎵 TikTok</option>
-                                <option value="youtube">▶️ YouTube</option>
-                                <option value="ugc">🎬 UGC</option>
+                                <option value="twitter">𝕏 Twitter</option>
                             </select>
                         </div>
 
                         <!-- Category/Keyword Input -->
                         <div class="flex-1 relative">
-                            <input type="text" 
-                                   name="keyword" 
-                                   placeholder="Kategori veya anahtar kelime girin..."
-                                   class="input w-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-primary/20 rounded-xl h-14 pl-12" />
-                            <svg class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            <input type="text" name="keyword" placeholder="Kategori veya anahtar kelime girin..."
+                                class="input w-full bg-gray-50 border-0 focus:bg-white focus:ring-2 focus:ring-primary/20 rounded-xl h-14 pl-12" />
+                            <svg class="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </div>
 
                         <!-- Search Button -->
                         <button type="submit" class="btn btn-primary h-14 px-8 rounded-xl text-base font-semibold">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                             Ara
                         </button>
@@ -58,22 +60,28 @@
 
                 <!-- Quick Filters (Pills) - Collabstr Style -->
                 <div class="flex flex-wrap justify-center gap-2 mt-6">
-                    <a href="/search?category=fashion" class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
+                    <a href="/search?category=fashion"
+                        class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
                         👗 Moda
                     </a>
-                    <a href="/search?category=beauty" class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
+                    <a href="/search?category=beauty"
+                        class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
                         💄 Güzellik
                     </a>
-                    <a href="/search?category=tech" class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
+                    <a href="/search?category=tech"
+                        class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
                         📱 Teknoloji
                     </a>
-                    <a href="/search?category=lifestyle" class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
+                    <a href="/search?category=lifestyle"
+                        class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
                         🌿 Yaşam Tarzı
                     </a>
-                    <a href="/search?category=food" class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
+                    <a href="/search?category=food"
+                        class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
                         🍕 Yemek
                     </a>
-                    <a href="/search?category=fitness" class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
+                    <a href="/search?category=fitness"
+                        class="badge badge-lg badge-outline hover:badge-primary transition-colors cursor-pointer py-3 px-4">
                         💪 Fitness
                     </a>
                 </div>

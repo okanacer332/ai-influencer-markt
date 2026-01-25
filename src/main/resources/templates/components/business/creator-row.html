@@ -64,7 +64,7 @@
                         <span th:switch="${creator.platform}">
                             <span th:case="'instagram'">📷</span>
                             <span th:case="'tiktok'">🎵</span>
-                            <span th:case="'youtube'">▶️</span>
+                            <span th:case="'twitter'">𝕏</span>
                             <span th:case="*">🤖</span>
                         </span>
                         <span th:if="${creator.followers != null}" th:text="${creator.followers}">100K</span>
